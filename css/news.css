@@ -1,0 +1,49 @@
+.news .image {
+    background-size: cover;
+    position: relative;
+    width: 100%;
+    height: 217.5px;
+    background-position: center center;
+}
+
+.news .img01 {
+    background-image: url("/images/tylerTheCreator.jpg");
+}
+
+.news .img02 {
+    background-image: url("/images/bricknasty.jpeg");
+}
+
+.news .img03 {
+    background-image: url("/images/blackMidiTour.jpg");
+}
+
+.news .img04 {
+    background-image: url("/images/deLaSoul.jpg");
+}
+
+.news .newsContent h4 {
+    padding-top: 10px;
+    padding-bottom: 7.5px;
+}
+
+.news .newsContent h3 {
+    padding-bottom: 7.5px;
+}
+
+.news .newsContent h3 {
+    padding-right: 25px;
+}
+
+.news .container {
+    padding: 15px 0px 30px 0px;
+}
+
+.news .sideArticle {
+    border-top: 3px solid black;
+}
+
+.news .rightSide {
+    display: flex;
+    flex-direction: column;
+}

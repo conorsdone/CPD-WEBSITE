@@ -1,0 +1,29 @@
+.topArticle {
+    background-color: black;
+    color: #b3b3b3;
+    padding: 40px 0px 40px 0px;
+}
+
+.topArticle .img {
+padding: 0px 0px 0px 0px;
+}
+
+.topArticle .container {
+    margin: auto;
+    background-color: black;
+}
+
+.topArticle h2{
+    color: white;
+}
+
+.topArticle p {
+font-size: 16px;
+margin: 20px 0px 20px 0px;
+line-height: auto;
+}
+
+.topArticle .container .text {
+    margin: 40px 20px 40px 20px;
+}
+

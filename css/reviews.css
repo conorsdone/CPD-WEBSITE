@@ -1,0 +1,81 @@
+.reviews .genreTag h1 {
+    font-size: 20px;
+	padding-top: 5px;
+    line-height: 26px;
+    align-items: flex-end;
+    font-variant: normal;
+    color: white;
+}
+
+.reviews .genreTag {
+    display: inline-flex;
+    align-items: flex-end;
+}
+
+.reviews .genreTxt {
+    background-color: black;
+    border-radius: 10px 10px 0px 0px;
+    border-top: 3px solid rgb(0, 0, 0);
+    padding: 0px 20px 0px 20px;
+}
+
+.reviews .genreTxt p {
+    padding-bottom: 5px;
+}
+
+.reviews .img01 {
+    background-image: url("/images/sminoLuv4Rent.jpg");
+}
+
+.reviews .img02 {
+    background-image: url("/images/fkatwigsCaprisongs.png");
+}
+
+.reviews .img03 {
+    background-image: url("/images/slowthaiUgly.jpg");
+}
+
+.reviews .img04 {
+    background-image: url("/images/thundercatDrunk.png");
+}
+
+.reviews .image {
+    position: relative;
+    padding-bottom: 100%;
+    background-position: center center;
+
+    background-size: auto calc(100%);
+    border-top: 5px solid rgb(0, 0, 0);
+}
+
+.reviews .reviewInfo {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.reviews .reviewInfo h2 {
+    font-size: 24px;
+    font-weight: 900;
+}
+
+.reviews .reviewInfo h3 {
+    font-size: 24px;
+}
+
+.reviews .reviewInfo p {
+    text-align: center;
+    margin-top: 7.5px;
+	padding-bottom: 7.5px;
+}
+
+.reviews .container {
+    padding: 15px 0px 30px 0px;
+}
+
+.reviews .review:hover .reviewInfo{
+    background-color: black;
+    border-radius: 0px 0px 10px 10px;
+    color: white;
+}
+

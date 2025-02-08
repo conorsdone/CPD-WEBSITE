@@ -1,0 +1,205 @@
+html,
+body {
+    overflow: hidden;
+}
+
+/* invert body actual animation */
+body {
+    background-color: black;
+    transition: filter 0.5s ease, background-color 0.5s ease;
+}
+
+/* invert body */
+body.inverted {
+    background-color: black;
+    filter: invert(1);
+}
+
+header {
+    z-index: 1500;
+}
+
+/* body.inverted header {
+    filter: invert(1);
+} */
+
+.background {
+    position: relative;
+    margin-top: -30vh;
+    margin-left: -10vw;
+    margin-right: -20vw;
+    padding-bottom: 20px;
+    transform: rotate(10deg);
+    transition: transform 3s ease;
+    height: 100vh;
+}
+
+body.inverted .background {
+    transform: rotate(-10deg);
+}
+
+.background .flyImage {
+    width: 40vh;
+    aspect-ratio: 4 / 5;
+}
+
+.background .flyImage01 {
+    background: url('/images/testing\ 4.jpg') center center;
+    background-size: cover;
+}
+
+.background .flyImage02 {
+    background: url('/images/MLH-1-colour-full\ res.jpg') center center;
+    background-size: cover;
+}
+
+.background .flyImage03 {
+    background: url('/images/F3MIII\ POST-pic5-v2-text-curve-2\(4160x5200\).jpg') center center;
+    background-size: cover;
+}
+
+.background .flyImage04 {
+    background: url('/images/igor\ og\ ps.jpg') center center;
+    background-size: cover;
+}
+
+.background .flyImage05 {
+    background: url('/images/MLH-4-\ instagram.jpg') center center;
+    background-size: cover;
+}
+
+.background .flyImage06 {
+    background: url('/images/BroncoLoko-PS-2-FullScale-ZoomOut.jpg') center center;
+    background-size: cover;
+}
+
+.background .container {
+    margin-top: 1rem;
+}
+
+.background .marquee {
+    --gap: clamp(0.5rem, 1rem, 1.5rem);
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    user-select: none;
+    gap: var(--gap);
+}
+
+.background .marquee__content {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-around;
+    gap: var(--gap);
+    min-width: 100%;
+}
+
+/* Enable animation */
+.background .marquee__content__1 {
+    animation: scroll 14s linear infinite;
+    /* Faster */
+}
+
+.background .marquee__content__2 {
+    animation: scroll 20s linear infinite;
+    /* Slower */
+}
+
+.background .marquee__content__3 {
+    animation: scroll 10s linear infinite;
+    /* Even faster */
+}
+
+/* Enable animation */
+body.inverted .background .marquee__content__1 {
+    animation: scroll 14s linear infinite;
+}
+
+body.inverted .background .marquee__content__2 {
+    animation: scroll 20s linear infinite;
+}
+
+body.inverted .background .marquee__content__3 {
+    animation: scroll 10s linear infinite;
+}
+
+@keyframes scroll {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(calc(-100% - var(--gap)));
+    }
+}
+
+@keyframes scroll-reverse {
+    from {
+        transform: translateX(calc(-100% - var(--gap)));
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* actual button */
+.button-7 {
+    position: fixed;
+    /* Keeps it visible */
+    top: 100px;
+    /* Adjust based on layout */
+    left: 100px;
+    z-index: 1100;
+    /* Higher than the modal (1000) */
+    background: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Modal Background */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1200;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Modal Image */
+.modal-content {
+    max-width: 80%;
+    max-height: 80%;
+    border-radius: 25px;
+}
+
+/* Close Button */
+.close {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Attempt to size parent based on content. Keep in mind that the parent width is equal to both content containers that stretch to fill the parent. */
+.marquee--fit-content {
+    max-width: fit-content;
+}
+
+/* A fit-content sizing fix: Absolute position the duplicate container. This will set the size of the parent wrapper to a single child container. Shout out to Olavi's article that had this solution 👏 @link: https://olavihaapala.fi/2021/02/23/modern-marquee.html  */
+.marquee--pos-absolute .marquee__content:last-child {
+    position: absolute;
+    top: 0;
+    left: 0;
+}

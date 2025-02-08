@@ -1,0 +1,40 @@
+.cpd-logo {
+    position: absolute;
+    z-index: 1500;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85vw;
+    transition: top 1s ease-in-out, transform 1s ease-in-out, width 1s ease-in-out;
+    pointer-events: none;
+    animation: redAni 5s infinite;
+}
+
+body.inverted .cpd-logo {
+    z-index: 6000; /* Increase the z-index */
+    position: absolute; /* Ensure position is set */
+    pointer-events: none;
+    animation: blueAni 5s infinite;
+}
+
+.cpd-logo.logo-transition {
+    top: 5%;
+    transform: translate(-50%, 0%);
+    width: 50vw;
+}
+
+header {
+    z-index: 5000; /* Ensure header has a high z-index */
+}
+
+@keyframes blueAni {
+    0%  { filter: sepia(100) invert(0%) saturate(50) drop-shadow(0rem 0rem 0rem #ff0000) blur(0px); }
+    50% { filter: sepia(100) invert(0%) saturate(100) drop-shadow(0rem 0rem 1rem #ff0000) ;}
+    100%  { filter: sepia(100) invert(0%) saturate(50) drop-shadow(0rem 0rem 0rem #ff0000) blur(0px); }
+  }
+
+@keyframes redAni {
+    0%  { filter: sepia(100) invert(0%) saturate(10) drop-shadow(0rem 0rem 0rem #ff0000) blur(0px); }
+    50% { filter: sepia(100) invert(0%) saturate(40) drop-shadow(0rem 0rem 1rem #ff0000) ;}
+    100%  { filter: sepia(100) invert(0%) saturate(10) drop-shadow(0rem 0rem 0rem #ff0000) blur(0px); }
+  }

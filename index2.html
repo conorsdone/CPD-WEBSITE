@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Morph with Crossfade</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      height: 100vh;
+    }
+    canvas {
+      width: 50vw;
+      height: 100vh;
+      display: block;
+      background: #000; /* Letterbox color */
+    }
+    .content {
+      width: 50vw;
+      height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+      background: #f0f0f0;
+      overflow-y: auto;
+    }
+    .controls {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="morphCanvas"></canvas>
+  <div class="content">
+    <h1>Your Content</h1>
+    <p>This area remains unaffected by the canvas.</p>
+  </div>
+
+  <!-- Vertex Shader -->
+  <script type="x-shader/x-vertex" id="vertexShader">#version 300 es
+precision highp float;
+
+in vec3 aPos;       // Position attribute
+in vec2 aTexCoords; // Texture coordinates
+
+uniform float time; 
+
+out vec2 vTexCoords;
+
+void main() {
+    float radius = length(aPos.xy);
+    float angle = atan(aPos.y, aPos.x);
+
+    // Apply swirling effect over time
+    angle += sin(radius * 3.0 + time) * 0.5;
+
+    // Convert back to Cartesian coordinates
+    vec2 warpedPos = vec2(cos(angle), sin(angle)) * radius;
+
+    gl_Position = vec4(warpedPos, aPos.z, 1.0);
+    vTexCoords = aTexCoords;
+}
+  </script>
+
+  <!-- Fragment Shader with Simplex Noise -->
+  <script type="x-shader/x-fragment" id="fragmentShader">#version 300 es
+precision highp float;
+
+in vec2 vTexCoords;
+out vec4 FragColor;
+
+uniform float time;
+
+// Hash function for noise
+vec2 hash(vec2 p) {
+    p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));
+    return fract(sin(p) * 43758.5453123);
+}
+
+// Gradient noise function
+float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+
+    vec2 u = f * f * (3.0 - 2.0 * f);
+
+    return mix(mix(dot(hash(i), f - vec2(0, 0)),
+                   dot(hash(i + vec2(1, 0)), f - vec2(1, 0)), u.x),
+               mix(dot(hash(i + vec2(0, 1)), f - vec2(0, 1)),
+                   dot(hash(i + vec2(1, 1)), f - vec2(1, 1)), u.x), u.y);
+}
+
+void main() {
+    float swirlAmount = 0.2;
+    vec2 swirlUV = vTexCoords + swirlAmount * vec2(noise(vTexCoords * 5.0 + time), noise(vTexCoords * 5.0 - time));
+
+    float value = noise(swirlUV * 10.0);
+
+    FragColor = vec4(vec3(value), 1.0);
+}
+  </script>
+
+  <script>
+    const images = [
+      '/images/jpegmafia.jpg',
+      '/images/monjola.jpg',
+      '/images/genesisOwusu.jpg'
+    ];
+
+    let currentImageIndex = 0;
+    let gl, program, texture, nextTexture;
+    let imageSize = [1, 1];
+    let fadeProgress = 0.0;
+    let isFading = false;
+    let nextImageIndex = (currentImageIndex + 1) % images.length;
+
+    function checkShaderCompile(gl, shader, type) {
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        console.error(`Error compiling ${type} shader:`, gl.getShaderInfoLog(shader));
+      }
+    }
+
+    function checkProgramLink(gl, program) {
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        console.error('Error linking program:', gl.getProgramInfoLog(program));
+      }
+    }
+
+    function initWebGL() {
+      const canvas = document.getElementById('morphCanvas');
+      gl = canvas.getContext('webgl2');
+      if (!gl) return alert("WebGL 2 not supported!");
+
+      // Initialize textures
+      texture = gl.createTexture();
+      nextTexture = gl.createTexture();
+      [texture, nextTexture].forEach(tex => {
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0,
+                      gl.RGBA, gl.UNSIGNED_BYTE, null);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      });
+
+      // Shader setup
+      const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+      gl.shaderSource(vertexShader, document.getElementById('vertexShader').text);
+      gl.compileShader(vertexShader);
+      checkShaderCompile(gl, vertexShader, "VERTEX");
+
+      const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+      gl.shaderSource(fragmentShader, document.getElementById('fragmentShader').text);
+      gl.compileShader(fragmentShader);
+      checkShaderCompile(gl, fragmentShader, "FRAGMENT");
+
+      program = gl.createProgram(); // Use global variable 'program'
+      gl.attachShader(program, vertexShader);
+      gl.attachShader(program, fragmentShader);
+      gl.linkProgram(program);
+      checkProgramLink(gl, program);
+
+      // **Make program current**
+      gl.useProgram(program);
+
+      // Get attribute and uniform locations from the program
+      const aPosLocation = gl.getAttribLocation(program, "aPos");
+      const aTexCoordLocation = gl.getAttribLocation(program, "aTexCoords");
+      const uTimeLocation = gl.getUniformLocation(program, "time");
+
+      // Debug check
+      console.log("aPosLocation:", aPosLocation);           // Expect 0
+      console.log("aTexCoordLocation:", aTexCoordLocation);   // Expect 1
+      console.log("uTimeLocation:", uTimeLocation);
+
+      if (aPosLocation === -1 || aTexCoordLocation === -1) {
+        console.error("Error: Shader attributes not found.");
+      }
+      if (uTimeLocation === null) {
+        console.error("Error: Shader uniform 'time' not found.");
+      }
+
+      // (Optional) Set additional texture uniform locations if needed.
+      // gl.uniform1i(gl.getUniformLocation(program, 'u_image'), 0);
+      // gl.uniform1i(gl.getUniformLocation(program, 'u_nextImage'), 1);
+
+      // Geometry setup:
+      // Provide four vertices with 5 floats each: 3 for position, 2 for texture coords.
+      const vertices = new Float32Array([
+        // x,   y,  z,   u,   v
+        -1.0, -1.0, 0.0,  0.0, 0.0,  // bottom left
+         1.0, -1.0, 0.0,  1.0, 0.0,  // bottom right
+        -1.0,  1.0, 0.0,  0.0, 1.0,  // top left
+         1.0,  1.0, 0.0,  1.0, 1.0   // top right
+      ]);
+
+      const buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+
+      const stride = 5 * Float32Array.BYTES_PER_ELEMENT;
+      const posOffset = 0;
+      const texOffset = 3 * Float32Array.BYTES_PER_ELEMENT;
+
+      gl.enableVertexAttribArray(aPosLocation);
+      gl.vertexAttribPointer(aPosLocation, 3, gl.FLOAT, false, stride, posOffset);
+
+      gl.enableVertexAttribArray(aTexCoordLocation);
+      gl.vertexAttribPointer(aTexCoordLocation, 2, gl.FLOAT, false, stride, texOffset);
+    }
+
+    async function loadImage(url) {
+      const img = await new Promise((resolve, reject) => {
+        const image = new Image();
+        image.crossOrigin = "anonymous";
+        image.onload = () => resolve(image);
+        image.onerror = reject;
+        image.src = url;
+      });
+
+      // Create a canvas to draw the image
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      return canvas;
+    }
+
+    async function updateTexture() {
+      const img = await loadImage(images[currentImageIndex]);
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+      imageSize = [img.width, img.height];
+      resize();
+    }
+
+    async function startFade() {
+      if (isFading) return;
+      isFading = true;
+
+      const nextImg = await loadImage(images[nextImageIndex]);
+      gl.bindTexture(gl.TEXTURE_2D, nextTexture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, nextImg);
+
+      const startTime = performance.now();
+      const fadeStep = () => {
+        const elapsed = performance.now() - startTime;
+        fadeProgress = Math.min(elapsed / 1000, 1.0);
+
+        if (fadeProgress < 1.0) {
+          requestAnimationFrame(fadeStep);
+        } else {
+          isFading = false;
+          currentImageIndex = nextImageIndex;
+          nextImageIndex = (currentImageIndex + 1) % images.length;
+          gl.bindTexture(gl.TEXTURE_2D, texture);
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, nextImg);
+          fadeProgress = 0.0;
+        }
+      };
+      fadeStep();
+    }
+
+    function resize() {
+      const canvas = document.getElementById('morphCanvas');
+      canvas.width = window.innerWidth * 0.5;
+      canvas.height = window.innerHeight;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+
+      // If using additional uniforms for canvas/image sizes, update them here.
+      // gl.uniform2f(gl.getUniformLocation(program, 'u_canvasSize'), canvas.width, canvas.height);
+      // gl.uniform2f(gl.getUniformLocation(program, 'u_imageSize'), imageSize[0], imageSize[1]);
+    }
+
+    function animate() {
+      // Ensure our program is active
+      gl.useProgram(program);
+
+      gl.uniform1f(gl.getUniformLocation(program, 'time'), performance.now() / 1000);
+      // gl.uniform1f(gl.getUniformLocation(program, 'u_strength'), 0.03);
+      // gl.uniform1f(gl.getUniformLocation(program, 'u_fadeProgress'), fadeProgress);
+
+      // Bind textures if needed (currently our shaders don't use them)
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, nextTexture);
+
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      requestAnimationFrame(animate);
+    }
+
+    function nextImage() {
+      if (!isFading) startFade();
+    }
+
+    // Initialize and start animation
+    initWebGL();
+    updateTexture().then(() => {
+      window.addEventListener('resize', resize);
+      animate();
+      setInterval(nextImage, 3000);
+    });
+  </script>
+</body>
+</html>

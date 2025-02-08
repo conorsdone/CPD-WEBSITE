@@ -1,0 +1,48 @@
+.mike-cutout {
+    position: absolute;
+    width: auto;
+    height: 60vh;
+    min-height: 300px;
+    border: 3px solid blue;
+    bottom: 0;
+    right: -6%;
+}
+
+.lauryn-cutout {
+    border-radius: 36rem; 
+    border-width: 0rem;
+    border-style: solid;
+    border-top-left-radius: 0.3rem;
+    border-bottom-left-radius: 22.4rem;
+    border-bottom-right-radius: 90.6rem;
+    border-top-right-radius: 0.1rem;
+    border-color: rgba(0, 0, 0, 0);
+    position: absolute;
+    width: auto;
+    height: 55vh;
+    top: 0;
+    left: 50vw;
+}
+
+.work-cutout {
+    position: absolute;
+    width: auto;
+    height: 11.5vh;
+    min-height: 90px;
+    max-height: 11.5vh;
+    border: 3px solid red;
+    bottom: 17.5vh;
+    left: 50vw;
+    margin-bottom: 15vh;
+}
+
+.about-cutout {
+    position: absolute;
+    width: auto;
+    height: 11.5vh;
+    min-height: 90px;
+    max-height: 11.5vh;
+    border: 3px solid teal;
+    bottom: 17.5vh;
+    left: 50vw;
+}
