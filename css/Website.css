@@ -100,9 +100,10 @@ a {
 /* STYLE.CSS */
 @font-face {
     font-family: Generic;
-    src: url("assets/Generic-G50-CC-Typic.ttf");
-    src: url("assets/Generic-G50-CC-Typic.woff") format("woff");
+    src: url("/CPD-WEBSITE/assets/Generic-G50-CC-Typic.ttf") format("truetype"),
+        url("/CPD-WEBSITE/assets/Generic-G50-CC-Typic.woff") format("woff");
 }
+
 
 body {
     font-family: Generic, sans-serif;
@@ -328,7 +329,7 @@ h4 {
 
 @media (max-width: 600px) {
     .home .cpd-logo {
-    width: 90vw;
+        width: 90vw;
     }
 
     .home .cpd-logo.logo-transition {
