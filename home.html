@@ -17,33 +17,61 @@
             document.body.classList.toggle('inverted');
         }
 
-        function openModal(imageSrc, description) {
-            const modal = document.getElementById("imageModal");
-            const modalImg = document.getElementById("modalImg");
-            const modalText = document.getElementById("modalText"); // Get the h1 element
-            const divLogo = document.querySelector(".home"); // Get Logo
-            const enter = document.querySelector(".enter"); // Get Logo
-            const logo = document.querySelector(".cpd-logo"); // Get Logo
+        document.addEventListener("DOMContentLoaded", function () {
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("modalImg");
+        const modalText = document.getElementById("modalText");
+        const elementsToMove = document.querySelectorAll(".home, .enter, .cpd-logo");
+        const enterElement = document.querySelector(".enter");
 
+        // Set background images dynamically
+        document.querySelectorAll(".flyImage").forEach((item) => {
+            const imageUrl = item.getAttribute("data-image-url");
+            if (imageUrl) {
+                item.style.backgroundImage = `url(${imageUrl})`;
+            }
+        });
+
+        // Attach event listener to both marquee containers
+        document.querySelectorAll(".marquee__content").forEach((marquee) => {
+            marquee.addEventListener("click", function (event) {
+                const item = event.target.closest(".flyImage");
+                if (!item) return; // Ignore clicks outside flyImage elements
+
+                const bgImage = window.getComputedStyle(item).backgroundImage.match(/url\(["']?(.*?)["']?\)/);
+                const imageSrc = bgImage ? bgImage[1] : "";
+                const title = item.getAttribute("data-title") || "Image";
+
+                openModal(imageSrc);
+            });
+        });
+
+        function openModal(imageSrc, description) {
             modal.style.display = "flex";
             modalImg.src = imageSrc;
-            modalText.textContent = description; // Set the description text
+            modalText.textContent = description;
 
-            // Add the class to move the logo to the top
-            divLogo.classList.add("logo-transition");
-            enter.classList.add("logo-transition");
-            logo.classList.add("logo-transition");
+            elementsToMove.forEach(el => el.classList.add("logo-transition"));
+            if (enterElement) {
+                enterElement.classList.add("logo-transition");
+                enterElement.style.animation = "fadeOut 0.5s ease-in-out forwards";
+            }
         }
 
         function closeModal() {
-            document.getElementById("imageModal").style.display = "none";
-
-            // Remove the class to return the logo to the center
-            document.querySelector(".home").classList.remove("logo-transition");
-            document.querySelector(".enter").classList.remove("logo-transition");
-            document.querySelector(".cpd-logo").
-            classList.remove("logo-transition");
+            modal.style.display = "none";
+            elementsToMove.forEach(el => el.classList.remove("logo-transition"));
+            if (enterElement) {
+                enterElement.classList.remove("logo-transition");
+                enterElement.style.animation = "fadeIn 0.5s ease-in-out forwards";
+            }
         }
+
+        // Close modal when clicking outside the image
+        modal.addEventListener("click", function (event) {
+            closeModal();
+        });
+    });
 
         // window.addEventListener("load", function () {
         //     let element = document.querySelector(".background .flyImage"); // Replace with your selector
@@ -65,118 +93,82 @@
         <div class="containerFull home">
             <img src="images/cpd logo.png" class="cpd-logo"></img>
             <h1 class="enter">
-                <!-- <a href="landing.html"> -->
-                    ENTER
-                <!-- </a> -->
+                <a href="landing.html">
+                ENTER
+                </a>
             </h1>
         </div>
     </header>
 
     <div id="imageModal" class="modal" onclick="closeModal()">
-        <span class="close">&times;</span>
         <img class="modal-content" id="modalImg">
         <h1 id="modalText">About Image</h1>
     </div>
 
-    <div>
+    <!-- <div>
         <button class="button-7" onclick="togglePageInvert()">! Click Me !</button>
-    </div>
+    </div> -->
 
     <div class="background">
 
         <div class="marquee marquee--reverse">
-
             <ul class="container marquee__content marquee__content__1">
-                <li class="flyImage flyImage01 width-2"
-                    onclick="openModal('/images/testing 4.jpg', 'Michael J Bonema')"></li>
-                <li class="flyImage flyImage02 width-2"
-                    onclick="openModal('/images/MLH-1-colour-full res.jpg', 'A colorful MLH logo')"></li>
-                <li class="flyImage flyImage03 width-2"
-                    onclick="openModal('/images/F3MIII POST-pic5-v2-text-curve-2(4160x5200).jpg', 'F3MIII Poster Image')">
-                </li>
-                <li class="flyImage flyImage04 width-2"
-                    onclick="openModal('/images/igor og ps.jpg', 'Igor OG PS cover art')"></li>
-                <li class="flyImage flyImage05 width-2"
-                    onclick="openModal('/images/MLH-4- instagram.jpg', 'Instagram post of MLH-4')"></li>
-                <li class="flyImage flyImage06 width-2"
-                    onclick="openModal('/images/BroncoLoko-PS-2-FullScale-ZoomOut.jpg', 'BroncoLoko PS full-scale image')">
-                </li>
+                <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="/images/MonjolaSite.jpg"></li>
+                <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="/images/MlhSite2.jpg"></li>
+                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="/images/MikeSite2.jpg"></li>
+                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="/images/f3miiiSite.jpg"></li>
+                <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="/images/BroncoLokoSite1.jpg"></li>
+                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="/images/MlhSite1.jpg"></li>
             </ul>
-
-
-
+        
             <ul class="container marquee__content marquee__content__1">
-                <li class="flyImage flyImage01 width-2"
-                    onclick="openModal('/images/testing 4.jpg', 'Michael J Bonema')"></li>
-                <li class="flyImage flyImage02 width-2"
-                    onclick="openModal('/images/MLH-1-colour-full res.jpg', 'A colorful MLH logo')"></li>
-                <li class="flyImage flyImage03 width-2"
-                    onclick="openModal('/images/F3MIII POST-pic5-v2-text-curve-2(4160x5200).jpg', 'F3MIII Poster Image')">
-                </li>
-                <li class="flyImage flyImage04 width-2"
-                    onclick="openModal('/images/igor og ps.jpg', 'Igor OG PS cover art')"></li>
-                <li class="flyImage flyImage05 width-2"
-                    onclick="openModal('/images/MLH-4- instagram.jpg', 'Instagram post of MLH-4')"></li>
-                <li class="flyImage flyImage06 width-2"
-                    onclick="openModal('/images/BroncoLoko-PS-2-FullScale-ZoomOut.jpg', 'BroncoLoko PS full-scale image')">
-                </li>
+                <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="/images/MonjolaSite.jpg"></li>
+                <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="/images/MlhSite2.jpg"></li>
+                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="/images/MikeSite2.jpg"></li>
+                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="/images/f3miiiSite.jpg"></li>
+                <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="/images/BroncoLokoSite1.jpg"></li>
+                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="/images/MlhSite1.jpg"></li>
             </ul>
-
-
         </div>
 
         <div class="marquee marquee--reverse">
-
             <ul class="container marquee__content marquee__content__2">
-                <li class="flyImage flyImage01 width-2" onclick="openModal('/images/testing\ 4.jpg')"></li>
-                <li class="flyImage flyImage02 width-2" onclick="openModal('/images/MLH-1-colour-full\ res.jpg')"></li>
-                <li class="flyImage flyImage03 width-2"
-                    onclick="openModal('/images/F3MIII\ POST-pic5-v2-text-curve-2\(4160x5200\).jpg')"></li>
-                <li class="flyImage flyImage04 width-2" onclick="openModal('/images/igor\ og\ ps.jpg')"></li>
-                <li class="flyImage flyImage05 width-2" onclick="openModal('/images/MLH-4-\ instagram.jpg')"></li>
-                <li class="flyImage flyImage06 width-2"
-                    onclick="openModal('/images/BroncoLoko-PS-2-FullScale-ZoomOut.jpg')"></li>
+                <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="/images/MonjolaSite.jpg"></li>
+                <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="/images/MlhSite2.jpg"></li>
+                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="/images/MikeSite2.jpg"></li>
+                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="/images/f3miiiSite.jpg"></li>
+                <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="/images/BroncoLokoSite1.jpg"></li>
+                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="/images/MlhSite1.jpg"></li>
             </ul>
 
-
             <ul class="container marquee__content marquee__content__2">
-                <li class="flyImage flyImage01 width-2" onclick="openModal('/images/testing\ 4.jpg')"></li>
-                <li class="flyImage flyImage02 width-2" onclick="openModal('/images/MLH-1-colour-full\ res.jpg')"></li>
-                <li class="flyImage flyImage03 width-2"
-                    onclick="openModal('/images/F3MIII\ POST-pic5-v2-text-curve-2\(4160x5200\).jpg')"></li>
-                <li class="flyImage flyImage04 width-2" onclick="openModal('/images/igor\ og\ ps.jpg')"></li>
-                <li class="flyImage flyImage05 width-2" onclick="openModal('/images/MLH-4-\ instagram.jpg')"></li>
-                <li class="flyImage flyImage06 width-2"
-                    onclick="openModal('/images/BroncoLoko-PS-2-FullScale-ZoomOut.jpg')"></li>
+                <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="/images/MonjolaSite.jpg"></li>
+                <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="/images/MlhSite2.jpg"></li>
+                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="/images/MikeSite2.jpg"></li>
+                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="/images/f3miiiSite.jpg"></li>
+                <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="/images/BroncoLokoSite1.jpg"></li>
+                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="/images/MlhSite1.jpg"></li>
             </ul>
-
         </div>
 
         <div class="marquee marquee--reverse">
-
             <ul class="container marquee__content marquee__content__3">
-                <li class="flyImage flyImage01 width-2" onclick="openModal('/images/testing\ 4.jpg')"></li>
-                <li class="flyImage flyImage02 width-2" onclick="openModal('/images/MLH-1-colour-full\ res.jpg')"></li>
-                <li class="flyImage flyImage03 width-2"
-                    onclick="openModal('/images/F3MIII\ POST-pic5-v2-text-curve-2\(4160x5200\).jpg')"></li>
-                <li class="flyImage flyImage04 width-2" onclick="openModal('/images/igor\ og\ ps.jpg')"></li>
-                <li class="flyImage flyImage05 width-2" onclick="openModal('/images/MLH-4-\ instagram.jpg')"></li>
-                <li class="flyImage flyImage06 width-2"
-                    onclick="openModal('/images/BroncoLoko-PS-2-FullScale-ZoomOut.jpg')"></li>
+                <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="/images/MonjolaSite.jpg"></li>
+                <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="/images/MlhSite2.jpg"></li>
+                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="/images/MikeSite2.jpg"></li>
+                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="/images/f3miiiSite.jpg"></li>
+                <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="/images/BroncoLokoSite1.jpg"></li>
+                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="/images/MlhSite1.jpg"></li>
             </ul>
 
-
             <ul class="container marquee__content marquee__content__3">
-                <li class="flyImage flyImage01 width-2" onclick="openModal('/images/testing\ 4.jpg')"></li>
-                <li class="flyImage flyImage02 width-2" onclick="openModal('/images/MLH-1-colour-full\ res.jpg')"></li>
-                <li class="flyImage flyImage03 width-2"
-                    onclick="openModal('/images/F3MIII\ POST-pic5-v2-text-curve-2\(4160x5200\).jpg')"></li>
-                <li class="flyImage flyImage04 width-2" onclick="openModal('/images/igor\ og\ ps.jpg')"></li>
-                <li class="flyImage flyImage05 width-2" onclick="openModal('/images/MLH-4-\ instagram.jpg')"></li>
-                <li class="flyImage flyImage06 width-2"
-                    onclick="openModal('/images/BroncoLoko-PS-2-FullScale-ZoomOut.jpg')"></li>
+                <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="/images/MonjolaSite.jpg"></li>
+                <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="/images/MlhSite2.jpg"></li>
+                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="/images/MikeSite2.jpg"></li>
+                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="/images/f3miiiSite.jpg"></li>
+                <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="/images/BroncoLokoSite1.jpg"></li>
+                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="/images/MlhSite1.jpg"></li>
             </ul>
-
         </div>
 
     </div>
