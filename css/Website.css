@@ -100,8 +100,8 @@ a {
 /* STYLE.CSS */
 @font-face {
     font-family: Generic;
-    src: url("/assets/Generic-G50-CC-Typic.ttf");
-    src: url("/assets/Generic-G50-CC-Typic.woff") format("woff");
+    src: url("assets/Generic-G50-CC-Typic.ttf");
+    src: url("assets/Generic-G50-CC-Typic.woff") format("woff");
 }
 
 body {
