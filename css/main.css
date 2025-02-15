@@ -33,6 +33,7 @@ html:focus-within {
 
 /* Set core body defaults */
 body {
+    overflow: hidden;
     min-height: 100vh;
     text-rendering: optimizeSpeed;
     line-height: 1.5;
@@ -110,6 +111,11 @@ a {
     src: url("/assets/Generic-G50-CC-Typic.woff") format("woff");
 }
 
+@font-face {
+    font-family: Octuple;
+    src: url("/assets/Octuple-max-demo.ttf");
+}
+
 
 body {
     font-family: Generic, sans-serif;
@@ -152,11 +158,10 @@ h2 {
 }
 
 h3 {
-    font-family: Bookmania;
+    font-family: Octuple;
     font-size: 18px;
-    font-style: italic;
-    font-weight: 600;
-    line-height: 20px;
+    font-weight: normal;
+    line-height: auto;
 }
 
 h4 {
@@ -169,11 +174,6 @@ h4 {
     padding: 0px;
 }
 
-.menu {
-    -webkit-filter: url("#goo");
-    filter: url("../button.html");
-}
-
 /* GRID.CSS */
 .container {
     width: auto;
@@ -181,6 +181,16 @@ h4 {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-column-gap: 20px;
+    grid-row-gap: 1em;
+    grid-row: auto;
+}
+
+.containerNoGap {
+    width: auto;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-column-gap: 0px;
     grid-row-gap: 1em;
     grid-row: auto;
 }
@@ -208,7 +218,7 @@ h4 {
     margin: auto;
 }
 
-.container-no-padding {
+.containerNoPadding {
     width: 1200px;
     margin: auto;
     display: grid;
@@ -282,82 +292,16 @@ h4 {
 
 /* HEADER.CSS */
 
-.home {
-    /* border: 3px solid greenyellow; */
-    position: absolute;
+.main-header {
     z-index: 2000;
-    width: 100vw;
-    text-align: center;
-    pointer-events: none;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    transition: top 1s ease-in-out, transform 1s ease-in-out, width 1s ease-in-out;
 }
 
-.home .enter {
-    /* border: 3px solid blue; */
-    pointer-events: all;
-    position: relative;
-    top: 0%;
-    left: 50%;
-    transform: translate(-50%, 50%);
-    width: min-content;
-}
-
-.home .cpd-logo {
-    /* border: 3px solid palevioletred; */
-    position: relative;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, 0%);
-    pointer-events: none;
-    width: 85vw;
-    transition: transform 1s ease-in-out;
+.main-header .cpd-logo {
+    z-index: 5000;
+    padding: 30px 20px 0px 200px;
+    /* border: 3px solid red; */
+    /* padding: 20px 30px 0px; */
     animation: redAni 5s infinite;
-}
-
-.home body.inverted .cpd-logo {
-    position: absolute;
-    pointer-events: none;
-    animation: blueAni 5s infinite;
-}
-
-.home .enter.logo-transition {
-    position: relative;
-    animation: fadeOut 0.5s ease-in-out forwards;
-}
-
-.home .cpd-logo.logo-transition {
-    position: relative;
-    transform: translate(-50%, -50%);
-}
-
-@media (max-width: 600px) {
-    .home .cpd-logo {
-        width: 90vw;
-    }
-
-    .home .cpd-logo.logo-transition {
-        position: relative;
-    }
-
-    .home.logo-transition {
-        top: 15% !important;
-        left: 50% !important;
-        width: 90vw !important;
-    }
-
-    .home .enter {
-        font-size: 3rem !important;
-    }
-}
-
-.home.logo-transition {
-    top: 10%;
-    left: 50%;
-    transform: translate(-50%, 0%);
-    width: 60vw;
 }
 
 @keyframes blueAni {
@@ -404,177 +348,9 @@ h4 {
     }
 }
 
-/* BACKGROUND.CSS */
 html,
 body {
-    overflow: hidden;
-}
-
-
-body {
-    background-color: black;
-    transition: filter 0.5s ease, background-color 0.5s ease;
-}
-
-body.inverted {
-    background-color: black;
-    filter: invert(1);
-}
-
-header {
-    z-index: 1500;
-}
-
-.background {
-    position: relative;
-    margin-top: -30vh;
-    margin-left: -10vw;
-    margin-right: -20vw;
-    padding-bottom: 20px;
-    transform: rotate(10deg);
-    transition: transform 3s ease;
-    height: 100vh;
-}
-
-@media (max-width: 600px) {
-    .background {
-        margin-top: -10vh;
-        margin-left: -20vw;
-    }
-}
-
-body.inverted .background {
-    transform: rotate(-10deg);
-}
-
-.background .flyImage {
-    width: 40vh;
-    aspect-ratio: 4 / 5;
-    background-size: cover;
-    background-position: center;
-}
-
-@media (max-width: 600px) {
-    .background .flyImage {
-        width: 50vw;
-        aspect-ratio: 4 / 5;
-        background-size: cover;
-    }
-}
-
-.background .container {
-    margin-top: 1rem;
-}
-
-.background .marquee {
-    --gap: clamp(0.5rem, 1rem, 1.5rem);
-    position: relative;
-    display: flex;
-    overflow: hidden;
-    user-select: none;
-    gap: var(--gap);
-}
-
-.background .marquee__content {
-    flex-shrink: 0;
-    display: flex;
-    justify-content: space-around;
-    gap: var(--gap);
-    /* min-width: 100%; */
-}
-
-.background .marquee__content__1 {
-    animation: scroll 14s linear infinite;
-}
-
-.background .marquee__content__2 {
-    animation: scroll 20s linear infinite;
-}
-
-.background .marquee__content__3 {
-    animation: scroll 10s linear infinite;
-}
-
-body.inverted .background .marquee__content__1 {
-    animation: scroll 14s linear infinite;
-}
-
-body.inverted .background .marquee__content__2 {
-    animation: scroll 20s linear infinite;
-}
-
-body.inverted .background .marquee__content__3 {
-    animation: scroll 10s linear infinite;
-}
-
-@keyframes scroll {
-    from {
-        transform: translateX(0);
-    }
-
-    to {
-        transform: translateX(calc(-100% - var(--gap)));
-    }
-}
-
-@keyframes scroll-reverse {
-    from {
-        transform: translateX(calc(-100% - var(--gap)));
-    }
-
-    to {
-        transform: translateX(0);
-    }
-}
-
-.button-7 {
-    position: fixed;
-    top: 100px;
-    left: 100px;
-    z-index: 1100;
-    background: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1200;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    max-width: 80%;
-    max-height: 80%;
-    border-radius: 25px;
-}
-
-@media (max-width: 600px) {
-    .modal-content {
-        max-width: 90%;
-        max-height: 90%;
-        border-radius: 10px;
-    }
-}
-
-.marquee--fit-content {
-    max-width: fit-content;
-}
-
-.marquee--pos-absolute .marquee__content:last-child {
-    position: absolute;
-    top: 0;
-    left: 0;
+    /* overflow: hidden; */
 }
 
 /* LANDING.CSS */
@@ -583,73 +359,114 @@ body.inverted .background .marquee__content__3 {
     width: auto;
     height: 60vh;
     min-height: 300px;
-    border: 3px solid blue;
+    /* border: 3px solid blue; */
     bottom: 0;
     right: -6%;
 }
 
 .lauryn-cutout {
     border-radius: 36rem;
-    border-width: 0rem;
+    border-width: 3px;
+    border-color: black;
     border-style: solid;
     border-top-left-radius: 0.3rem;
     border-bottom-left-radius: 22.4rem;
     border-bottom-right-radius: 90.6rem;
     border-top-right-radius: 0.1rem;
-    border-color: rgba(0, 0, 0, 0);
+    /* width: 60vh;
+    margin-top: -20vh;
+    margin-left: -4vw; */
+    z-index: -1;
     position: absolute;
     width: auto;
     height: 55vh;
-    top: 0;
-    left: 50vw;
+    top: -2vh;
+    left: 49.5vw;
 }
 
 .work-cutout {
     position: absolute;
     width: auto;
-    height: 11.5vh;
-    min-height: 90px;
-    max-height: 11.5vh;
-    border: 3px solid red;
+    height: 11vh;
+    rotate: -1deg;
+    /* min-height: 90px;
+    max-height: 11.5vh; */
+    /* border: 3px solid red; */
     bottom: 17.5vh;
-    left: 50vw;
+    left: 50.5vw;
     margin-bottom: 15vh;
 }
 
 .about-cutout {
+    cursor: pointer;
     position: absolute;
     width: auto;
-    height: 11.5vh;
-    min-height: 90px;
-    max-height: 11.5vh;
-    border: 3px solid teal;
+    height: 10vh;
+    /* min-height: 90px;
+    max-height: 11.5vh; */
+    /* border: 3px solid teal; */
     bottom: 17.5vh;
-    left: 50vw;
+    left: 50.5vw;
 }
 
-/* HOME.CSS */
-.button-7 {
-    position: fixed;
-    top: 100px;
-    left: 100px;
-    z-index: 1100;
-    background: white;
-    padding: 10px 20px;
-    border: none;
+.instagram-cutout {
+    /* border: 3px solid greenyellow; */
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    position: absolute;
+    width: auto;
+    height: 10vh;
+    /* min-height: 90px;
+    max-height: 11.5vh; */
+    /* border: 3px solid teal; */
+    bottom: 4vh;
+    left: 52.5vw;
 }
 
-.cursor-image {
+.nova-cutout {
+    /* border: 3px solid greenyellow; */
+    cursor: pointer;
     position: absolute;
-    mix-blend-mode: exclusion;
-    /* filter: invert(100%); */
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    transition: transform 0.05s linear;
-    /* mix-blend-mode: screen;  */
-    z-index: 10000;
+    width: auto;
+    height: 10vh;
+    /* min-height: 90px;
+    max-height: 11.5vh; */
+    /* border: 3px solid teal; */
+    bottom: 4vh;
+    left: 61.25vw;
+}
+
+.vsco-cutout {
+    /* border: 3px solid greenyellow; */
+    cursor: pointer;
+    position: absolute;
+    width: auto;
+    height: 10vh;
+    border-radius: 100%;
+    /* min-height: 90px;
+    max-height: 11.5vh; */
+    /* border: 3px solid teal; */
+    bottom: 4vh;
+    left: 70vw;
+}
+
+.work, .about, .instagram, .nova, .vsco {
+    cursor: pointer;
+}
+
+.work:hover , .about:hover, .instagram:hover, .nova:hover, .vsco:hover {
+    filter: sepia(100) invert(100%) saturate(100) blur(0px) drop-shadow(0rem 0rem 0.25rem #ffffff);
+}
+
+ .content {
+    /* border: 3px solid greenyellow; */
+}
+
+.liveTime {
+    font-family: monospace;
+    position: absolute;
+    padding-right: 25px;
+    top: 14vh;
+    right: 0;
 }
 
 @import url('https://unpkg.com/normalize.css') layer(normalize);
@@ -658,8 +475,8 @@ body.inverted .background .marquee__content__3 {
 
 @layer demo {
   :root {
-    --color: light-dark(red,red);
-    --shadow: light-dark(#ffff0d, #ffff0d);
+    --color: light-dark(red, red);
+    --shadow: light-dark(blue,blue);
     --glare: light-dark(white, hsl(0 0% 100% / 0.75));
     --transition: 0.5s;
   }
@@ -676,7 +493,6 @@ body.inverted .background .marquee__content__3 {
     transition: background 0.2s 0.1s;
     font-weight: 600;
   }
-
 
   .dazzle span {
     display: inline-block;

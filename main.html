@@ -2,50 +2,81 @@
 <html lang="en">
 
 <head>
+    <!-- <base href="/CPD-WEBSITE/">
+    USE WHEN PUSHING TO GITHUB -->
+
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Morph with Crossfade</title>
+
+    <link rel="stylesheet" href="https://use.typekit.net/qyt6jto.css">
 
     <link rel="stylesheet" href="css/all.min.css">
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/grid.css">
-    <link rel="stylesheet" href="css/style.css">
-
-    <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/background.css">
-    <link rel="stylesheet" href="css/landing.css">
-
-    <style>
-        body,
-        html {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            display: flex;
-            height: 100vh;
-        }
-    </style>
+    <link rel="stylesheet" href="css/main.css">
 </head>
 
-<body>
-
-    <header>
-        <div class="containerFull" style="pointer-events: none;">
-            <img style="pointer-events: none;" src="images/cpd logo.png" class="cpd-logo"></img>
-        </div>
-    </header>
-
-    <div class="landing">
-        <div class="canvas">
-            <canvas id="morphCanvas"></canvas>
-        </div>
-        <div class="content">
-            <img src="images/mike cutout for web.png" class="mike-cutout"></img>
-            <img src="images/website-lauryn.png" class="lauryn-cutout"></img>
-            <img src="images/website-work.png" class="work-cutout"></img>
-            <img src="images/website-about.png" class="about-cutout"></img>
-        </div>
+<body class="main containerNoGap">
+    <div class="width-6 canvas">
+        <canvas id="morphCanvas"></canvas>
     </div>
+
+    <div class="width-6 content">
+
+        <div class="main-header">
+            <img src="images/cpd logo.png" class="cpd-logo">
+        </div>
+
+        <h3 class="liveTime" id="gmt-time"></h3>
+
+        <img src="images/website-lauryn.png" class="lauryn-cutout"></img>
+        <img src="images/MikeCutoutSite.png" class="mike-cutout"></img>
+        <a class="work" href="work.html">
+            <img src="images/website-work.png" class="work-cutout"></img>
+        </a>
+        <a class="about" href="about.html">
+            <img src="images/website-about.png" class="about-cutout"></img>
+        </a>
+        <a class="instagram" href="https://www.instagram.com/cpd.jpg/">
+            <img src="images/website-instagram.png" class="instagram-cutout"></img>
+        </a>
+        <a class="nova" href="https://itsnova.com/conordunne">
+            <img src="images/website-nova.png" class="nova-cutout"></img>
+        </a>
+        <a class="vsco" href="https://vsco.co/cpd-jpg/gallery">
+            <img src="images/website-vsco.png" class="vsco-cutout"></img>
+        </a>
+
+    </div>
+    <a style=" text-align: center; height: 120px; z-index: 7000;" class="width-6 dazzle fluid" href="#">
+        <svg aria-hidden="true" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"
+                fill="#000" />
+        </svg>
+        <svg aria-hidden="true" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"
+                fill="#000" />
+        </svg>
+        <svg aria-hidden="true" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"
+                fill="#000" />
+        </svg>
+        <svg aria-hidden="true" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"
+                fill="#000" />
+        </svg>
+        <svg aria-hidden="true" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"
+                fill="#000" />
+        </svg>
+        <!-- End sparkles -->
+        <span class="fluid">Click Me !</span>
+        <span class="fluid" aria-hidden="true">Click Me !</span>
+    </a>
 
     <!-- Vertex Shader -->
     <script type="x-shader/x-vertex" id="vertexShader">
@@ -125,9 +156,10 @@
 
     <script>
         const images = [
-            '/images/jpegmafia.jpg',
-            '/images/monjola.jpg',
-            '/images/genesisOwusu.jpg'
+            '/images/MikeSite1.jpg',
+            '/images/MlhSite1.jpg',
+            '/images/MonjolaIgorSite.jpg',
+            '/images/BroncoLokoSite2.jpg'
         ];
 
         let currentImageIndex = 0;
@@ -246,7 +278,7 @@
 
         function animate() {
             gl.uniform1f(gl.getUniformLocation(program, 'time'), performance.now() / 1000);
-            gl.uniform1f(gl.getUniformLocation(program, 'u_strength'), 0.03);
+            gl.uniform1f(gl.getUniformLocation(program, 'u_strength'), 0.05);
             gl.uniform1f(gl.getUniformLocation(program, 'u_fadeProgress'), fadeProgress);
 
             gl.activeTexture(gl.TEXTURE0);
@@ -266,6 +298,18 @@
             currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
             await updateTexture();
         }
+
+        function updateTime() {
+            const now = new Date();
+            const hours = now.getUTCHours().toString().padStart(2, '0'); // Get hours in GMT
+            const minutes = now.getUTCMinutes().toString().padStart(2, '0'); // Get minutes in GMT
+            const seconds = now.getUTCSeconds().toString().padStart(2, '0'); // Get seconds in GMT
+            const gmtTime = `Dublin, Éire ${hours}:${minutes}:${seconds} GMT`; // Format the time string
+            document.getElementById("gmt-time").textContent = gmtTime;
+        }
+
+        setInterval(updateTime, 1000); // Update every second
+        window.onload = updateTime; // Update immediately when page loads
 
         // Initialize
         initWebGL();

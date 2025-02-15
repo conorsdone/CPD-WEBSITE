@@ -2,7 +2,8 @@
 <html lang="en">
 
 <head>
-    <base href="/CPD-WEBSITE/">
+    <!-- <base href="/CPD-WEBSITE/">
+    USE WHEN PUSHING TO GITHUB -->
 
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,7 +12,7 @@
     <link rel="stylesheet" href="https://use.typekit.net/qyt6jto.css">
 
     <link rel="stylesheet" href="css/all.min.css">
-    <link rel="stylesheet" href="css/Website.css">
+    <link rel="stylesheet" href="css/home.css">
 
     <title>CPD.JPG Homepage</title>
     <script>
@@ -20,84 +21,146 @@
         }
 
         document.addEventListener("DOMContentLoaded", function () {
-        const modal = document.getElementById("imageModal");
-        const modalImg = document.getElementById("modalImg");
-        const modalText = document.getElementById("modalText");
-        const elementsToMove = document.querySelectorAll(".home, .enter, .cpd-logo");
-        const enterElement = document.querySelector(".enter");
+            const modal = document.getElementById("imageModal");
+            const modalImg = document.getElementById("modalImg");
+            const modalText = document.getElementById("modalText");
+            const elementsToMove = document.querySelectorAll(".home, .enter, .cpd-logo");
+            const enterElement = document.querySelector(".enter");
 
-        // Set background images dynamically
-        document.querySelectorAll(".flyImage").forEach((item) => {
-            const imageUrl = item.getAttribute("data-image-url");
-            if (imageUrl) {
-                item.style.backgroundImage = `url(${imageUrl})`;
+            // Set background images dynamically
+            document.querySelectorAll(".flyImage").forEach((item) => {
+                const imageUrl = item.getAttribute("data-image-url");
+                if (imageUrl) {
+                    item.style.backgroundImage = `url(${imageUrl})`;
+                }
+            });
+
+            // Attach event listener to both marquee containers
+            document.querySelectorAll(".marquee__content").forEach((marquee) => {
+                marquee.addEventListener("click", function (event) {
+                    const item = event.target.closest(".flyImage");
+                    if (!item) return; // Ignore clicks outside flyImage elements
+
+                    const bgImage = window.getComputedStyle(item).backgroundImage.match(/url\(["']?(.*?)["']?\)/);
+                    const imageSrc = bgImage ? bgImage[1] : "";
+                    const title = item.getAttribute("data-title") || "Image";
+
+                    openModal(imageSrc);
+                });
+            });
+
+            function openModal(imageSrc, description) {
+                modal.style.display = "flex";
+                modalImg.src = imageSrc;
+                modalText.textContent = description;
+
+                elementsToMove.forEach(el => el.classList.add("logo-transition"));
+                if (enterElement) {
+                    enterElement.classList.add("logo-transition");
+                    enterElement.style.animation = "fadeOut 0.5s ease-in-out forwards";
+                }
             }
-        });
 
-        // Attach event listener to both marquee containers
-        document.querySelectorAll(".marquee__content").forEach((marquee) => {
-            marquee.addEventListener("click", function (event) {
-                const item = event.target.closest(".flyImage");
-                if (!item) return; // Ignore clicks outside flyImage elements
+            function closeModal() {
+                modal.style.display = "none";
+                elementsToMove.forEach(el => el.classList.remove("logo-transition"));
+                if (enterElement) {
+                    enterElement.classList.remove("logo-transition");
+                    enterElement.style.animation = "fadeIn 0.5s ease-in-out forwards";
+                }
+            }
 
-                const bgImage = window.getComputedStyle(item).backgroundImage.match(/url\(["']?(.*?)["']?\)/);
-                const imageSrc = bgImage ? bgImage[1] : "";
-                const title = item.getAttribute("data-title") || "Image";
-
-                openModal(imageSrc);
+            // Close modal when clicking outside the image
+            modal.addEventListener("click", function (event) {
+                closeModal();
             });
         });
 
-        function openModal(imageSrc, description) {
-            modal.style.display = "flex";
-            modalImg.src = imageSrc;
-            modalText.textContent = description;
-
-            elementsToMove.forEach(el => el.classList.add("logo-transition"));
-            if (enterElement) {
-                enterElement.classList.add("logo-transition");
-                enterElement.style.animation = "fadeOut 0.5s ease-in-out forwards";
-            }
-        }
-
-        function closeModal() {
-            modal.style.display = "none";
-            elementsToMove.forEach(el => el.classList.remove("logo-transition"));
-            if (enterElement) {
-                enterElement.classList.remove("logo-transition");
-                enterElement.style.animation = "fadeIn 0.5s ease-in-out forwards";
-            }
-        }
-
-        // Close modal when clicking outside the image
-        modal.addEventListener("click", function (event) {
-            closeModal();
+        $(document).mousemove(function (e) {
+            $("#image").css({ left: e.pageX, top: e.pageY });
         });
-    });
-
-        // window.addEventListener("load", function () {
-        //     let element = document.querySelector(".background .flyImage"); // Replace with your selector
-        //     let width = window.innerWidth * 0.4; // 50vh in pixels
-        //     element.style.width = width + "px";
-        // });
-
-        // // Prevent height change on resize
-        // window.addEventListener("resize", function () {
-        //     let element = document.querySelector(".background .flyImage");
-        //     element.style.width = element.offsetWidth + "px"; // Keep the same height
-        // });
 
     </script>
 </head>
 
 <body>
+
+    <!-- <svg height="100" width="100" xmlns="http://www.w3.org/2000/svg" alt="Cursor Image" class="cursor-image" id="cursorImg">
+        <circle r="45" cx="50" cy="50" fill="white" />
+      </svg>
+
+    <script>
+        document.addEventListener("mousemove", function (event) {
+            const cursorImg = document.getElementById("cursorImg");
+            cursorImg.style.left = `${event.clientX}px`;
+            cursorImg.style.top = `${event.clientY}px`;
+        });
+    </script> -->
+
     <header>
         <div class="containerFull home">
             <img src="images/cpd logo.png" class="cpd-logo"></img>
             <h1 class="enter">
-                <a href="landing.html">
-                ENTER
-                </a>
+                <a style=" text-align: center; height: 120px; z-index: 7000;" class="width-6 dazzle fluid" href="javascript:setTimeout(()=>{window.location = 'main.html' },1400);">
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 96 96"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"
+                        fill="#000"
+                      />
+                    </svg>
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 96 96"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"
+                        fill="#000"
+                      />
+                    </svg>
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 96 96"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"
+                        fill="#000"
+                      />
+                    </svg>
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 96 96"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"
+                        fill="#000"
+                      />
+                    </svg>
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 96 96"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"
+                        fill="#000"
+                      />
+                    </svg>
+                    <!-- End sparkles -->
+                    <span class="fluid">ENTER</span>
+                    <span class="fluid" aria-hidden="true">ENTER</span>
+                  </a>
             </h1>
         </div>
     </header>
@@ -117,19 +180,27 @@
             <ul class="container marquee__content marquee__content__1">
                 <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.jpg"></li>
                 <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.jpg"></li>
-                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg"></li>
-                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg"></li>
-                <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="images/BroncoLokoSite1.jpg"></li>
-                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="images/MlhSite1.jpg"></li>
+                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg">
+                </li>
+                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg">
+                </li>
+                <li class="flyImage width-2" data-title="Instagram post of MLH-4"
+                    data-image-url="images/BroncoLokoSite1.jpg"></li>
+                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image"
+                    data-image-url="images/MlhSite1.jpg"></li>
             </ul>
-        
+
             <ul class="container marquee__content marquee__content__1">
                 <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.jpg"></li>
                 <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.jpg"></li>
-                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg"></li>
-                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg"></li>
-                <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="images/BroncoLokoSite1.jpg"></li>
-                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="images/MlhSite1.jpg"></li>
+                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg">
+                </li>
+                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg">
+                </li>
+                <li class="flyImage width-2" data-title="Instagram post of MLH-4"
+                    data-image-url="images/BroncoLokoSite1.jpg"></li>
+                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image"
+                    data-image-url="images/MlhSite1.jpg"></li>
             </ul>
         </div>
 
@@ -137,19 +208,27 @@
             <ul class="container marquee__content marquee__content__2">
                 <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.jpg"></li>
                 <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.jpg"></li>
-                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg"></li>
-                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg"></li>
-                <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="images/BroncoLokoSite1.jpg"></li>
-                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="images/MlhSite1.jpg"></li>
+                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg">
+                </li>
+                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg">
+                </li>
+                <li class="flyImage width-2" data-title="Instagram post of MLH-4"
+                    data-image-url="images/BroncoLokoSite1.jpg"></li>
+                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image"
+                    data-image-url="images/MlhSite1.jpg"></li>
             </ul>
 
             <ul class="container marquee__content marquee__content__2">
                 <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.jpg"></li>
                 <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.jpg"></li>
-                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg"></li>
-                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg"></li>
-                <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="images/BroncoLokoSite1.jpg"></li>
-                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="images/MlhSite1.jpg"></li>
+                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg">
+                </li>
+                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg">
+                </li>
+                <li class="flyImage width-2" data-title="Instagram post of MLH-4"
+                    data-image-url="images/BroncoLokoSite1.jpg"></li>
+                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image"
+                    data-image-url="images/MlhSite1.jpg"></li>
             </ul>
         </div>
 
@@ -157,25 +236,40 @@
             <ul class="container marquee__content marquee__content__3">
                 <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.jpg"></li>
                 <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.jpg"></li>
-                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg"></li>
-                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg"></li>
-                <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="images/BroncoLokoSite1.jpg"></li>
-                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="images/MlhSite1.jpg"></li>
+                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg">
+                </li>
+                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg">
+                </li>
+                <li class="flyImage width-2" data-title="Instagram post of MLH-4"
+                    data-image-url="images/BroncoLokoSite1.jpg"></li>
+                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image"
+                    data-image-url="images/MlhSite1.jpg"></li>
             </ul>
 
             <ul class="container marquee__content marquee__content__3">
                 <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.jpg"></li>
                 <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.jpg"></li>
-                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg"></li>
-                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg"></li>
-                <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="images/BroncoLokoSite1.jpg"></li>
-                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="images/MlhSite1.jpg"></li>
+                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg">
+                </li>
+                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg">
+                </li>
+                <li class="flyImage width-2" data-title="Instagram post of MLH-4"
+                    data-image-url="images/BroncoLokoSite1.jpg"></li>
+                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image"
+                    data-image-url="images/MlhSite1.jpg"></li>
             </ul>
         </div>
 
     </div>
-</body>
 
+    <!-- <footer>
+        <p style="z-index: 5000; position: absolute; font-size: 0.5rem; bottom: 0%; padding: 1%;">
+            © 2024 Conor Dunne.<br>
+            The code on this website is released under <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank">CC0 1.0</a> (public domain).<br>
+            However, all images and media are protected under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a>.<br> 
+            Unauthorized use of images is prohibited.
+          </p>        
+    </footer> -->
 </body>
 
 </html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASCII Morph</title>
+
+    <style>
+        body {
+            background: #222222;
+        }
+
+        .morph-section {
+            width: 400px;
+            height: 400px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -200px;
+            margin-left: -200px;
+            font-family: monospace;
+            color: #fff;
+        }
+
+        .info {
+            font-family: monospace;
+            position: absolute;
+            line-height: 20px;
+            font-size: 14px;
+            left: 20px;
+            bottom: 20px;
+            color: #fff;
+        }
+
+        a {
+            color: #f9f9f9;
+        }
+    </style>
+</head>
+
+<body>
+    <pre class="morph-section"></pre>
+
+    <div class="info">
+        Ascii Morph - <a href="https://github.com/tholman/ascii-morph" target="_blank">source</a> - Built for my
+        <a href="http://tholman.com" target="_blank">website</a>
+    </div>
+
+    <script type="text/javascript" src="js/asciiMorph.js" defer></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var element = document.querySelector(".morph-section");
+
+            if (!element) {
+                console.error("Error: Element '.morph-section' not found!");
+                return;
+            }
+
+            if (typeof AsciiMorph === "undefined") {
+                console.error("Error: AsciiMorph is not defined. Check the script path.");
+                return;
+            }
+
+            AsciiMorph(element, { x: 51, y: 28 });
+
+            var asciis = [
+                [
+                    "                _ooOoo_",
+                    "               o8888888o",
+                    '               88" . "88',
+                    "               (| -_- |)",
+                    "               O\\  =  /O",
+                    "            ____/`---'\\____",
+                    "          .'  \\\\|     |//  `.",
+                    "         /  \\\\|||  :  |||//  \\",
+                    "        /  _||||| -:- |||||_  \\",
+                    "        |   | \\\\\\  -  /'| |   |",
+                    "        | \\_|  `\\`---'//  |_/ |",
+                    "        \\  .-\\__ `-. -'__/-.  /",
+                    "      ___`. .'  /--.--\\  `. .'___",
+                    '   ."" \'<  `.___\\_<|>_/___.\' _> \\"".',
+                    "  | | :  `- \\`. ;`. _/; .'/ /  .' ; |",
+                    "  \\  \\ `-.   \\_\\_`. _.'_/_/  -' _.' /",
+                    "===`-.`___`-.__\\ \\___  /__.-'_.'_.-'===",
+                    "                `=--=-'    "
+                ],
+                [
+                    "                             /",
+                    "                            /",
+                    "                           /;",
+                    "                          //",
+                    "                         ;/",
+                    "                       ,//",
+                    "                   _,-' ;_,,",
+                    "                _,'-_  ;|,'",
+                    "            _,-'_,..--. |",
+                    "    ___   .'-'_)'  ) _)\\|      ___",
+                    "  ,'\"\"\"`'' _  )   ) _)  ''--'''_,-'",
+                    "-={-o-  /|    )  _)  ) ; '_,--''",
+                    "  \\ -' ,`.  ) .)  _)_,''|",
+                    "   `.\"(   `------''     /",
+                    "     `.\\             _,'",
+                    "       `-.____....-\\\\",
+                    "                 || \\\\",
+                    "                 // ||",
+                    "                //  ||",
+                    "            _-.//_ _||_,",
+                    "              ,'  ,-'/"
+                ],
+                [
+                    "      \\`.     ___",
+                    "       \\ \\   / __>0",
+                    "   /\\  /  |/' / ",
+                    "  /  \\/   `  ,`'--.",
+                    " / /(___________)_ \\",
+                    " |/ //.-.   .-.\\\\ \\ \\",
+                    " 0 // :@ ___ @: \\\\ /",
+                    "   ( o ^(___)^ o ) 0",
+                    "    \\ \\_______/ /",
+                    "/\\   '._______.'--.",
+                    "\\ /|  |<_____>    |",
+                    " \\ \\__|<_____>____/|__",
+                    "  \\____<_____>_______/",
+                    "      |<_____>    |",
+                    "      |<_____>    |",
+                    "      :<_____>____:",
+                    "     / <_____>   /|",
+                    "    /  <_____>  / |",
+                    "   /___________/  |",
+                    "   |           | _|__",
+                    "   |           | ---||_",
+                    "   |   |L\\/|/  |  | [__]",
+                    "   |  \\|||\\|\\  |  /",
+                    "   |           | /",
+                    "   |___________|/"
+                ],
+                [
+                    "     .--------.",
+                    "    / .------. \\",
+                    "   / /        \\ \\",
+                    "   | |        | |",
+                    "  _| |________| |_",
+                    ".' |_|        |_| '.",
+                    "'._____ ____ _____.'",
+                    "|     .'____'.     |",
+                    "'.__.'.'    '.'.__.'",
+                    "'.__  |      |  __.'",
+                    "|   '.'.____.'.'   |",
+                    "'.____'.____.'____.'",
+                    "'.________________.'"
+                ]
+            ];
+
+            AsciiMorph.render(asciis[0]);
+
+            var currentIndex = 1;
+
+            setTimeout(function () {
+                AsciiMorph.morph(asciis[1]);
+            }, 1000);
+
+            setInterval(function () {
+                AsciiMorph.morph(asciis[currentIndex]);
+                currentIndex = (currentIndex + 1) % asciis.length;
+            }, 3000);
+        });
+    </script>
+</body>
+
+</html>

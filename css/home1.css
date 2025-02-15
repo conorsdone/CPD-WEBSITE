@@ -1,0 +1,15 @@
+.button-7 {
+    position: fixed;
+    /* Keeps it visible */
+    top: 100px;
+    /* Adjust based on layout */
+    left: 100px;
+    z-index: 1100;
+    /* Higher than the modal (1000) */
+    background: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
