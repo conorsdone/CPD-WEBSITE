@@ -107,13 +107,13 @@ a {
 
 @font-face {
     font-family: Generic;
-    src: url("/assets/Generic-G50-CC-Typic.ttf");
-    src: url("/assets/Generic-G50-CC-Typic.woff") format("woff");
+    src: url("assets/Generic-G50-CC-Typic.ttf");
+    src: url("assets/Generic-G50-CC-Typic.woff") format("woff");
 }
 
 @font-face {
     font-family: Octuple;
-    src: url("/assets/Octuple-max-demo.ttf");
+    src: url("assets/Octuple-max-demo.ttf");
 }
 
 
