@@ -348,11 +348,6 @@ h4 {
     }
 }
 
-html,
-body {
-    /* overflow: hidden; */
-}
-
 /* LANDING.CSS */
 .mike-cutout {
     position: absolute;
@@ -455,10 +450,6 @@ body {
 
 .work:hover , .about:hover, .instagram:hover, .nova:hover, .vsco:hover {
     filter: sepia(100) invert(100%) saturate(100) blur(0px) drop-shadow(0rem 0rem 0.25rem #ffffff);
-}
-
- .content {
-    /* border: 3px solid greenyellow; */
 }
 
 .liveTime {
