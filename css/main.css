@@ -99,23 +99,17 @@ a {
 }
 
 /* STYLE.CSS */
-/* @font-face {
+@font-face {
     font-family: Generic;
     src: url("/CPD-WEBSITE/assets/Generic-G50-CC-Typic.ttf") format("truetype"),
         url("/CPD-WEBSITE/assets/Generic-G50-CC-Typic.woff") format("woff");
-} USE WHEN PUSHING TO GITHUB */
-
-@font-face {
-    font-family: Generic;
-    src: url("assets/Generic-G50-CC-Typic.ttf");
-    src: url("assets/Generic-G50-CC-Typic.woff") format("woff");
 }
 
 @font-face {
     font-family: Octuple;
-    src: url("assets/Octuple-max-demo.ttf");
+    src: url("/CPD-WEBSITE/assets/Octuple-max-demo.ttf") format("truetype");
 }
-
+/* when pushing to git use " /CPD-WEBSITE/assets/  "*/
 
 body {
     font-family: Generic, sans-serif;
