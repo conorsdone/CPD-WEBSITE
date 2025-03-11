@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { AsciiEffect } from 'three/addons/effects/AsciiEffect.js';
+import { GLTFLoader } from './node_modules/three/examples/jsm/loaders/GLTFLoader.js';
+import { AsciiEffect } from './node_modules/three/examples/jsm/effects/AsciiEffect.js';
 
 // Get the first canvas element
 var canvas = document.getElementsByTagName("canvas")[0];
