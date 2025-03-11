@@ -38,7 +38,7 @@ effect.domElement.addEventListener('click', () => {
 const loader = new GLTFLoader();
 let model;
 
-loader.load('/CPD-WEBSITE/assets/super_mario_star.glb', function (gltf) {
+loader.load('./assets/super_mario_star.glb', function (gltf) {
     model = gltf.scene;
     scene.add(model);
     

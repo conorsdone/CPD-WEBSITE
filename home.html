@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <base href="/CPD-WEBSITE/">
+    <!-- <base href="/CPD-WEBSITE/"> -->
     <!-- USE WHEN PUSHING TO GITHUB -->
 
     <!-- Google Tag Manager -->
@@ -23,14 +23,7 @@
     <link rel="stylesheet" href="css/home.css">
 
     <title>CPD.JPG Homepage</title>
-    <script type="importmap">
-        {
-          "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@v0.174.0/build/three.module.js",
-            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.174.0/examples/jsm/"
-          }
-        }
-      </script>
+    
     <script>
         function togglePageInvert() {
             document.body.classList.toggle('inverted');
@@ -98,6 +91,14 @@
             $("#image").css({ left: e.pageX, top: e.pageY });
         });
 
+    </script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@<version>/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@<version>/examples/jsm/"
+        }
+      }
     </script>
 </head>
 

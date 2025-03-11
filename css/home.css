@@ -1,3 +1,5 @@
+@import url('https://unpkg.com/normalize.css') layer(normalize);
+
 /* RESET.CSS */
 /* Box sizing rules */
 *,
@@ -581,8 +583,6 @@ body.inverted .background .marquee__content__3 {
     /* mix-blend-mode: screen;  */
     z-index: 10000;
 }
-
-@import url('https://unpkg.com/normalize.css') layer(normalize);
 
 @layer normalize, base, demo;
 
