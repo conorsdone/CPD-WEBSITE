@@ -101,12 +101,15 @@ a {
 @font-face {
     font-family: Generic;
     src: url("/CPD-WEBSITE/assets/Generic-G50-CC-Typic.ttf") format("truetype"),
-        url("/CPD-WEBSITE/assets/Generic-G50-CC-Typic.woff") format("woff");
+        url("/CPD-WEBSITE/assets/Generic-G50-CC-Typic.woff") format("woff"),
+        url("/assets/Generic-G50-CC-Typic.ttf") format("truetype"),
+        url("/assets/Generic-G50-CC-Typic.woff") format("woff");
 }
 
 @font-face {
     font-family: Octuple;
-    src: url("/CPD-WEBSITE/assets/Octuple-max-demo.ttf") format("truetype");
+    src: url("/CPD-WEBSITE/assets/Octuple-max-demo.ttf") format("truetype"),
+    url("/CPD-WEBSITE/assets/Octuple-max-demo.ttf") format("truetype");
 }
 /* when pushing to git use " /CPD-WEBSITE/assets/  "*/
 
@@ -138,10 +141,6 @@ h1 {
     text-decoration: none;
 }
 
-.swashStyle {
-    font-feature-settings: "swsh";
-}
-
 h2 {
     font-size: 32px;
     font-style: italic;
@@ -167,11 +166,6 @@ h4 {
     font-weight: 400;
     text-transform: uppercase;
     padding: 0px;
-}
-
-.menu {
-    -webkit-filter: url("#goo");
-    filter: url("../button.html");
 }
 
 /* GRID.CSS */
@@ -496,15 +490,15 @@ body.inverted .background {
 }
 
 body.inverted .background .marquee__content__1 {
-    animation: scroll 14s linear infinite;
+    animation: scroll-reverse 14s linear infinite;
 }
 
 body.inverted .background .marquee__content__2 {
-    animation: scroll 20s linear infinite;
+    animation: scroll-reverse 20s linear infinite;
 }
 
 body.inverted .background .marquee__content__3 {
-    animation: scroll 10s linear infinite;
+    animation: scroll-reverse 10s linear infinite;
 }
 
 @keyframes scroll {
@@ -575,70 +569,6 @@ body.inverted .background .marquee__content__3 {
     position: absolute;
     top: 0;
     left: 0;
-}
-
-/* LANDING.CSS */
-.mike-cutout {
-    position: absolute;
-    width: auto;
-    height: 60vh;
-    min-height: 300px;
-    border: 3px solid blue;
-    bottom: 0;
-    right: -6%;
-}
-
-.lauryn-cutout {
-    border-radius: 36rem;
-    border-width: 0rem;
-    border-style: solid;
-    border-top-left-radius: 0.3rem;
-    border-bottom-left-radius: 22.4rem;
-    border-bottom-right-radius: 90.6rem;
-    border-top-right-radius: 0.1rem;
-    border-color: rgba(0, 0, 0, 0);
-    position: absolute;
-    width: auto;
-    height: 55vh;
-    top: 0;
-    left: 50vw;
-}
-
-.work-cutout {
-    position: absolute;
-    width: auto;
-    height: 11.5vh;
-    min-height: 90px;
-    max-height: 11.5vh;
-    border: 3px solid red;
-    bottom: 17.5vh;
-    left: 50vw;
-    margin-bottom: 15vh;
-}
-
-.about-cutout {
-    position: absolute;
-    width: auto;
-    height: 11.5vh;
-    min-height: 90px;
-    max-height: 11.5vh;
-    border: 3px solid teal;
-    bottom: 17.5vh;
-    left: 50vw;
-}
-
-/* HOME.CSS */
-.button-7 {
-    position: fixed;
-    top: 100px;
-    left: 100px;
-    z-index: 1100;
-    background: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .cursor-image {
@@ -871,4 +801,22 @@ body.inverted .background .marquee__content__3 {
     min-height: 100vh;
   }
   
+}
+
+table {
+    filter: drop-shadow(0rem 0rem 1rem #ff0000);
+}
+
+.AsciiCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10; /* Adjust z-index if necessary */
+    pointer-events: none;
+  }
+
+  @media (max-width: 600px) {
+    
 }

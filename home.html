@@ -2,8 +2,16 @@
 <html lang="en">
 
 <head>
-    <!-- <base href="/CPD-WEBSITE/"> -->
+    <base href="/CPD-WEBSITE/">
     <!-- USE WHEN PUSHING TO GITHUB -->
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-P8GNZT7R');</script>
+    <!-- End Google Tag Manager -->
 
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,6 +23,14 @@
     <link rel="stylesheet" href="css/home.css">
 
     <title>CPD.JPG Homepage</title>
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@v0.174.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.174.0/examples/jsm/"
+          }
+        }
+      </script>
     <script>
         function togglePageInvert() {
             document.body.classList.toggle('inverted');
@@ -53,6 +69,7 @@
                 modal.style.display = "flex";
                 modalImg.src = imageSrc;
                 modalText.textContent = description;
+                modalImg.style.animation = "fadeIn 0.5s ease-in-out forwards";
 
                 elementsToMove.forEach(el => el.classList.add("logo-transition"));
                 if (enterElement) {
@@ -63,6 +80,7 @@
 
             function closeModal() {
                 modal.style.display = "none";
+                modalImg.style.animation = "fadeOut 1s ease-in-out forwards";
                 elementsToMove.forEach(el => el.classList.remove("logo-transition"));
                 if (enterElement) {
                     enterElement.classList.remove("logo-transition");
@@ -84,7 +102,13 @@
 </head>
 
 <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P8GNZT7R"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
 
+    <script type="module" src="/home.js"></script>
+    <!-- <canvas></canvas> -->
     <!-- <svg height="100" width="100" xmlns="http://www.w3.org/2000/svg" alt="Cursor Image" class="cursor-image" id="cursorImg">
         <circle r="45" cx="50" cy="50" fill="white" />
       </svg>
@@ -169,10 +193,6 @@
         <img class="modal-content" id="modalImg">
         <h1 id="modalText">About Image</h1>
     </div>
-
-    <!-- <div>
-        <button class="button-7" onclick="togglePageInvert()">! Click Me !</button>
-    </div> -->
 
     <div class="background">
 
