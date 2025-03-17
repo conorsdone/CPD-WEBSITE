@@ -109,7 +109,6 @@ a {
     font-family: Octuple;
     src: url("/CPD-WEBSITE/assets/Octuple-max-demo.ttf") format("truetype");
 }
-/* when pushing to git use " /CPD-WEBSITE/assets/  "*/
 
 body {
     font-family: Generic, sans-serif;
@@ -189,6 +188,12 @@ h4 {
     grid-row: auto;
 }
 
+@media (max-width: 900px) {
+    .containerNoGap {
+    display: flex !important;
+    }
+}
+
 .innerContainer {
     width: 100%;
     display: grid;
@@ -259,6 +264,11 @@ h4 {
 .width-6 {
     grid-column: span 6;
 }
+@media (max-width: 900px) {
+    .width-6 {
+        grid-column: span 6;
+    }
+}
 
 .width-7 {
     grid-column: span 7;
@@ -286,26 +296,9 @@ h4 {
 
 /* HEADER.CSS */
 
-.main-header {
-  z-index: 5000;
-  width: 34vw; /* Dynamic width (68vw) */
-  height: auto;
-  /* min-width: 350px; */
-  position: absolute;
-  top: 1vmax;
-  right: 0;
-  padding-right: 1vmax;
-}
-
-.main-header .cpd-logo {
-    animation: redAni 5s infinite;
-}
-
-.liveTime {
-  font-size: 1.5vw;
-    color: white;
-    font-family: monospace;
-    text-align: right;
+.imagesDisplay {
+    background-color: red;
+    height: 100vh;
 }
 
 @keyframes blueAni {
@@ -353,21 +346,104 @@ h4 {
 }
 
 /* LANDING.CSS */
-.mike-cutout {
-    position: absolute;
-    width: calc(35vmax - 5vmin);
-    height: auto;
-    border: 3px solid blue;
-    bottom: 0;
-    right: 0;
-    overflow: hidden;
+
+.work,
+.about,
+.instagram,
+.nova,
+.vsco {
+    cursor: pointer;
 }
 
-@media (max-width: 750px) {
-  .mike-cutout {
+.work:hover,
+.about:hover,
+.instagram:hover,
+.nova:hover,
+.vsco:hover {
+    filter: sepia(100) invert(100%) saturate(100) blur(0px) drop-shadow(0rem 0rem 0.25rem #ffffff);
+}
+
+.liveTime {
+    /* border: 3px solid green; */
+    font-size: 1.5vw;
+    color: white;
+    font-family: monospace;
+    text-align: right;
+}
+
+@media (max-width: 600px) {
+    .liveTime {
+        font-size: 2.75vw;
+        text-align: center;
+    }
+}
+
+.header {
+    /* border: 3px solid blue; */
+    z-index: 5000;
+    width: 35vw;
+    min-width: 350px;
+    position: absolute;
+    top: 0;
     right: 0;
-    transform: translate(5vw, 0%) scale(1);
-  }
+    padding-right: 25px;
+    padding-top: 25px;
+}
+
+@media (max-width: 600px) {
+    .header {
+        padding-right: 10vw;
+        padding-top: 0;
+    }
+}
+
+.cpd-logo {
+    border: 3px solid red;
+    animation: redAni 5s infinite;
+    /* padding: 30px 20px 0px 200px; */
+}
+
+.imagesDisplay {
+    width: 50vw;
+}
+
+.content {
+    width: 50vw;
+}
+
+@media (max-width: 900px) {
+    .imagesDisplay {
+        width: 0vw;
+    }
+
+    .content {
+        width: 100vw;
+    }
+}
+
+.mike-cutout {
+    position: absolute;
+    width: 35vw;
+    height: auto;
+    /* border: 3px solid blue; */
+    bottom: 0;
+    right: -6%;
+}
+
+@media (max-width: 900px) {
+    .mike-cutout {
+        width: 60vw;
+        bottom: 0;
+        right: -6%;
+    }
+}
+
+@media (max-width: 600px) {
+    .mike-cutout {
+        width: 80vw;
+        bottom: 0;
+        right: -20%;
+    }
 }
 
 .lauryn-cutout {
@@ -379,15 +455,28 @@ h4 {
     border-bottom-left-radius: 22.4rem;
     border-bottom-right-radius: 90.6rem;
     border-top-right-radius: 0.1rem;
-    /* width: 60vh;
-    margin-top: -20vh;
-    margin-left: -4vw; */
-    z-index: -1;
+    min-width: 350px;
+    z-index: 10;
     position: absolute;
-    width: 32.5vmax;
-    /* height: 55vh; */
-    top: -4vh;
+    width: 32.5vw;
+    top: -5vh;
     left: 49.5vw;
+}
+
+@media (max-width: 900px) {
+    .lauryn-cutout {
+        width: 55vw;
+        top: -5vh;
+        left: 0vw;
+    }
+}
+
+@media (max-width: 600px) {
+    .lauryn-cutout {
+        width: 50vw;
+        top: 5vh;
+        left: -5vw;
+    }
 }
 
 .work-cutout {
@@ -406,13 +495,45 @@ h4 {
 .about-cutout {
     cursor: pointer;
     position: absolute;
-    width: auto;
+    
     height: 10vh;
     /* min-height: 90px;
     max-height: 11.5vh; */
     /* border: 3px solid teal; */
     bottom: 17.5vh;
     left: 50.5vw;
+}
+
+@media (max-width: 900px) {
+    .work-cutout {
+        height: 11vh;
+        rotate: -1deg;
+        bottom: 15vh;
+        left: 10vw;
+        margin-bottom: 15vh;
+    }
+
+    .about-cutout {
+        height: 10vh;
+        bottom: 15vh;
+        left: 10vw;
+    }
+}
+
+@media (max-width: 600px) {
+    .work-cutout {
+        z-index: 1000;
+        height: 7vh;
+        rotate: -1deg;
+        bottom: 50vh;
+        left: 45vw;
+    }
+
+    .about-cutout {
+        height: 6vh;
+        bottom: 25vh;
+        left: 0vw;
+    }
 }
 
 .instagram-cutout {
@@ -455,28 +576,43 @@ h4 {
     left: 70vw;
 }
 
-.work, .about, .instagram, .nova, .vsco {
-    cursor: pointer;
+@media (max-width: 900px) {
+    .instagram-cutout {
+        height: 10vh;
+        bottom: 4vh;
+        left: 52.5vw;
+    }
+    
+    .nova-cutout {
+        height: 10vh;
+        bottom: 4vh;
+        left: 61.25vw;
+    }
+    
+    .vsco-cutout {
+        height: 10vh;
+        border-radius: 100%;
+        bottom: 4vh;
+        left: 70vw;
+    }
 }
 
-.work:hover , .about:hover, .instagram:hover, .nova:hover, .vsco:hover {
-    filter: sepia(100) invert(100%) saturate(100) blur(0px) drop-shadow(0rem 0rem 0.25rem #ffffff);
-}
-
-html {
-  color-scheme: light dark;
-}
-
-html {
-  overflow: hidden;
-  position: fixed;
-}
-
-body {
-    max-width: 100%;
-    overflow: hidden;
-}
-
-.content {
-  overflow: hidden;
+@media (max-width: 600px) {
+    .instagram-cutout {
+        height: 10vh;
+        bottom: 4vh;
+        left: .5vw;
+    }
+    
+    .nova-cutout {
+        height: 10vh;
+        bottom: 14vh;
+        left: 17.5vw;
+    }
+    
+    .vsco-cutout {
+        height: 10vh;
+        bottom: 4vh;
+        left: 34vw;
+    }
 }

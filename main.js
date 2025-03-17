@@ -26,6 +26,7 @@ effect.domElement.style.position = 'absolute';
 effect.domElement.style.top = '0';
 effect.domElement.classList.add("AsciiCanvas");
 effect.domElement.style.pointerEvents = 'none';
+effect.domElement.style.rotate = '20deg';
 
 // Append ASCII effect's DOM to the body, not the renderer's DOM
 document.body.appendChild(effect.domElement);
@@ -43,7 +44,7 @@ loader.load('./assets/super_mario_star.glb', function (gltf) {
     scene.add(model);
     
     // Scale down the model if it's too large
-    model.scale.set(0.4, 0.4, 0.4);
+    model.scale.set(0.3, 0.3, 0.3);
     
     // Position the model slightly away from the camera
     model.position.set(0, 0, -5);
@@ -52,9 +53,9 @@ loader.load('./assets/super_mario_star.glb', function (gltf) {
 });
 
 // Set initial camera position further back
-if (window.innerWidth < 600) {  
+if (window.innerWidth < 541) {  
     // Mobile view: adjust position
-    camera.position.set(0, 3.5, 10);
+    camera.position.set(-0.35, -2.6, 8);
 } else {  
     // Desktop view: default position
     camera.position.set(7, -3, 10);
@@ -84,13 +85,16 @@ window.addEventListener('mousemove', (event) => {
     let diffY = (mouseY - screenCenter.y) / window.innerHeight * 2;
 
     // Adjust sensitivity for mobile or smaller screens
-    let sensitivity = window.innerWidth < 768 ? 2 : 1;
+    let sensitivity = window.innerWidth < 768 ? 0.2 : 1;
 
+    let mobileoffset = diffX * Math.PI / 4 * sensitivity;
+    let mobileoffset2 = diffY * Math.PI / 4 * sensitivity;
     // Apply the rotation to the model based on the difference in mouse position
-    model.rotation.y = diffX * Math.PI / 4 * sensitivity; // Horizontal rotation (Y-axis)
+    model.rotation.y = mobileoffset; // Horizontal rotation (Y-axis)
     
     // **Flip the vertical rotation (X-axis) to fix the up/down issue**
-    model.rotation.x = diffY * Math.PI / 4 * sensitivity; // Vertical rotation (X-axis)
+    model.rotation.x = mobileoffset2; // Vertical rotation (X-axis)
+    model.rotation.z = 0; // Vertical rotation (X-axis)
 });
 
 
@@ -130,22 +134,6 @@ window.addEventListener('touchmove', (event) => {
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
-// window.addEventListener('mousemove', (event) => {
-//     if (!model) return;
-    
-//     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-//     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    
-//     raycaster.setFromCamera(mouse, camera);
-//     const intersects = raycaster.intersectObject(model, true);
-    
-//     if (intersects.length > 0) {
-//         document.body.style.cursor = 'pointer';
-//     } else {
-//         document.body.style.cursor = 'default';
-//     }
-// });
-
 window.addEventListener('click', (event) => {
     if (!model) return;
     
@@ -181,7 +169,7 @@ function animate() {
     
     if (model) {
         // Apply the bouncing effect with floor collision
-        model.position.y = Math.sin(Date.now() * 0.0015) * 0.3;
+        model.position.y = Math.sin(Date.now() * 0.006) * 0.06;
     }
     
     // Render the scene with the effect

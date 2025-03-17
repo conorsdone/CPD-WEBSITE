@@ -12,10 +12,20 @@
   <link rel="stylesheet" href="https://use.typekit.net/qyt6jto.css">
 
   <link rel="stylesheet" href="css/all.min.css">
-  <link rel="stylesheet" href="css/index2.css">
+  <link rel="stylesheet" href="css/index3.css">
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.174.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.174.0/examples/jsm/"
+      }
+    }
+  </script>
 </head>
 
 <body>
+  <script type="module" src="main.js"></script>
   <script>
     function updateTime() {
       const now = new Date();
@@ -32,43 +42,63 @@
     // Initialize
   </script>
 
-  <div class="main containerNoGap">
+  <div class="page-wrapper">
 
-    <div class="imagesDisplay">
+    <div class="canvas-container">
       <canvas id="morphCanvas"></canvas>
     </div>
 
-    <div class="content">
+    <div class="content-container">
 
-      <div class="header">
-        <a class="work" href="home.html">
+      <div class="page-header">
+        <a href="home.html">
         <img src="images/cpd logo.png" class="cpd-logo">
       </a>
         <h3 class="liveTime" id="gmt-time"></h3>
       </div>
 
-      <h3 class="liveTime" id="gmt-time"></h3>
+      <!-- <a href="home.html">
+        <img src="images/cpd logo.png" class="cpd-logo">
+      </a>
 
-      <img src="images/website-lauryn.png" class="lauryn-cutout"></img>
-      <img src="images/MikeCutoutSite.png" class="mike-cutout"></img>
+      <h3 class="liveTime" id="gmt-time"></h3> -->
+
+      <img src="images/website-lauryn.png" class="mlh-image"></img>
+
+      <img src="images/MikeCutoutSite.png" class="mike-image"></img>
+
+      <a class="work" href="work.html">
+        <img src="images/website-work.png" class="work-image"></img>
+      </a>
+
+      <a class="about" href="about.html">
+        <img src="images/website-about.png" class="about-image"></img>
+      </a>
+
+
+      <!-- <img src="images/MikeCutoutSite.png" class="mike-cutout"></img>
+
       <a class="work" href="work.html">
         <img src="images/website-work.png" class="work-cutout"></img>
       </a>
+
       <a class="about" href="about.html">
         <img src="images/website-about.png" class="about-cutout"></img>
       </a>
+
       <a class="instagram" href="https://www.instagram.com/cpd.jpg/">
         <img src="images/website-instagram.png" class="instagram-cutout"></img>
       </a>
+
       <a class="nova" href="https://itsnova.com/conordunne">
         <img src="images/website-nova.png" class="nova-cutout"></img>
       </a>
+
       <a class="vsco" href="https://vsco.co/cpd-jpg/gallery">
         <img src="images/website-vsco.png" class="vsco-cutout"></img>
-      </a>
+      </a> -->
 
     </div>
-
   </div>
 </body>
 

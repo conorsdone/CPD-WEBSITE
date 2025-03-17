@@ -80,7 +80,14 @@ li {
     list-style-type: none;
 }
 
+html {
+  /* overflow: hidden; */
+}
+
 body {
+    /* max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll; */
     font-family: 'Public Sans', sans-serif;
     color: var(--mainBlue);
     width: 100%;
@@ -109,7 +116,6 @@ a {
     font-family: Octuple;
     src: url("/CPD-WEBSITE/assets/Octuple-max-demo.ttf") format("truetype");
 }
-/* when pushing to git use " /CPD-WEBSITE/assets/  "*/
 
 body {
     font-family: Generic, sans-serif;
@@ -286,26 +292,9 @@ h4 {
 
 /* HEADER.CSS */
 
-.main-header {
-  z-index: 5000;
-  width: 34vw; /* Dynamic width (68vw) */
-  height: auto;
-  /* min-width: 350px; */
-  position: absolute;
-  top: 1vmax;
-  right: 0;
-  padding-right: 1vmax;
-}
-
-.main-header .cpd-logo {
-    animation: redAni 5s infinite;
-}
-
-.liveTime {
-  font-size: 1.5vw;
-    color: white;
-    font-family: monospace;
-    text-align: right;
+.imagesDisplay {
+    background-color: red;
+    height: 100vh;
 }
 
 @keyframes blueAni {
@@ -353,130 +342,242 @@ h4 {
 }
 
 /* LANDING.CSS */
-.mike-cutout {
-    position: absolute;
-    width: calc(35vmax - 5vmin);
-    height: auto;
-    border: 3px solid blue;
-    bottom: 0;
-    right: 0;
-    overflow: hidden;
+
+.work,
+.about,
+.instagram,
+.nova,
+.vsco {
+    cursor: pointer;
 }
 
-@media (max-width: 750px) {
-  .mike-cutout {
-    right: 0;
-    transform: translate(5vw, 0%) scale(1);
+.work:hover,
+.about:hover,
+.instagram:hover,
+.nova:hover,
+.vsco:hover {
+    filter: sepia(100) invert(100%) saturate(100) blur(0px) drop-shadow(0rem 0rem 0.25rem #ffffff);
+}
+
+.page-wrapper {
+    display: flex; /* Use Flexbox to create a 2-column layout */
+  width: 100vw;  /* Full viewport width */
+  height: 100vh;
+}
+
+.canvas-container {
+    width: 50vw; /* Takes up 50% of the viewport width */
+    height: 100vh;
+    background: red; /* Placeholder for your 3D rendered loop */
   }
+
+.content-container {
+    width: 50vw; /* Takes up the other 50% */
+  height: 100vh;
+  position: relative; /* Since you use absolute positioning inside */
+  /* transition: width 0.3s ease-in-out; */
 }
 
-.lauryn-cutout {
+@media (max-width: 540px) {
+    .canvas-container {
+      display: none; /* Hides the left side */
+    }
+  
+    .content-container {
+      width: 100vw; /* Makes content full-width */
+      height: 100vh;
+    }
+  }
+
+/* @media (max-width: 1024px) {
+    .content-container {
+        transform: scale(0.9, 0.9); 
+        transform-origin: top left;
+    }
+} */
+
+.page-header {
+    z-index: 5000;
+    width: 34vw; /* Dynamic width (68vw) */
+    height: auto;
+    /* min-width: 350px; */
+    position: absolute;
+    top: 1vw;
+    right: 0;
+    padding-right: 1vw;
+}
+
+@media (max-width: 540px) {
+    .page-header  {
+        height: auto;
+        width: 100vw;
+        top: 1vh;
+        padding: 0 5vh;
+    }
+}
+
+.cpd-logo {
+    /* border: 3px solid red; */
+    animation: redAni 5s infinite;
+}
+
+.liveTime {
+    /* border: 3px solid green; */
+    font-size: 1.5vw;
+    color: white;
+    font-family: monospace;
+    text-align: right;
+}
+
+@media (max-width: 540px) {
+    .liveTime  {
+        text-align: center;
+        font-size: calc(3.25vw + 0.5vh);
+    }
+}
+
+.mlh-image {
     border-radius: 36rem;
     border-width: 3px;
-    border-color: black;
+    border-color: green;
     border-style: solid;
     border-top-left-radius: 0.3rem;
     border-bottom-left-radius: 22.4rem;
     border-bottom-right-radius: 90.6rem;
     border-top-right-radius: 0.1rem;
-    /* width: 60vh;
-    margin-top: -20vh;
-    margin-left: -4vw; */
-    z-index: -1;
+    border-left: 0px;
+    border-top: 0px;
+
     position: absolute;
-    width: 32.5vmax;
-    /* height: 55vh; */
-    top: -4vh;
-    left: 49.5vw;
+    width: calc(10vw + 35vh); /* Dynamic width (60vw) */
+    height: auto; /* Maintain aspect ratio */
+    top: 0%;
+    left: 0%;
+    transform: translate(-0%, -0%) scale(1);
+    /* transition: transform 0.3s; */
 }
 
-.work-cutout {
-    position: absolute;
-    width: auto;
-    height: 11vh;
-    rotate: -1deg;
-    /* min-height: 90px;
-    max-height: 11.5vh; */
+@media (max-width: 540px) {
+    .mlh-image  {
+        width: 80vw;
+        transform: translate(0%, 16.5vw) scale(1); /* Scale up for mobile */
+    }
+}
+
+.mike-image {
     /* border: 3px solid red; */
-    bottom: 17.5vh;
-    left: 50.5vw;
-    margin-bottom: 15vh;
-}
-
-.about-cutout {
-    cursor: pointer;
     position: absolute;
-    width: auto;
-    height: 10vh;
-    /* min-height: 90px;
-    max-height: 11.5vh; */
-    /* border: 3px solid teal; */
-    bottom: 17.5vh;
-    left: 50.5vw;
+    width: calc(10vw + 35vh); /* Dynamic width (60vw) */
+    height: auto; /* Maintain aspect ratio */
+    bottom: 0%;
+    transform: translate(calc(15vw + 10vh), 0%) scale(1);
+    /* transition: transform 0.3s; */
 }
 
-.instagram-cutout {
-    /* border: 3px solid greenyellow; */
-    cursor: pointer;
+@media (max-width: 540px) {
+    .mike-image  {
+        width: 100vw;
+        height: auto;
+        bottom: 0;
+        right: 0;
+        transform: translate(30vw,0) scale(1); /* Scale up for mobile */
+    }
+}
+
+.work-image {
+    border: 3px solid red;
     position: absolute;
-    width: auto;
-    height: 10vh;
-    /* min-height: 90px;
-    max-height: 11.5vh; */
-    /* border: 3px solid teal; */
-    bottom: 4vh;
-    left: 52.5vw;
+    /* width: 24vw; */
+    width: calc(4vw + 35vh); /* Dynamic width (50 - 2(padding) vw) */
+    height: auto; /* Maintain aspect ratio */
+    top: calc(37.5vh + 10vw); 
+    /* 55 */
+    transform: translate(1vw, 0%) scale(1);
+    /* transition: transform 0.3s; */
 }
 
-.nova-cutout {
-    /* border: 3px solid greenyellow; */
-    cursor: pointer;
+@media (max-width: 540px) {
+    .work-image  {
+        width: 57.5vw;
+        height: auto;
+        rotate: 20deg;
+        top: calc(32vh - 6.5vw);
+        left: 50vw;
+        transform: translate(-9vw, 0); /* Scale up for mobile */
+    }
+}
+
+.about-image {
+    border: 3px solid red;
     position: absolute;
-    width: auto;
-    height: 10vh;
-    /* min-height: 90px;
-    max-height: 11.5vh; */
-    /* border: 3px solid teal; */
-    bottom: 4vh;
-    left: 61.25vw;
+    /* width: 26vw; Dynamic width (58 - 2(padding) vw) */
+    width: calc(5vw + 35vh); /* Dynamic width (50 - 2(padding) vw) */
+    height: auto; /* Maintain aspect ratio */
+    top: calc(52.5vh + 10vw);
+    /* 70 */
+    transform: translate(1vw, 0%) scale(1);
+    /* transition: transform 0.3s; */
 }
 
-.vsco-cutout {
-    /* border: 3px solid greenyellow; */
-    cursor: pointer;
+@media (max-width: 540px) {
+    .about-image  {
+        width: 55vw;
+        height: auto;
+        rotate: -20deg;
+        top: calc(55vh + 10vw);
+        right: 50vw;
+        transform: translate(6vw, 0); /* Scale up for mobile */
+    }
+}
+
+
+.cpd-logo2 {
+    border: 3px solid red;
+    animation: redAni 5s infinite;
     position: absolute;
-    width: auto;
-    height: 10vh;
-    border-radius: 100%;
-    /* min-height: 90px;
-    max-height: 11.5vh; */
-    /* border: 3px solid teal; */
-    bottom: 4vh;
-    left: 70vw;
+    width: 34vw; /* Dynamic width (68vw) */
+    height: auto; /* Maintain aspect ratio */
+    top: 1vw; /* Dynamic padding (2vw) */
+    right: 1vw; /* Dynamic padding (2vw) */
+    transform: translate(-0%, -0%) scale(1);
+    /* transition: transform 0.3s; */
 }
 
-.work, .about, .instagram, .nova, .vsco {
-    cursor: pointer;
+@media (max-width: 540px) {
+    .cpd-logo2  {
+        height: auto;
+        width: 100vw;
+        top: 1vh; /* Dynamic padding (2vw) */
+        right: 0;
+        left: 0;
+        padding: 0 5vh;
+        transform: translate(0%, 0%) scale(1); /* Scale up for mobile */
+    }
 }
 
-.work:hover , .about:hover, .instagram:hover, .nova:hover, .vsco:hover {
-    filter: sepia(100) invert(100%) saturate(100) blur(0px) drop-shadow(0rem 0rem 0.25rem #ffffff);
+.liveTime2 {
+    font-size: 1.6vw; /* Dynamic text (3.2vw) */
+    color: white;
+    font-family: monospace;
+    text-align: right;
+    position: absolute;
+    width: 34vw; /* Dynamic width (68vw) */
+    height: auto; /* Maintain aspect ratio */
+    top: 1vw; /* Dynamic padding (2vw) */
+    right: 1vw; /* Dynamic padding (2vw) */
+    transform: translate(0%, 275%) scale(1);
+    /* transition: transform 0.3s; */
 }
 
-html {
-  color-scheme: light dark;
-}
-
-html {
-  overflow: hidden;
-  position: fixed;
-}
-
-body {
-    max-width: 100%;
-    overflow: hidden;
-}
-
-.content {
-  overflow: hidden;
+@media (max-width: 540px) {
+    .liveTime2  {
+        font-size: 2.5vh;
+        height: auto;
+        width: 100vw;
+        top: 0vh; /* Dynamic padding (2vw) */
+        right: 0;
+        left: 0;
+        text-align: center;
+        transform: translate(0%, 0) scale(1); /* Scale up for mobile */
+    }
 }

@@ -2,7 +2,8 @@
 <html lang="en">
 
 <head>
-    <base href="/CPD-WEBSITE/">
+    <!-- <base href="/CPD-WEBSITE/"> -->
+    <!-- <base href="./"> -->
     <!-- USE WHEN PUSHING TO GITHUB -->
 
     <!-- Google Tag Manager -->
@@ -25,6 +26,10 @@
     <title>CPD.JPG Homepage</title>
     
     <script>
+if (window.location.hostname === "your-github-username.github.io") {
+    document.write('<base href="/CPD-WEBSITE/">');
+  }
+
         function togglePageInvert() {
             document.body.classList.toggle('inverted');
         }
@@ -126,7 +131,7 @@
         <div class="containerFull home">
             <img src="images/cpd logo.png" class="cpd-logo"></img>
             <h1 class="enter">
-                <a style=" text-align: center; height: 120px; z-index: 7000;" class="width-6 dazzle fluid" href="javascript:setTimeout(()=>{window.location = 'main.html' },1400);">
+                <a style=" text-align: center; height: 120px; z-index: 7000;" class="width-6 dazzle fluid" href="javascript:setTimeout(()=>{window.location = 'index2.html' },1400);">
                     <svg
                       aria-hidden="true"
                       viewBox="0 0 96 96"
