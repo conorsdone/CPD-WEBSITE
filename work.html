@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- <base href="/CPD-WEBSITE/"> -->
+    <!-- <base href="./"> -->
+    <!-- USE WHEN PUSHING TO GITHUB -->
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-P8GNZT7R');</script>
+    <!-- End Google Tag Manager -->
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://use.typekit.net/qyt6jto.css">
+
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="css/work.css">
+
+    <title>CPD.JPG Work</title>
+    
+    <script>
+if (window.location.hostname === "your-github-username.github.io") {
+    document.write('<base href="/CPD-WEBSITE/">');
+  }
+
+        function togglePageInvert() {
+            document.body.classList.toggle('inverted');
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const modal = document.getElementById("imageModal");
+            const modalImg = document.getElementById("modalImg");
+            const modalText = document.getElementById("modalText");
+            const elementsToMove = document.querySelectorAll(".home, .enter, .cpd-logo");
+            const enterElement = document.querySelector(".enter");
+
+            // Set background images dynamically
+            document.querySelectorAll(".flyImage").forEach((item) => {
+                const imageUrl = item.getAttribute("data-image-url");
+                if (imageUrl) {
+                    item.style.backgroundImage = `url(${imageUrl})`;
+                }
+            });
+
+            // Attach event listener to both marquee containers
+            document.querySelectorAll(".marquee__content").forEach((marquee) => {
+                marquee.addEventListener("click", function (event) {
+                    const item = event.target.closest(".flyImage");
+                    if (!item) return; // Ignore clicks outside flyImage elements
+
+                    const bgImage = window.getComputedStyle(item).backgroundImage.match(/url\(["']?(.*?)["']?\)/);
+                    const imageSrc = bgImage ? bgImage[1] : "";
+                    const title = item.getAttribute("data-title") || "Image";
+
+                    openModal(imageSrc);
+                });
+            });
+
+            function openModal(imageSrc, description) {
+                modal.style.display = "flex";
+                modalImg.src = imageSrc;
+                modalText.textContent = description;
+                modalImg.style.animation = "fadeIn 0.5s ease-in-out forwards";
+
+                elementsToMove.forEach(el => el.classList.add("logo-transition"));
+                if (enterElement) {
+                    enterElement.classList.add("logo-transition");
+                    enterElement.style.animation = "fadeOut 0.5s ease-in-out forwards";
+                }
+            }
+
+            function closeModal() {
+                modal.style.display = "none";
+                modalImg.style.animation = "fadeOut 1s ease-in-out forwards";
+                elementsToMove.forEach(el => el.classList.remove("logo-transition"));
+                if (enterElement) {
+                    enterElement.classList.remove("logo-transition");
+                    enterElement.style.animation = "fadeIn 0.5s ease-in-out forwards";
+                }
+            }
+
+            // Close modal when clicking outside the image
+            modal.addEventListener("click", function (event) {
+                closeModal();
+            });
+        });
+
+        $(document).mousemove(function (e) {
+            $("#image").css({ left: e.pageX, top: e.pageY });
+        });
+
+    </script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.174.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.174.0/examples/jsm/"
+        }
+      }
+    </script>
+</head>
+
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P8GNZT7R"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <header>
+        <div class="containerFull home">
+            <img src="images/cpd logo.png" class="cpd-logo"></img>
+        </div>
+    </header>
+
+    <!-- <footer>
+        <p style="z-index: 5000; position: absolute; font-size: 0.5rem; bottom: 0%; padding: 1%;">
+            © 2024 Conor Dunne.<br>
+            The code on this website is released under <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank">CC0 1.0</a> (public domain).<br>
+            However, all images and media are protected under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a>.<br> 
+            Unauthorized use of images is prohibited.
+          </p>        
+    </footer> -->
+</body>
+
+</html>

@@ -80,14 +80,7 @@ li {
     list-style-type: none;
 }
 
-html {
-  /* overflow: hidden; */
-}
-
 body {
-    /* max-width: 100%;
-    overflow-x: hidden;
-    overflow-y: scroll; */
     font-family: 'Public Sans', sans-serif;
     color: var(--mainBlue);
     width: 100%;
@@ -439,7 +432,7 @@ h4 {
 .mlh-image {
     border-radius: 36rem;
     border-width: 3px;
-    border-color: green;
+    border-color: black;
     border-style: solid;
     border-top-left-radius: 0.3rem;
     border-bottom-left-radius: 22.4rem;
@@ -485,7 +478,7 @@ h4 {
 }
 
 .work-image {
-    border: 3px solid red;
+    /* border: 3px solid red; */
     position: absolute;
     /* width: 24vw; */
     width: calc(4vw + 35vh); /* Dynamic width (50 - 2(padding) vw) */
@@ -508,7 +501,7 @@ h4 {
 }
 
 .about-image {
-    border: 3px solid red;
+    /* border: 3px solid red; */
     position: absolute;
     /* width: 26vw; Dynamic width (58 - 2(padding) vw) */
     width: calc(5vw + 35vh); /* Dynamic width (50 - 2(padding) vw) */
@@ -532,7 +525,7 @@ h4 {
 
 
 .cpd-logo2 {
-    border: 3px solid red;
+    /* border: 3px solid red; */
     animation: redAni 5s infinite;
     position: absolute;
     width: 34vw; /* Dynamic width (68vw) */

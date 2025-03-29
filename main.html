@@ -2,55 +2,145 @@
 <html lang="en">
 
 <head>
-    <!-- <base href="/CPD-WEBSITE/"> -->
-    <!-- USE WHEN PUSHING TO GITHUB -->
+  <!-- <base href="/CPD-WEBSITE/"> -->
+  <!-- USE WHEN PUSHING TO GITHUB -->
 
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="https://use.typekit.net/qyt6jto.css">
+  <link rel="stylesheet" href="https://use.typekit.net/qyt6jto.css">
 
-    <link rel="stylesheet" href="css/all.min.css">
-    <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/all.min.css">
+  <link rel="stylesheet" href="css/main.css">
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.174.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.174.0/examples/jsm/"
+      }
+    }
+  </script>
 </head>
 
-<body class="main containerNoGap">
-    <div class="width-6 canvas">
-        <canvas id="morphCanvas"></canvas>
+<body>
+  <script type="module" src="main.js"></script>
+
+  <div class="page-wrapper">
+
+    <div class="canvas-container">
+      <canvas id="morphCanvas"></canvas>
     </div>
 
-    <div class="width-6 content">
+    <div class="content-container">
 
-        <div class="main-header">
-            <img src="images/cpd logo.png" class="cpd-logo">
-            <h3 class="liveTime" id="gmt-time"></h3>
-        </div>
-
+      <div class="page-header">
+        <a href="home.html">
+          <img src="images/cpd logo.png" class="cpd-logo">
+        </a>
         <h3 class="liveTime" id="gmt-time"></h3>
+      </div>
 
-        <img src="images/website-lauryn.png" class="lauryn-cutout"></img>
-        <img src="images/MikeCutoutSite.png" class="mike-cutout"></img>
-        <a class="work" href="work.html">
-            <img src="images/website-work.png" class="work-cutout"></img>
-        </a>
-        <a class="about" href="about.html">
-            <img src="images/website-about.png" class="about-cutout"></img>
-        </a>
-        <a class="instagram" href="https://www.instagram.com/cpd.jpg/">
-            <img src="images/website-instagram.png" class="instagram-cutout"></img>
-        </a>
-        <a class="nova" href="https://itsnova.com/conordunne">
-            <img src="images/website-nova.png" class="nova-cutout"></img>
-        </a>
-        <a class="vsco" href="https://vsco.co/cpd-jpg/gallery">
-            <img src="images/website-vsco.png" class="vsco-cutout"></img>
-        </a>
+      <!-- <a href="home.html">
+        <img src="images/cpd logo.png" class="cpd-logo">
+      </a>
 
+      <h3 class="liveTime" id="gmt-time"></h3> -->
+
+      <img src="images/website-lauryn.png" class="mlh-image"></img>
+
+      <img src="images/MikeCutoutSite.png" class="mike-image"></img>
+
+      <a class="work" href="work.html">
+        <img src="images/website-work.png" class="work-image"></img>
+      </a>
+
+      <a class="about" href="about.html">
+        <img src="images/website-about.png" class="about-image"></img>
+      </a>
+
+      <div class="containerNoGap media-container">
+        <div class="containerNoGap media-links width-6">
+          <a class="instagram width-4" href="https://www.instagram.com/cpd.jpg/">
+            <img src="images/website-instagram.png" class="instagram-image social-image">
+          </a>
+          <div class="empty width-8"></div>
+          <a class="nova width-4" href="https://www.instagram.com/cpd.jpg/">
+            <img src="images/website-nova.png" class="nova-image social-image">
+          </a>
+          <div class="empty width-8"></div>
+          <a class="vsco width-4" href="https://www.instagram.com/cpd.jpg/">
+            <img src="images/website-vsco.png" class="vsco-image social-image">
+          </a>
+          <div class="empty width-8"></div>
+        </div>
+        <div class="empty width-6"></div>
+      </div>
     </div>
+  </div>
 
-    <!-- Vertex Shader -->
-    <script type="x-shader/x-vertex" id="vertexShader">
+  <script>
+
+    function applyAspectRatioClass() {
+      const aspectRatio = window.innerWidth / window.innerHeight;
+
+      // Access body element
+      const body = document.body;
+
+      // Remove existing ratio classes to avoid conflicts
+      body.classList.remove('ultra-wide-ratio', 'wide-ratio', 'tall-ratio', 'square-ratio');
+
+      // Add class based on ratio
+      if (aspectRatio > 2.3) {
+        body.classList.add('ultra-wide-ratio');   // Landscape-like ratio
+      } else if (aspectRatio > 1.3) {
+        body.classList.add('wide-ratio');   // Landscape-like ratio
+      } else if (aspectRatio < 0.75) {
+        body.classList.add('tall-ratio');   // Portrait-like ratio
+      } else {
+        body.classList.add('square-ratio'); // Close to a square aspect ratio
+      }
+    }
+
+    // Run the function on load and resize to handle toolbar show/hide
+    applyAspectRatioClass();
+
+
+    window.addEventListener('resize', applyAspectRatioClass);
+
+    function adjustViewportHeight() {
+      // Calculate 1vh based on the current visible viewport height
+      const vh = window.innerHeight * 0.01;
+
+      // Set the custom CSS variable to update dynamically
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+
+    // Adjust viewport height on load
+    adjustViewportHeight();
+
+    // Handle viewport changes due to the toolbar showing/hiding (resize events)
+    window.addEventListener('resize', adjustViewportHeight);
+
+    function updateTime() {
+      const aspectRatio = window.innerWidth / window.innerHeight;
+      const now = new Date();
+      const hours = now.getUTCHours().toString().padStart(2, '0'); // Get hours in GMT
+      const minutes = now.getUTCMinutes().toString().padStart(2, '0'); // Get minutes in GMT
+      const seconds = now.getUTCSeconds().toString().padStart(2, '0'); // Get seconds in GMT
+      const gmtTime = `Dublin, Éire ${hours}:${minutes}:${seconds} GMT`; // Format the time string
+      document.getElementById("gmt-time").textContent = gmtTime;
+      console.log(aspectRatio);
+    }
+
+    setInterval(updateTime, 1000); // Update every second
+    window.onload = updateTime; // Update immediately when page loads
+
+    // Initialize
+  </script>
+  <!-- Vertex Shader -->
+  <script type="x-shader/x-vertex" id="vertexShader">
         attribute vec2 a_position;
         varying vec2 vTextureCoord;
         uniform vec2 u_imageSize;
@@ -73,8 +163,8 @@
         }
     </script>
 
-    <!-- Fragment Shader with Simplex Noise -->
-    <script type="x-shader/x-fragment" id="fragmentShader">
+  <!-- Fragment Shader with Simplex Noise -->
+  <script type="x-shader/x-fragment" id="fragmentShader">
         precision lowp float;
         varying vec2 vTextureCoord;
         uniform float time;
@@ -125,174 +215,174 @@
         }
     </script>
 
-    <script>
-        const images = [
-            '/images/000012.jpg',
-            '/images/000038.jpg',
-            '/images/000040.jpg',
-            '/images/smino 1 ver 3.jpg',
-            '/images/testing 10.jpg',
-            '/images/bricknasty-test 1.jpg'
-        ];
+  <script>
+    const images = [
+      'images/000012.jpg',
+      'images/000038.jpg',
+      'images/000040.jpg',
+      'images/smino 1 ver 3.jpg',
+      'images/testing 10.jpg',
+      'images/bricknasty-test 1.jpg'
+    ];
 
-        let currentImageIndex = 0;
-        let gl, program, texture, nextTexture;
-        let imageSize = [1, 1];
-        let fadeProgress = 0.0;
-        let isFading = false;
-        let nextImageIndex = (currentImageIndex + 1) % images.length;
+    let currentImageIndex = 0;
+    let gl, program, texture, nextTexture;
+    let imageSize = [1, 1];
+    let fadeProgress = 0.0;
+    let isFading = false;
+    let nextImageIndex = (currentImageIndex + 1) % images.length;
 
-        function initWebGL() {
-            const canvas = document.getElementById('morphCanvas');
-            gl = canvas.getContext('webgl');
-            if (!gl) return alert("WebGL not supported!");
+    function initWebGL() {
+      const canvas = document.getElementById('morphCanvas');
+      gl = canvas.getContext('webgl');
+      if (!gl) return alert("WebGL not supported!");
 
-            // Initialize textures
-            texture = gl.createTexture();
-            nextTexture = gl.createTexture();
-            [texture, nextTexture].forEach(tex => {
-                gl.bindTexture(gl.TEXTURE_2D, tex);
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-            });
+      // Initialize textures
+      texture = gl.createTexture();
+      nextTexture = gl.createTexture();
+      [texture, nextTexture].forEach(tex => {
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      });
 
-            // Shader setup
-            const vs = gl.createShader(gl.VERTEX_SHADER);
-            const fs = gl.createShader(gl.FRAGMENT_SHADER);
-            gl.shaderSource(vs, document.getElementById('vertexShader').text);
-            gl.shaderSource(fs, document.getElementById('fragmentShader').text);
-            gl.compileShader(vs);
-            gl.compileShader(fs);
+      // Shader setup
+      const vs = gl.createShader(gl.VERTEX_SHADER);
+      const fs = gl.createShader(gl.FRAGMENT_SHADER);
+      gl.shaderSource(vs, document.getElementById('vertexShader').text);
+      gl.shaderSource(fs, document.getElementById('fragmentShader').text);
+      gl.compileShader(vs);
+      gl.compileShader(fs);
 
-            program = gl.createProgram();
-            gl.attachShader(program, vs);
-            gl.attachShader(program, fs);
-            gl.linkProgram(program);
-            gl.useProgram(program);
+      program = gl.createProgram();
+      gl.attachShader(program, vs);
+      gl.attachShader(program, fs);
+      gl.linkProgram(program);
+      gl.useProgram(program);
 
-            // Set texture uniform locations
-            gl.uniform1i(gl.getUniformLocation(program, 'u_image'), 0);
-            gl.uniform1i(gl.getUniformLocation(program, 'u_nextImage'), 1);
+      // Set texture uniform locations
+      gl.uniform1i(gl.getUniformLocation(program, 'u_image'), 0);
+      gl.uniform1i(gl.getUniformLocation(program, 'u_nextImage'), 1);
 
-            // Geometry setup
-            const buffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-            const aPos = gl.getAttribLocation(program, 'a_position');
-            gl.enableVertexAttribArray(aPos);
-            gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+      // Geometry setup
+      const buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+      const aPos = gl.getAttribLocation(program, 'a_position');
+      gl.enableVertexAttribArray(aPos);
+      gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+    }
+
+    async function loadImage(url) {
+      const img = await new Promise((resolve, reject) => {
+        const image = new Image();
+        image.crossOrigin = "anonymous";
+        image.onload = () => resolve(image);
+        image.onerror = reject;
+        image.src = url;
+      });
+
+      // Create texture-ready canvas
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      return canvas;
+    }
+
+    async function updateTexture() {
+      const img = await loadImage(images[currentImageIndex]);
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+      imageSize = [img.width, img.height];
+      resize();
+    }
+
+    async function startFade() {
+      if (isFading) return;
+      isFading = true;
+
+      // Load next image
+      const nextImg = await loadImage(images[nextImageIndex]);
+      gl.bindTexture(gl.TEXTURE_2D, nextTexture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, nextImg);
+
+      // Animate fade
+      const startTime = performance.now();
+      const fadeStep = () => {
+        const elapsed = performance.now() - startTime;
+        fadeProgress = Math.min(elapsed / 1000, 1.0);
+
+        if (fadeProgress < 1.0) {
+          requestAnimationFrame(fadeStep);
+        } else {
+          isFading = false;
+          currentImageIndex = nextImageIndex;
+          nextImageIndex = (currentImageIndex + 1) % images.length;
+          gl.bindTexture(gl.TEXTURE_2D, texture);
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, nextImg);
+          fadeProgress = 0.0;
         }
+      };
+      fadeStep();
+    }
 
-        async function loadImage(url) {
-            const img = await new Promise((resolve, reject) => {
-                const image = new Image();
-                image.crossOrigin = "anonymous";
-                image.onload = () => resolve(image);
-                image.onerror = reject;
-                image.src = url;
-            });
+    function resize() {
+      const canvas = document.getElementById('morphCanvas');
+      canvas.width = window.innerWidth * 0.5;
+      canvas.height = window.innerHeight;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.uniform2f(gl.getUniformLocation(program, 'u_canvasSize'), canvas.width, canvas.height);
+      gl.uniform2f(gl.getUniformLocation(program, 'u_imageSize'), imageSize[0], imageSize[1]);
+    }
 
-            // Create texture-ready canvas
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0);
-            return canvas;
-        }
+    function animate() {
+      gl.uniform1f(gl.getUniformLocation(program, 'time'), performance.now() / 1000);
+      gl.uniform1f(gl.getUniformLocation(program, 'u_strength'), 0.05);
+      gl.uniform1f(gl.getUniformLocation(program, 'u_fadeProgress'), fadeProgress);
 
-        async function updateTexture() {
-            const img = await loadImage(images[currentImageIndex]);
-            gl.bindTexture(gl.TEXTURE_2D, texture);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
-            imageSize = [img.width, img.height];
-            resize();
-        }
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, nextTexture);
 
-        async function startFade() {
-            if (isFading) return;
-            isFading = true;
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      requestAnimationFrame(animate);
+    }
 
-            // Load next image
-            const nextImg = await loadImage(images[nextImageIndex]);
-            gl.bindTexture(gl.TEXTURE_2D, nextTexture);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, nextImg);
+    function nextImage() {
+      if (!isFading) startFade();
+    }
 
-            // Animate fade
-            const startTime = performance.now();
-            const fadeStep = () => {
-                const elapsed = performance.now() - startTime;
-                fadeProgress = Math.min(elapsed / 1000, 1.0);
+    async function prevImage() {
+      currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+      await updateTexture();
+    }
 
-                if (fadeProgress < 1.0) {
-                    requestAnimationFrame(fadeStep);
-                } else {
-                    isFading = false;
-                    currentImageIndex = nextImageIndex;
-                    nextImageIndex = (currentImageIndex + 1) % images.length;
-                    gl.bindTexture(gl.TEXTURE_2D, texture);
-                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, nextImg);
-                    fadeProgress = 0.0;
-                }
-            };
-            fadeStep();
-        }
+    function updateTime() {
+      const now = new Date();
+      const hours = now.getUTCHours().toString().padStart(2, '0'); // Get hours in GMT
+      const minutes = now.getUTCMinutes().toString().padStart(2, '0'); // Get minutes in GMT
+      const seconds = now.getUTCSeconds().toString().padStart(2, '0'); // Get seconds in GMT
+      const gmtTime = `Dublin, Éire ${hours}:${minutes}:${seconds} GMT`; // Format the time string
+      document.getElementById("gmt-time").textContent = gmtTime;
+    }
 
-        function resize() {
-            const canvas = document.getElementById('morphCanvas');
-            canvas.width = window.innerWidth * 0.5;
-            canvas.height = window.innerHeight;
-            gl.viewport(0, 0, canvas.width, canvas.height);
-            gl.uniform2f(gl.getUniformLocation(program, 'u_canvasSize'), canvas.width, canvas.height);
-            gl.uniform2f(gl.getUniformLocation(program, 'u_imageSize'), imageSize[0], imageSize[1]);
-        }
+    setInterval(updateTime, 1000); // Update every second
+    window.onload = updateTime; // Update immediately when page loads
 
-        function animate() {
-            gl.uniform1f(gl.getUniformLocation(program, 'time'), performance.now() / 1000);
-            gl.uniform1f(gl.getUniformLocation(program, 'u_strength'), 0.05);
-            gl.uniform1f(gl.getUniformLocation(program, 'u_fadeProgress'), fadeProgress);
-
-            gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, texture);
-            gl.activeTexture(gl.TEXTURE1);
-            gl.bindTexture(gl.TEXTURE_2D, nextTexture);
-
-            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-            requestAnimationFrame(animate);
-        }
-
-        function nextImage() {
-            if (!isFading) startFade();
-        }
-
-        async function prevImage() {
-            currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-            await updateTexture();
-        }
-
-        function updateTime() {
-            const now = new Date();
-            const hours = now.getUTCHours().toString().padStart(2, '0'); // Get hours in GMT
-            const minutes = now.getUTCMinutes().toString().padStart(2, '0'); // Get minutes in GMT
-            const seconds = now.getUTCSeconds().toString().padStart(2, '0'); // Get seconds in GMT
-            const gmtTime = `Dublin, Éire ${hours}:${minutes}:${seconds} GMT`; // Format the time string
-            document.getElementById("gmt-time").textContent = gmtTime;
-        }
-
-        setInterval(updateTime, 1000); // Update every second
-        window.onload = updateTime; // Update immediately when page loads
-
-        // Initialize
-        initWebGL();
-        updateTexture().then(() => {
-            window.addEventListener('resize', resize);
-            animate();
-            // Start slideshow after first load
-            setInterval(nextImage, 3000);
-        });
-    </script>
+    // Initialize
+    initWebGL();
+    updateTexture().then(() => {
+      window.addEventListener('resize', resize);
+      animate();
+      // Start slideshow after first load
+      setInterval(nextImage, 3000);
+    });
+  </script>
 </body>
 
 </html>

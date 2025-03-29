@@ -398,7 +398,7 @@ h4 {
 }
 
 .cpd-logo {
-    border: 3px solid red;
+    /* border: 3px solid red; */
     animation: redAni 5s infinite;
     /* padding: 30px 20px 0px 200px; */
 }
