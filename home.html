@@ -2,102 +2,94 @@
 <html lang="en">
 
 <head>
-    <!-- <base href="/CPD-WEBSITE/"> -->
-    <!-- <base href="./"> -->
-    <!-- USE WHEN PUSHING TO GITHUB -->
+  <!-- <base href="/CPD-WEBSITE/"> -->
+  <!-- <base href="./"> -->
+  <!-- USE WHEN PUSHING TO GITHUB -->
 
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-P8GNZT7R');</script>
-    <!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://use.typekit.net/qyt6jto.css">
 
-    <link rel="stylesheet" href="https://use.typekit.net/qyt6jto.css">
+  <link rel="stylesheet" href="css/all.min.css">
+  <link rel="stylesheet" href="css/home.css">
 
-    <link rel="stylesheet" href="css/all.min.css">
-    <link rel="stylesheet" href="css/home.css">
+  <title>CPD.JPG Homepage</title>
 
-    <title>CPD.JPG Homepage</title>
-    
-    <script>
-if (window.location.hostname === "your-github-username.github.io") {
-    document.write('<base href="/CPD-WEBSITE/">');
-  }
+  <script>
+    if (window.location.hostname === "your-github-username.github.io") {
+      document.write('<base href="/CPD-WEBSITE/">');
+    }
 
-        function togglePageInvert() {
-            document.body.classList.toggle('inverted');
+    function togglePageInvert() {
+      document.body.classList.toggle('inverted');
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const modal = document.getElementById("imageModal");
+      const modalImg = document.getElementById("modalImg");
+      const modalText = document.getElementById("modalText");
+      const elementsToMove = document.querySelectorAll(".home, .enter, .cpd-logo");
+      const enterElement = document.querySelector(".enter");
+
+      // Set background images dynamically
+      document.querySelectorAll(".flyImage").forEach((item) => {
+        const imageUrl = item.getAttribute("data-image-url");
+        if (imageUrl) {
+          item.style.backgroundImage = `url(${imageUrl})`;
         }
+      });
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const modal = document.getElementById("imageModal");
-            const modalImg = document.getElementById("modalImg");
-            const modalText = document.getElementById("modalText");
-            const elementsToMove = document.querySelectorAll(".home, .enter, .cpd-logo");
-            const enterElement = document.querySelector(".enter");
+      // Attach event listener to both marquee containers
+      document.querySelectorAll(".marquee__content").forEach((marquee) => {
+        marquee.addEventListener("click", function (event) {
+          const item = event.target.closest(".flyImage");
+          if (!item) return; // Ignore clicks outside flyImage elements
 
-            // Set background images dynamically
-            document.querySelectorAll(".flyImage").forEach((item) => {
-                const imageUrl = item.getAttribute("data-image-url");
-                if (imageUrl) {
-                    item.style.backgroundImage = `url(${imageUrl})`;
-                }
-            });
+          const bgImage = window.getComputedStyle(item).backgroundImage.match(/url\(["']?(.*?)["']?\)/);
+          const imageSrc = bgImage ? bgImage[1] : "";
+          const title = item.getAttribute("data-title") || "Image";
 
-            // Attach event listener to both marquee containers
-            document.querySelectorAll(".marquee__content").forEach((marquee) => {
-                marquee.addEventListener("click", function (event) {
-                    const item = event.target.closest(".flyImage");
-                    if (!item) return; // Ignore clicks outside flyImage elements
-
-                    const bgImage = window.getComputedStyle(item).backgroundImage.match(/url\(["']?(.*?)["']?\)/);
-                    const imageSrc = bgImage ? bgImage[1] : "";
-                    const title = item.getAttribute("data-title") || "Image";
-
-                    openModal(imageSrc);
-                });
-            });
-
-            function openModal(imageSrc, description) {
-                modal.style.display = "flex";
-                modalImg.src = imageSrc;
-                modalText.textContent = description;
-                modalImg.style.animation = "fadeIn 0.5s ease-in-out forwards";
-
-                elementsToMove.forEach(el => el.classList.add("logo-transition"));
-                if (enterElement) {
-                    enterElement.classList.add("logo-transition");
-                    enterElement.style.animation = "fadeOut 0.5s ease-in-out forwards";
-                }
-            }
-
-            function closeModal() {
-                modal.style.display = "none";
-                modalImg.style.animation = "fadeOut 1s ease-in-out forwards";
-                elementsToMove.forEach(el => el.classList.remove("logo-transition"));
-                if (enterElement) {
-                    enterElement.classList.remove("logo-transition");
-                    enterElement.style.animation = "fadeIn 0.5s ease-in-out forwards";
-                }
-            }
-
-            // Close modal when clicking outside the image
-            modal.addEventListener("click", function (event) {
-                closeModal();
-            });
+          openModal(imageSrc);
         });
+      });
 
-        $(document).mousemove(function (e) {
-            $("#image").css({ left: e.pageX, top: e.pageY });
-        });
+      function openModal(imageSrc, description) {
+        modal.style.display = "flex";
+        modalImg.src = imageSrc;
+        modalText.textContent = description;
+        modalImg.style.animation = "fadeIn 0.5s ease-in-out forwards";
 
-    </script>
-    <script type="importmap">
+        elementsToMove.forEach(el => el.classList.add("logo-transition"));
+        if (enterElement) {
+          enterElement.classList.add("logo-transition");
+          enterElement.style.animation = "fadeOut 0.5s ease-in-out forwards";
+        }
+      }
+
+      function closeModal() {
+        modal.style.display = "none";
+        modalImg.style.animation = "fadeOut 1s ease-in-out forwards";
+        elementsToMove.forEach(el => el.classList.remove("logo-transition"));
+        if (enterElement) {
+          enterElement.classList.remove("logo-transition");
+          enterElement.style.animation = "fadeIn 0.5s ease-in-out forwards";
+        }
+      }
+
+      // Close modal when clicking outside the image
+      modal.addEventListener("click", function (event) {
+        closeModal();
+      });
+    });
+
+    $(document).mousemove(function (e) {
+      $("#image").css({ left: e.pageX, top: e.pageY });
+    });
+
+  </script>
+  <script type="importmap">
       {
         "imports": {
           "three": "https://cdn.jsdelivr.net/npm/three@0.174.0/build/three.module.js",
@@ -108,183 +100,146 @@ if (window.location.hostname === "your-github-username.github.io") {
 </head>
 
 <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P8GNZT7R"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
 
-    <script type="module" src="home.js"></script>
-    <!-- <canvas></canvas> -->
-    <!-- <svg height="100" width="100" xmlns="http://www.w3.org/2000/svg" alt="Cursor Image" class="cursor-image" id="cursorImg">
-        <circle r="45" cx="50" cy="50" fill="white" />
-      </svg>
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="loader"></div>
+    <span id="percentage">0%</span>
+</div>
 
-    <script>
-        document.addEventListener("mousemove", function (event) {
-            const cursorImg = document.getElementById("cursorImg");
-            cursorImg.style.left = `${event.clientX}px`;
-            cursorImg.style.top = `${event.clientY}px`;
-        });
-    </script> -->
+  <script type="module" src="js/home.js"></script>
+
+  <div id="content" style="display: none;">
 
     <header>
-        <div class="containerFull home">
-            <img src="images/cpd logo.png" class="cpd-logo"></img>
-            <h1 class="enter">
-                <a style=" text-align: center; height: 120px; z-index: 7000;" class="width-6 dazzle fluid" href="javascript:setTimeout(()=>{window.location = 'main.html' },1400);">
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 96 96"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"
-                        fill="#000"
-                      />
-                    </svg>
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 96 96"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"
-                        fill="#000"
-                      />
-                    </svg>
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 96 96"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"
-                        fill="#000"
-                      />
-                    </svg>
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 96 96"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"
-                        fill="#000"
-                      />
-                    </svg>
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 96 96"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"
-                        fill="#000"
-                      />
-                    </svg>
-                    <!-- End sparkles -->
-                    <span class="fluid">ENTER</span>
-                    <span class="fluid" aria-hidden="true">ENTER</span>
-                  </a>
-            </h1>
-        </div>
+      <div class="containerFull home">
+        <img src="images/cpd logo.png" class="cpd-logo"></img>
+        <h1 class="enter">
+          <a style=" text-align: center; height: 120px; z-index: 7000;" class="width-6 dazzle fluid"
+            href="javascript:setTimeout(()=>{window.location = 'main.html' },1400);">
+            <svg aria-hidden="true" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"
+                fill="#000" />
+            </svg>
+            <svg aria-hidden="true" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"
+                fill="#000" />
+            </svg>
+            <svg aria-hidden="true" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"
+                fill="#000" />
+            </svg>
+            <svg aria-hidden="true" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"
+                fill="#000" />
+            </svg>
+            <svg aria-hidden="true" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"
+                fill="#000" />
+            </svg>
+            <!-- End sparkles -->
+            <span class="fluid">ENTER</span>
+            <span class="fluid" aria-hidden="true">ENTER</span>
+          </a>
+        </h1>
+      </div>
     </header>
 
     <div id="imageModal" class="modal" onclick="closeModal()">
-        <img class="modal-content" id="modalImg">
-        <h1 id="modalText">About Image</h1>
+      <img class="modal-content" id="modalImg">
+      <h1 id="modalText">About Image</h1>
     </div>
 
     <div class="background">
 
-        <div class="marquee marquee--reverse">
-            <ul class="container marquee__content marquee__content__1">
-                <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.jpg"></li>
-                <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.jpg"></li>
-                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg">
-                </li>
-                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg">
-                </li>
-                <li class="flyImage width-2" data-title="Instagram post of MLH-4"
-                    data-image-url="images/BroncoLokoSite1.jpg"></li>
-                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image"
-                    data-image-url="images/MlhSite1.jpg"></li>
-            </ul>
+      <div class="marquee marquee--reverse">
+        <ul class="container marquee__content marquee__content__1">
+          <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.jpg"></li>
+          <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.jpg"></li>
+          <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg">
+          </li>
+          <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg">
+          </li>
+          <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="images/BroncoLokoSite1.jpg">
+          </li>
+          <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="images/MlhSite1.jpg">
+          </li>
+        </ul>
 
-            <ul class="container marquee__content marquee__content__1">
-                <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.jpg"></li>
-                <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.jpg"></li>
-                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg">
-                </li>
-                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg">
-                </li>
-                <li class="flyImage width-2" data-title="Instagram post of MLH-4"
-                    data-image-url="images/BroncoLokoSite1.jpg"></li>
-                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image"
-                    data-image-url="images/MlhSite1.jpg"></li>
-            </ul>
-        </div>
+        <ul class="container marquee__content marquee__content__1">
+          <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.jpg"></li>
+          <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.jpg"></li>
+          <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg">
+          </li>
+          <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg">
+          </li>
+          <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="images/BroncoLokoSite1.jpg">
+          </li>
+          <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="images/MlhSite1.jpg">
+          </li>
+        </ul>
+      </div>
 
-        <div class="marquee marquee--reverse">
-            <ul class="container marquee__content marquee__content__2">
-                <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.jpg"></li>
-                <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.jpg"></li>
-                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg">
-                </li>
-                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg">
-                </li>
-                <li class="flyImage width-2" data-title="Instagram post of MLH-4"
-                    data-image-url="images/BroncoLokoSite1.jpg"></li>
-                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image"
-                    data-image-url="images/MlhSite1.jpg"></li>
-            </ul>
+      <div class="marquee marquee--reverse">
+        <ul class="container marquee__content marquee__content__2">
+          <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.jpg"></li>
+          <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.jpg"></li>
+          <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg">
+          </li>
+          <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg">
+          </li>
+          <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="images/BroncoLokoSite1.jpg">
+          </li>
+          <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="images/MlhSite1.jpg">
+          </li>
+        </ul>
 
-            <ul class="container marquee__content marquee__content__2">
-                <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.jpg"></li>
-                <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.jpg"></li>
-                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg">
-                </li>
-                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg">
-                </li>
-                <li class="flyImage width-2" data-title="Instagram post of MLH-4"
-                    data-image-url="images/BroncoLokoSite1.jpg"></li>
-                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image"
-                    data-image-url="images/MlhSite1.jpg"></li>
-            </ul>
-        </div>
+        <ul class="container marquee__content marquee__content__2">
+          <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.jpg"></li>
+          <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.jpg"></li>
+          <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg">
+          </li>
+          <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg">
+          </li>
+          <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="images/BroncoLokoSite1.jpg">
+          </li>
+          <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="images/MlhSite1.jpg">
+          </li>
+        </ul>
+      </div>
 
-        <div class="marquee marquee--reverse">
-            <ul class="container marquee__content marquee__content__3">
-                <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.jpg"></li>
-                <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.jpg"></li>
-                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg">
-                </li>
-                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg">
-                </li>
-                <li class="flyImage width-2" data-title="Instagram post of MLH-4"
-                    data-image-url="images/BroncoLokoSite1.jpg"></li>
-                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image"
-                    data-image-url="images/MlhSite1.jpg"></li>
-            </ul>
+      <div class="marquee marquee--reverse">
+        <ul class="container marquee__content marquee__content__3">
+          <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.jpg"></li>
+          <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.jpg"></li>
+          <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg">
+          </li>
+          <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg">
+          </li>
+          <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="images/BroncoLokoSite1.jpg">
+          </li>
+          <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="images/MlhSite1.jpg">
+          </li>
+        </ul>
 
-            <ul class="container marquee__content marquee__content__3">
-                <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.jpg"></li>
-                <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.jpg"></li>
-                <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg">
-                </li>
-                <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg">
-                </li>
-                <li class="flyImage width-2" data-title="Instagram post of MLH-4"
-                    data-image-url="images/BroncoLokoSite1.jpg"></li>
-                <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image"
-                    data-image-url="images/MlhSite1.jpg"></li>
-            </ul>
-        </div>
+        <ul class="container marquee__content marquee__content__3">
+          <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.jpg"></li>
+          <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.jpg"></li>
+          <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.jpg">
+          </li>
+          <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.jpg">
+          </li>
+          <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="images/BroncoLokoSite1.jpg">
+          </li>
+          <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="images/MlhSite1.jpg">
+          </li>
+        </ul>
+      </div>
 
     </div>
 
@@ -296,6 +251,9 @@ if (window.location.hostname === "your-github-username.github.io") {
             Unauthorized use of images is prohibited.
           </p>        
     </footer> -->
+
+  </div>
+  <script src="js/loader.js"></script>
 </body>
 
 </html>
