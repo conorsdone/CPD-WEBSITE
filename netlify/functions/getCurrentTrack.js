@@ -49,6 +49,7 @@ async function getNowPlaying() {
     });
 
     const trackData = await trackResponse.json();
+    console.log('Full Spotify Response:', JSON.stringify(trackData, null, 2));
 
     if (!trackData.is_playing) {
       return { statusCode: 200, body: JSON.stringify({ message: 'No track is currently playing.' }) };
