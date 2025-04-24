@@ -14,6 +14,40 @@
     })(window,document,'script','dataLayer','GTM-P8GNZT7R');</script>
     <!-- End Google Tag Manager -->
 
+    <script>
+        async function fetchNowPlaying() {
+      try {
+        const response = await fetch('/.netlify/functions/getCurrentTrack');
+        const data = await response.json();
+        
+        // Log the data to inspect it
+        console.log('Track data:', data);
+        
+        const trackDiv = document.getElementById('track-info');
+    
+        if (data.message) {
+          trackDiv.innerHTML = `${data.message}`;
+        } else {
+          trackDiv.innerHTML = `
+            <div>
+              <img src="${data.album_image}" alt="Album Cover" width="100" height="100">
+              <h3>${data.name}</h3>
+              <p>by ${data.artists}</p>
+              <p>Album: ${data.album}</p>
+            </div>
+          `;
+        }
+      } catch (error) {
+        document.getElementById('track-info').innerHTML = 'Error loading track info.';
+        console.error('Fetch error:', error);
+      }
+    }
+    
+    document.addEventListener('DOMContentLoaded', fetchNowPlaying);
+    
+    
+    </script>
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -105,31 +139,6 @@ if (window.location.hostname === "your-github-username.github.io") {
         }
       }
     </script>
-    async function fetchNowPlaying() {
-        try {
-          const response = await fetch('/.netlify/functions/getCurrentTrack');
-          const data = await response.json();
-      
-          const trackDiv = document.getElementById('track-info');
-      
-          if (data.message) {
-            trackDiv.innerHTML = `<p>${data.message}</p>`;
-          } else {
-            trackDiv.innerHTML = `
-              <img src="${data.album_image}" alt="Album cover" style="width:100px; height:auto; border-radius: 8px;">
-              <p><strong>${data.name}</strong> by ${data.artists}</p>
-              <p><em>${data.album}</em></p>
-            `;
-          }
-        } catch (error) {
-          document.getElementById('track-info').innerHTML = `<p>Error loading track info.</p>`;
-          console.error('Fetch error:', error);
-        }
-      }
-      
-      // Call it when the page loads
-      document.addEventListener('DOMContentLoaded', fetchNowPlaying);
-    </script>      
 </head>
 
 <body>
@@ -151,6 +160,9 @@ if (window.location.hostname === "your-github-username.github.io") {
         </div>
       </section>
 
+    <div id="track-info">Loading...</div>
+
+
     <!-- <footer>
         <p style="z-index: 5000; position: absolute; font-size: 0.5rem; bottom: 0%; padding: 1%;">
             © 2024 Conor Dunne.<br>
@@ -159,6 +171,7 @@ if (window.location.hostname === "your-github-username.github.io") {
             Unauthorized use of images is prohibited.
           </p>        
     </footer> -->
+    
 </body>
 
 </html>
