@@ -37,6 +37,7 @@ async function getAccessToken() {
 async function getNowPlaying() {
   try {
     const accessToken = await getAccessToken();
+    console.log('Access Token:', accessToken);
     
     // Spotify API to get the current playing track
     const nowPlayingUrl = 'https://api.spotify.com/v1/me/player/currently-playing';
