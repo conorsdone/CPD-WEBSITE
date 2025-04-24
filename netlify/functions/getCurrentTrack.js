@@ -1,0 +1,79 @@
+const fetch = require('node-fetch');  // make sure node-fetch is installed
+
+// Getting values from environment variables (added in Netlify UI)
+const client_id = process.env.SPOTIFY_CLIENT_ID;
+const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
+const refresh_token = process.env.SPOTIFY_REFRESH_TOKEN;
+
+// Spotify token endpoint
+const tokenUrl = 'https://accounts.spotify.com/api/token';
+
+async function getAccessToken() {
+  const body = new URLSearchParams({
+    grant_type: 'refresh_token',
+    refresh_token: refresh_token,
+  });
+
+  const auth = Buffer.from(`${client_id}:${client_secret}`).toString('base64');
+
+  const response = await fetch(tokenUrl, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Basic ${auth}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: body.toString(),
+  });
+
+  const data = await response.json();
+
+  if (data.error) {
+    throw new Error(data.error_description);
+  }
+
+  return data.access_token;  // return the new access token
+}
+
+async function getNowPlaying() {
+  try {
+    const accessToken = await getAccessToken();
+    
+    // Spotify API to get the current playing track
+    const nowPlayingUrl = 'https://api.spotify.com/v1/me/player/currently-playing';
+    
+    const trackResponse = await fetch(nowPlayingUrl, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+
+    const trackData = await trackResponse.json();
+
+    if (!trackData.is_playing) {
+      return { statusCode: 200, body: JSON.stringify({ message: 'No track is currently playing.' }) };
+    }
+
+    const track = trackData.item;
+    const trackInfo = {
+      name: track.name,
+      artists: track.artists.map(artist => artist.name).join(', '),
+      album: track.album.name,
+      album_image: track.album.images[0].url,
+    };
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(trackInfo),  // return track info in response
+    };
+
+  } catch (error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: error.message }),
+    };
+  }
+}
+
+exports.handler = async () => {
+  return await getNowPlaying();
+};
