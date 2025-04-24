@@ -69,6 +69,7 @@ async function getNowPlaying() {
     };
 
   } catch (error) {
+    console.error('Error caught:', error.message);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message }),
