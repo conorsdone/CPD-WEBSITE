@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');  // make sure node-fetch is installed
+const fetch = require('node-fetch'); // make sure node-fetch is installed
 
 // Getting values from environment variables (added in Netlify UI)
 const client_id = process.env.SPOTIFY_CLIENT_ID;
