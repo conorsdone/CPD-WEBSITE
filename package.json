@@ -16,5 +16,8 @@
     "url": "https://github.com/conorsdone/CPD-WEBSITE/issues"
   },
   "homepage": "https://github.com/conorsdone/CPD-WEBSITE#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
 }
