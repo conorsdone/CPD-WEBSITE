@@ -105,6 +105,31 @@ if (window.location.hostname === "your-github-username.github.io") {
         }
       }
     </script>
+    async function fetchNowPlaying() {
+        try {
+          const response = await fetch('/.netlify/functions/getCurrentTrack');
+          const data = await response.json();
+      
+          const trackDiv = document.getElementById('track-info');
+      
+          if (data.message) {
+            trackDiv.innerHTML = `<p>${data.message}</p>`;
+          } else {
+            trackDiv.innerHTML = `
+              <img src="${data.album_image}" alt="Album cover" style="width:100px; height:auto; border-radius: 8px;">
+              <p><strong>${data.name}</strong> by ${data.artists}</p>
+              <p><em>${data.album}</em></p>
+            `;
+          }
+        } catch (error) {
+          document.getElementById('track-info').innerHTML = `<p>Error loading track info.</p>`;
+          console.error('Fetch error:', error);
+        }
+      }
+      
+      // Call it when the page loads
+      document.addEventListener('DOMContentLoaded', fetchNowPlaying);
+    </script>      
 </head>
 
 <body>
@@ -118,6 +143,13 @@ if (window.location.hostname === "your-github-username.github.io") {
             <img src="images/cpd logo.png" class="cpd-logo"></img>
         </div>
     </header>
+
+    <section id="now-playing">
+        <h2>Now Playing</h2>
+        <div id="track-info">
+          <p>Loading...</p>
+        </div>
+      </section>
 
     <!-- <footer>
         <p style="z-index: 5000; position: absolute; font-size: 0.5rem; bottom: 0%; padding: 1%;">
