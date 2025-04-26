@@ -381,198 +381,27 @@ h4 {
     }
   }
 
-/* @media (max-width: 1024px) {
-    .content-container {
-        transform: scale(0.9, 0.9); 
-        transform-origin: top left;
-    }
-} */
-
-.page-header {
-    z-index: 5000;
-    width: 34vw; /* Dynamic width (68vw) */
-    height: auto;
-    /* min-width: 350px; */
-    position: absolute;
-    top: 1vw;
-    right: 0;
-    padding-right: 1vw;
-}
-
-@media (max-width: 540px) {
-    .page-header  {
-        height: auto;
-        width: 100vw;
-        top: 1vh;
-        padding: 0 5vh;
-    }
-}
-
 .cpd-logo {
     /* border: 3px solid red; */
     animation: redAni 5s infinite;
 }
 
-.liveTime {
-    /* border: 3px solid green; */
-    font-size: 1.5vw;
-    color: white;
-    font-family: monospace;
-    text-align: right;
+.webgl {
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+}
+
+.webgl .cpd-logo {
+    width: 50%;
 }
 
 @media (max-width: 540px) {
-    .liveTime  {
-        text-align: center;
-        font-size: calc(3.25vw + 0.5vh);
+    .webgl .cpd-logo {
+        width: 90%;
     }
 }
 
-.mlh-image {
-    border-radius: 36rem;
-    border-width: 3px;
-    border-color: black;
-    border-style: solid;
-    border-top-left-radius: 0.3rem;
-    border-bottom-left-radius: 22.4rem;
-    border-bottom-right-radius: 90.6rem;
-    border-top-right-radius: 0.1rem;
-    border-left: 0px;
-    border-top: 0px;
-
-    position: absolute;
-    width: calc(10vw + 35vh); /* Dynamic width (60vw) */
-    height: auto; /* Maintain aspect ratio */
-    top: 0%;
-    left: 0%;
-    transform: translate(-0%, -0%) scale(1);
-    /* transition: transform 0.3s; */
-}
-
-@media (max-width: 540px) {
-    .mlh-image  {
-        width: 80vw;
-        transform: translate(0%, 16.5vw) scale(1); /* Scale up for mobile */
-    }
-}
-
-.mike-image {
-    /* border: 3px solid red; */
-    position: absolute;
-    width: calc(10vw + 35vh); /* Dynamic width (60vw) */
-    height: auto; /* Maintain aspect ratio */
-    bottom: 0%;
-    transform: translate(calc(15vw + 10vh), 0%) scale(1);
-    /* transition: transform 0.3s; */
-}
-
-@media (max-width: 540px) {
-    .mike-image  {
-        width: 100vw;
-        height: auto;
-        bottom: 0;
-        right: 0;
-        transform: translate(30vw,0) scale(1); /* Scale up for mobile */
-    }
-}
-
-.work-image {
-    /* border: 3px solid red; */
-    position: absolute;
-    /* width: 24vw; */
-    width: calc(4vw + 35vh); /* Dynamic width (50 - 2(padding) vw) */
-    height: auto; /* Maintain aspect ratio */
-    top: calc(37.5vh + 10vw); 
-    /* 55 */
-    transform: translate(1vw, 0%) scale(1);
-    /* transition: transform 0.3s; */
-}
-
-@media (max-width: 540px) {
-    .work-image  {
-        width: 57.5vw;
-        height: auto;
-        rotate: 20deg;
-        top: calc(32vh - 6.5vw);
-        left: 50vw;
-        transform: translate(-9vw, 0); /* Scale up for mobile */
-    }
-}
-
-.about-image {
-    /* border: 3px solid red; */
-    position: absolute;
-    /* width: 26vw; Dynamic width (58 - 2(padding) vw) */
-    width: calc(5vw + 35vh); /* Dynamic width (50 - 2(padding) vw) */
-    height: auto; /* Maintain aspect ratio */
-    top: calc(52.5vh + 10vw);
-    /* 70 */
-    transform: translate(1vw, 0%) scale(1);
-    /* transition: transform 0.3s; */
-}
-
-@media (max-width: 540px) {
-    .about-image  {
-        width: 55vw;
-        height: auto;
-        rotate: -20deg;
-        top: calc(55vh + 10vw);
-        right: 50vw;
-        transform: translate(6vw, 0); /* Scale up for mobile */
-    }
-}
-
-
-.cpd-logo2 {
-    /* border: 3px solid red; */
-    animation: redAni 5s infinite;
-    position: absolute;
-    width: 34vw; /* Dynamic width (68vw) */
-    height: auto; /* Maintain aspect ratio */
-    top: 1vw; /* Dynamic padding (2vw) */
-    right: 1vw; /* Dynamic padding (2vw) */
-    transform: translate(-0%, -0%) scale(1);
-    /* transition: transform 0.3s; */
-}
-
-@media (max-width: 540px) {
-    .cpd-logo2  {
-        height: auto;
-        width: 100vw;
-        top: 1vh; /* Dynamic padding (2vw) */
-        right: 0;
-        left: 0;
-        padding: 0 5vh;
-        transform: translate(0%, 0%) scale(1); /* Scale up for mobile */
-    }
-}
-
-.liveTime2 {
-    font-size: 1.6vw; /* Dynamic text (3.2vw) */
-    color: white;
-    font-family: monospace;
-    text-align: right;
-    position: absolute;
-    width: 34vw; /* Dynamic width (68vw) */
-    height: auto; /* Maintain aspect ratio */
-    top: 1vw; /* Dynamic padding (2vw) */
-    right: 1vw; /* Dynamic padding (2vw) */
-    transform: translate(0%, 275%) scale(1);
-    /* transition: transform 0.3s; */
-}
-
-@media (max-width: 540px) {
-    .liveTime2  {
-        font-size: 2.5vh;
-        height: auto;
-        width: 100vw;
-        top: 0vh; /* Dynamic padding (2vw) */
-        right: 0;
-        left: 0;
-        text-align: center;
-        transform: translate(0%, 0) scale(1); /* Scale up for mobile */
-    }
-}
 
 #track-info {
     border: 3px solid red;
