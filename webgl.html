@@ -55,18 +55,17 @@
     const response = await fetch('/.netlify/functions/getCurrentTrack'); // Call the working backend
     const data = await response.json();
     
-    console.log('Fetched data:', data); // Debugging: see what's fetched
+    console.log('Fetched data:', data);
 
     if (data.message) {
       console.error(data.message);
     } else {
-      // Map the real Spotify fields to what updateScreen expects
+      // Map the real Spotify fields properly
       const mappedTrackInfo = {
         trackName: data.name || 'Unknown Track',
         artistName: data.artists || 'Unknown Artist',
         albumName: data.album || 'Unknown Album',
-        albumImageUrl: data.album_image || 'Unknown Album Image',
-        // albumImageUrl: '', // We'll skip image for now as you said
+        albumImageUrl: data.album_image || '', // <-- 💥 now using the live Spotify album art!
       };
 
       updateScreen(mappedTrackInfo);
@@ -75,6 +74,7 @@
     console.error('Error fetching track info:', error);
   }
 }
+
 
 function updateScreen(trackInfo) {
   if (!canvas || !ctx) {
@@ -98,7 +98,7 @@ function updateScreen(trackInfo) {
 
   // Load the Cherry Bomb cover
   const img = new Image();
-  img.src = 'assets/cherrybombCover.jpg'; // your local image
+  img.src = trackInfo.albumImageUrl || 'assets/cherrybombCover.jpg';
 
   img.onload = () => {
     // Draw rounded rectangle for album image centered at top
@@ -151,7 +151,6 @@ function updateScreen(trackInfo) {
     console.error('Failed to load Cherry Bomb image:', error);
   };
 }
-
 
 function drawBatteryIcon() {
   const batteryX = canvas.width - 50;
