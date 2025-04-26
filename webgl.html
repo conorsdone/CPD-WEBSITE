@@ -36,22 +36,21 @@
 			import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 			import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 
-			let camera, scene, renderer;
 
-			init();
+			let camera, scene, renderer, model, controls;
+let screenTexture, ctx, canvas, envTexture;
 
-      async function fetchNowPlaying() {
+init();
+
+async function fetchNowPlaying() {
   try {
-    const response = await fetch('/.netlify/functions/getCurrentTrack');
+    const response = await fetch('/.netlify/functions/getCurrentTrack'); // Adjust to your endpoint
     const data = await response.json();
-    
-    // Log the data to inspect it
-    console.log('Track data:', data);
-    
+
     if (data.message) {
       console.error(data.message);
     } else {
-      // Call the function to update the 3D screen
+      // Call the function to update the iPod screen with track info
       updateScreen(data);
     }
   } catch (error) {
@@ -59,121 +58,129 @@
   }
 }
 
+function updateScreen(trackInfo) {
+  if (!canvas || !ctx) {
+    console.error('Canvas or ctx is not initialized');
+    return;
+  }
 
-			function init() {
+  const { trackName, artistName, albumName, albumImageUrl } = trackInfo;
 
-				const container = document.createElement('div');
-				document.body.appendChild(container);
+  // Clear the canvas before updating
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-				camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 20);
-				camera.position.set(90, 0, 0);
+  const img = new Image();
+  img.crossOrigin = 'anonymous'; // Important for loading external images
 
-				scene = new THREE.Scene();
+  img.onload = () => {
+    // Draw the album cover
+    ctx.drawImage(img, 10, 10, 80, 80); // Adjust size and position as needed
 
-				new RGBELoader()
-					.load('assets/royal_esplanade_1k.hdr', function (texture) {
+    // Now draw text after image is loaded
+    ctx.font = '16px Arial';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('Track: ' + trackName, 100, 40);
+    ctx.fillText('Artist: ' + artistName, 100, 70);
+    ctx.fillText('Album: ' + albumName, 100, 100);
 
-						texture.mapping = THREE.EquirectangularReflectionMapping;
+    screenTexture.needsUpdate = true; // Trigger texture update
+  };
 
-						scene.background = texture;
-						scene.environment = texture;
+  img.onerror = () => {
+    console.error('Failed to load album image:', albumImageUrl);
+  };
 
-						render();
-
-						// Load the model
-						const loader = new GLTFLoader().setPath('assets/');
-						loader.load(
-							'scene.gltf',
-							async function (gltf) {
-								const model = gltf.scene;
-
-								// Debug material in case original materials fail
-								// model.traverse((child) => {
-								// 	if (child.isMesh) {
-								// 		child.material = new THREE.MeshNormalMaterial();
-								// 	}
-								// });
-
-								console.log('Model loaded:', model);
-
-								await renderer.compileAsync(model, camera, scene);
-
-								scene.add(model);
-                
-                // Create a plane for the iPod screen (adjust size to fit the model)
-const screenGeometry = new THREE.PlaneGeometry(0.08, 0.065); // Adjust the dimensions based on your model
-const screenMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.DoubleSide });
-const screen = new THREE.Mesh(screenGeometry, screenMaterial);
-
-// Position the screen where it would be on the iPod model (you might need to adjust these values)
-screen.position.set(0.009, 0.055, 0); // Adjust based on your model's screen position
-screen.rotation.set(0, 1.5708, 0);
-
-// Add the screen to the iPod model
-model.add(screen);
+  img.src = albumImageUrl;
+}
 
 
-                // Calculate bounding box
-                const box = new THREE.Box3().setFromObject(model);
-const center = box.getCenter(new THREE.Vector3());
-const size = box.getSize(new THREE.Vector3());
+function init() {
+  const container = document.createElement('div');
+  document.body.appendChild(container);
 
-// Focus controls on center
-controls.target.copy(center);
-controls.update();
+  // Set up the camera
+  camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 20);
+  camera.position.set(0, 0, 3);  // Adjust camera position as needed
 
-// Adjust camera distance based on model size (but closer)
-const maxDim = Math.max(size.x, size.y, size.z);
-const fov = camera.fov * (Math.PI / 180);
+  scene = new THREE.Scene();
 
-// This brings the camera closer — adjust the multiplier to suit
-const cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 0.5;  // 0.5 makes it closer
+  // Load the environment texture (e.g., HDRI)
+  new RGBELoader().load('assets/royal_esplanade_1k.hdr', function(texture) {
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+    scene.background = texture;
+    scene.environment = texture;
+    render();
+  });
 
-// Optional offset to move the camera slightly above or in front of the model
-camera.position.set(center.x, center.y + maxDim * 0.2, center.z + cameraZ);
-camera.lookAt(center);
-								render();
-							},
-							undefined, // onProgress callback (optional)
-							function (error) {
-								console.error('An error occurred while loading the GLTF model:', error);
-							}
-						);
+  // Load the 3D iPod model
+  const loader = new GLTFLoader();
+  loader.load('assets/scene.gltf', function(gltf) {
+    model = gltf.scene;
+    scene.add(model);
 
-					});
+    // Create the canvas and texture for the iPod screen
+    canvas = document.createElement('canvas');
+    canvas.width = 300;  // Adjust width as needed (in pixels)
+    canvas.height = 400; // Adjust height as needed (in pixels)
+    ctx = canvas.getContext('2d');
 
-				renderer = new THREE.WebGLRenderer({ antialias: true });
-				renderer.setPixelRatio(window.devicePixelRatio);
-				renderer.setSize(window.innerWidth, window.innerHeight);
-				renderer.toneMapping = THREE.ACESFilmicToneMapping;
-				renderer.toneMappingExposure = 1;
-				container.appendChild(renderer.domElement);
+    // Create the texture for the screen
+    screenTexture = new THREE.CanvasTexture(canvas);
 
-				const controls = new OrbitControls(camera, renderer.domElement);
-				controls.addEventListener('change', render); // use if no animation loop
-				controls.minDistance = 2;
-				controls.maxDistance = 10;
-				controls.target.set(0, 0, -0.2);
-				controls.update();
+    // Create the material using the canvas texture
+    const screenMaterial = new THREE.MeshBasicMaterial({ map: screenTexture, side: THREE.DoubleSide });
 
-				window.addEventListener('resize', onWindowResize);
+    // Create the 3D panel for the iPod screen with updated dimensions
+    const screenGeometry = new THREE.PlaneGeometry(0.08, 0.065);  // Adjusted dimensions (in 3D units)
+    const screen = new THREE.Mesh(screenGeometry, screenMaterial);
 
-			}
+    // Position the screen appropriately on the iPod model
+    screen.position.set(0.009, 0.055, 0); // Adjusted position based on your model's screen
+    screen.rotation.set(0, Math.PI / 2, 0);  // Rotation to orient the screen correctly
 
-			function onWindowResize() {
+    // Add the screen to the iPod model
+    model.add(screen);
+    model.scale.set(5, 5, 5); // Scale up uniformly (2x size in all directions)
 
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
+    // Now that the screen is ready, we can update it with placeholder data
+    // updateScreen({
+    //   trackName: 'BUFFALO',
+    //   artistName: 'Tyler, The Creator',
+    //   albumName: 'Cherry Bomb',
+    //   albumImageUrl: 'assets/cherrybombCover.jpg'
+    // });
+    fetchNowPlaying();
+setInterval(fetchNowPlaying, 10000); // Update every 10 seconds
 
-				renderer.setSize(window.innerWidth, window.innerHeight);
+  });
 
-				render();
+  // Set up renderer
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  container.appendChild(renderer.domElement);
 
-			}
+  window.addEventListener('resize', onWindowResize);
+  controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+controls.enablePan = false; // optional, depending on how free you want the user
 
-			function render() {
-				renderer.render(scene, camera);
-			}
+  render();
+}
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function render() {
+  requestAnimationFrame(render);
+  controls.update();
+  renderer.render(scene, camera);
+}
+
 
 		</script>
 	</body>
