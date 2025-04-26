@@ -20,11 +20,7 @@
 <body>
   <div id="info">
     <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> - GLTFLoader<br />
-    Battle Damaged Sci-fi Helmet by
-    <a href="https://sketchfab.com/theblueturtle_" target="_blank" rel="noopener">theblueturtle_</a><br />
-    <a href="https://hdrihaven.com/hdri/?h=royal_esplanade" target="_blank" rel="noopener">Royal Esplanade</a> from <a
-      href="https://hdrihaven.com/" target="_blank" rel="noopener">HDRI Haven</a>
-
+    <a href="https://hdrihaven.com/hdri/?h=royal_esplanade" target="_blank" rel="noopener">Royal Esplanade</a> from <a href="https://hdrihaven.com/" target="_blank" rel="noopener">HDRI Haven</a>
   </div>
 
   <script type="importmap">
@@ -38,153 +34,156 @@
 
   <script type="module">
 
+    // import from threejs
     import * as THREE from 'three';
 
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 
+    // create variables
+    let camera, scene, renderer, model, controls, screenTexture, ctx, canvas, envTexture;
 
-    let camera, scene, renderer, model, controls;
-    let screenTexture, ctx, canvas, envTexture;
-
+    // initiate app
     init();
 
+    // spotify get now playing track function
     async function fetchNowPlaying() {
-  try {
-    const response = await fetch('/.netlify/functions/getCurrentTrack'); // Call the working backend
-    const data = await response.json();
-    
-    console.log('Fetched data:', data);
+      try {
+        const response = await fetch('/.netlify/functions/getCurrentTrack'); // call the netlify function
+        const data = await response.json();
 
-    if (data.message) {
-      console.error(data.message);
-    } else {
-      // Map the real Spotify fields properly
-      const mappedTrackInfo = {
-        trackName: data.name || 'Unknown Track',
-        artistName: data.artists || 'Unknown Artist',
-        albumName: data.album || 'Unknown Album',
-        albumImageUrl: data.album_image || '', // <-- 💥 now using the live Spotify album art!
+        console.log('Fetched data:', data); // log the data from spotify api
+
+        if (data.message) {
+          console.error(data.message);
+        } else {
+          // map spotify data
+          const mappedTrackInfo = {
+            trackName: data.name || 'Unknown Track',
+            artistName: data.artists || 'Unknown Artist',
+            albumName: data.album || 'Unknown Album',
+            albumImageUrl: data.album_image || '',
+          };
+
+          updateScreen(mappedTrackInfo); // update screen with data
+        }
+      } catch (error) {
+        console.error('Error fetching track info:', error);
+      }
+    }
+
+
+    function updateScreen(trackInfo) {
+      if (!canvas || !ctx) {
+        console.error('Canvas or ctx is not initialized');
+        return;
+      }
+
+      const { trackName, artistName, albumName } = trackInfo; // create variables for track info
+
+      console.log('Updating screen with:', trackInfo);
+
+      // clear screen
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // create background
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      gradient.addColorStop(0, '#111111');
+      gradient.addColorStop(1, '#333333');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // load spotify image (album cover)
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.src = trackInfo.albumImageUrl || 'assets/cherrybombCover.jpg';
+
+      img.onload = () => {
+        const imgSize = 120;
+        const imgX = (canvas.width - imgSize) / 2; // center horizontally
+        const imgY = 30; // top padding
+
+        const radius = 15;
+
+        // draw image
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(imgX + radius, imgY);
+        ctx.lineTo(imgX + imgSize - radius, imgY);
+        ctx.quadraticCurveTo(imgX + imgSize, imgY, imgX + imgSize, imgY + radius);
+        ctx.lineTo(imgX + imgSize, imgY + imgSize - radius);
+        ctx.quadraticCurveTo(imgX + imgSize, imgY + imgSize, imgX + imgSize - radius, imgY + imgSize);
+        ctx.lineTo(imgX + radius, imgY + imgSize);
+        ctx.quadraticCurveTo(imgX, imgY + imgSize, imgX, imgY + imgSize - radius);
+        ctx.lineTo(imgX, imgY + radius);
+        ctx.quadraticCurveTo(imgX, imgY, imgX + radius, imgY);
+        ctx.closePath();
+        ctx.clip();
+        ctx.drawImage(img, imgX, imgY, imgSize, imgSize);
+        ctx.restore();
+
+        // draw text
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+
+        // track name
+        ctx.font = 'bold 18px Arial';
+        ctx.fillText(trackName, canvas.width / 2, imgY + imgSize + 40);
+
+        // artist name
+        ctx.font = '16px Arial';
+        ctx.fillText(artistName, canvas.width / 2, imgY + imgSize + 70);
+
+        // album name
+        ctx.font = '14px Arial';
+        ctx.fillText('Album: ' + albumName, canvas.width / 2, imgY + imgSize + 95);
+
+        // call the battery icon drawing function
+        drawBatteryIcon();
+
+        // update screen texture
+        screenTexture.needsUpdate = true;
       };
 
-      updateScreen(mappedTrackInfo);
+      img.onerror = (error) => {
+        console.error('Failed to load album cover image:', error);
+      };
     }
-  } catch (error) {
-    console.error('Error fetching track info:', error);
-  }
-}
 
+    // draw battery icon function
+    function drawBatteryIcon() {
+      const batteryX = canvas.width - 50;
+      const batteryY = 20;
+      const batteryWidth = 30;
+      const batteryHeight = 12;
 
-function updateScreen(trackInfo) {
-  if (!canvas || !ctx) {
-    console.error('Canvas or ctx is not initialized');
-    return;
-  }
+      // battery outer rectangle
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(batteryX, batteryY, batteryWidth, batteryHeight);
 
-  const { trackName, artistName, albumName } = trackInfo;
+      // battery end
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(batteryX + batteryWidth, batteryY + 3, 4, 6);
 
-  console.log('Updating screen with:', trackInfo);
-
-  // Clear the previous screen
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Create a gradient background
-  const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  gradient.addColorStop(0, '#111111');
-  gradient.addColorStop(1, '#333333');
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // Load the Cherry Bomb cover
-  const img = new Image();
-img.crossOrigin = 'anonymous'; // <---- ADD THIS LINE
-img.src = trackInfo.albumImageUrl || 'assets/cherrybombCover.jpg';
-
-
-  img.onload = () => {
-    // Draw rounded rectangle for album image centered at top
-    const imgSize = 120;
-    const imgX = (canvas.width - imgSize) / 2; // center horizontally
-    const imgY = 30; // top padding
-
-    const radius = 15;
-
-    ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(imgX + radius, imgY);
-    ctx.lineTo(imgX + imgSize - radius, imgY);
-    ctx.quadraticCurveTo(imgX + imgSize, imgY, imgX + imgSize, imgY + radius);
-    ctx.lineTo(imgX + imgSize, imgY + imgSize - radius);
-    ctx.quadraticCurveTo(imgX + imgSize, imgY + imgSize, imgX + imgSize - radius, imgY + imgSize);
-    ctx.lineTo(imgX + radius, imgY + imgSize);
-    ctx.quadraticCurveTo(imgX, imgY + imgSize, imgX, imgY + imgSize - radius);
-    ctx.lineTo(imgX, imgY + radius);
-    ctx.quadraticCurveTo(imgX, imgY, imgX + radius, imgY);
-    ctx.closePath();
-    ctx.clip();
-    ctx.drawImage(img, imgX, imgY, imgSize, imgSize);
-    ctx.restore();
-
-    // Draw Track Info BELOW the image
-    ctx.fillStyle = '#ffffff';
-    ctx.textAlign = 'center';
-
-    // Track Name
-    ctx.font = 'bold 18px Arial';
-    ctx.fillText(trackName, canvas.width / 2, imgY + imgSize + 40);
-
-    // Artist Name
-    ctx.font = '16px Arial';
-    ctx.fillText(artistName, canvas.width / 2, imgY + imgSize + 70);
-
-    // Album Name
-    ctx.font = '14px Arial';
-    ctx.fillText('Album: ' + albumName, canvas.width / 2, imgY + imgSize + 95);
-
-    // Draw fake battery icon
-    drawBatteryIcon();
-
-    // Update texture
-    screenTexture.needsUpdate = true;
-  };
-
-  img.onerror = (error) => {
-    console.error('Failed to load Cherry Bomb image:', error);
-  };
-}
-
-function drawBatteryIcon() {
-  const batteryX = canvas.width - 50;
-  const batteryY = 20;
-  const batteryWidth = 30;
-  const batteryHeight = 12;
-
-  // Battery outer rectangle
-  ctx.strokeStyle = '#ffffff';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(batteryX, batteryY, batteryWidth, batteryHeight);
-
-  // Battery positive terminal
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(batteryX + batteryWidth, batteryY + 3, 4, 6);
-
-  // Battery level (let's pretend it's always 70%)
-  ctx.fillStyle = '#00ff00'; // Green
-  ctx.fillRect(batteryX + 2, batteryY + 2, batteryWidth * 0.7 - 4, batteryHeight - 4);
-}
+      // battery %
+      ctx.fillStyle = '#00ff00'; // Green
+      ctx.fillRect(batteryX + 2, batteryY + 2, batteryWidth * 0.7 - 4, batteryHeight - 4);
+    }
 
     function init() {
       const container = document.createElement('div');
       document.body.appendChild(container);
 
-      // Set up the camera
+      // set up the camera fov 35mm
       camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 20);
-      camera.position.set(0, 0, 3);  // Adjust camera position as needed
+      camera.position.set(0, 0, 3);
 
+      // create scene
       scene = new THREE.Scene();
 
-      // Load the environment texture (e.g., HDRI)
+      // load the environment texture
       new RGBELoader().load('assets/royal_esplanade_1k.hdr', function (texture) {
         texture.mapping = THREE.EquirectangularReflectionMapping;
         scene.background = texture;
@@ -192,49 +191,41 @@ function drawBatteryIcon() {
         render();
       });
 
-      // Load the 3D iPod model
+      // load the ipod model
       const loader = new GLTFLoader();
       loader.load('assets/scene.gltf', function (gltf) {
         model = gltf.scene;
         scene.add(model);
 
-        // Create the canvas and texture for the iPod screen
+        // create canvas + texture for ipod screen
         canvas = document.createElement('canvas');
-        canvas.width = 300;  // Adjust width as needed (in pixels)
-        canvas.height = 400; // Adjust height as needed (in pixels)
+        canvas.width = 400;
+        canvas.height = 330;
         ctx = canvas.getContext('2d');
 
-        // Create the texture for the screen
+        // create texture for screen
         screenTexture = new THREE.CanvasTexture(canvas);
 
-        // Create the material using the canvas texture
+        // create material using canvas texture
         const screenMaterial = new THREE.MeshBasicMaterial({ map: screenTexture, side: THREE.DoubleSide });
 
-        // Create the 3D panel for the iPod screen with updated dimensions
-        const screenGeometry = new THREE.PlaneGeometry(0.08, 0.065);  // Adjusted dimensions (in 3D units)
+        // create 3d plane for ipod screen with updated dimensions
+        const screenGeometry = new THREE.PlaneGeometry(0.08, 0.066);  // Adjusted dimensions (in 3D units)
         const screen = new THREE.Mesh(screenGeometry, screenMaterial);
 
-        // Position the screen appropriately on the iPod model
-        screen.position.set(0.009, 0.055, 0); // Adjusted position based on your model's screen
-        screen.rotation.set(0, Math.PI / 2, 0);  // Rotation to orient the screen correctly
+        // place new screen onto the model
+        screen.position.set(0.009, 0.0545, 0); // new screen position
+        screen.rotation.set(0, Math.PI / 2, 0); // new screen rotation
 
-        // Add the screen to the iPod model
+        // add new screen to ipod
         model.add(screen);
-        model.scale.set(5, 5, 5); // Scale up uniformly (2x size in all directions)
+        model.scale.set(5, 5, 5); // scale up screen
 
-        // Now that the screen is ready, we can update it with placeholder data
-        // updateScreen({
-        //   trackName: 'BUFFALO',
-        //   artistName: 'Tyler, The Creator',
-        //   albumName: 'Cherry Bomb',
-        //   albumImageUrl: 'assets/cherrybombCover.jpg'
-        // });
-            fetchNowPlaying();
-        // setInterval(fetchNowPlaying, 10000); // Update every 10 seconds
-
+        fetchNowPlaying(); // fetch track info
+        setInterval(fetchNowPlaying, 10000); // update every 10 seconds
       });
 
-      // Set up renderer
+      // set up renderer
       renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setSize(window.innerWidth, window.innerHeight);
@@ -244,23 +235,24 @@ function drawBatteryIcon() {
       controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.dampingFactor = 0.05;
-      controls.enablePan = false; // optional, depending on how free you want the user
+      controls.enablePan = false;
 
       render();
     }
 
+    // window resize function
     function onWindowResize() {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
+    // render function
     function render() {
       requestAnimationFrame(render);
       controls.update();
       renderer.render(scene, camera);
     }
-
   </script>
 </body>
 
