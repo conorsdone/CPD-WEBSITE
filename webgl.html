@@ -59,38 +59,34 @@ async function fetchNowPlaying() {
 }
 
 function updateScreen(trackInfo) {
+  // Check if canvas exists and ctx is initialized
   if (!canvas || !ctx) {
     console.error('Canvas or ctx is not initialized');
     return;
   }
 
-  const { trackName, artistName, albumName, albumImageUrl } = trackInfo;
+  // Extract the values from the fetched data
+  const { name, artists, album, album_image } = trackInfo;
 
   // Clear the canvas before updating
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  // Draw the album image on the canvas (optional)
   const img = new Image();
-  img.crossOrigin = 'anonymous'; // Important for loading external images
-
   img.onload = () => {
-    // Draw the album cover
-    ctx.drawImage(img, 10, 10, 80, 80); // Adjust size and position as needed
-
-    // Now draw text after image is loaded
-    ctx.font = '16px Arial';
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText('Track: ' + trackName, 100, 40);
-    ctx.fillText('Artist: ' + artistName, 100, 70);
-    ctx.fillText('Album: ' + albumName, 100, 100);
-
-    screenTexture.needsUpdate = true; // Trigger texture update
+    ctx.drawImage(img, 10, 10, 80, 80); // Adjust size and position of the album cover
   };
+  img.src = album_image; // Use the correct album image URL from the backend
 
-  img.onerror = () => {
-    console.error('Failed to load album image:', albumImageUrl);
-  };
+  // Draw the track info (name, artist, album) on the canvas
+  ctx.font = '16px Arial';
+  ctx.fillStyle = '#ffffff'; // White text for contrast
+  ctx.fillText('Track: ' + name, 100, 40);
+  ctx.fillText('Artist: ' + artists, 100, 70);
+  ctx.fillText('Album: ' + album, 100, 100);
 
-  img.src = albumImageUrl;
+  // Update the texture with the new canvas content
+  screenTexture.needsUpdate = true;
 }
 
 
