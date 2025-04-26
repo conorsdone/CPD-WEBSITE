@@ -1,39 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+		<title>three.js webgl - GLTFloader</title>
 		<meta charset="utf-8">
-		<title>My first three.js app</title>
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link type="text/css" rel="stylesheet" href="main.css">
 		<style>
-			body { margin: 0; 
-                background-color: black;
-            color: white;}
-        body.inverted { color: red;}
-            canvas {
-			position: fixed;
-			top: 0;
-			left: 0;
-			display: block;
-			width: 100%;
-			height: 100vh;
-		}
+			body { margin: 0; overflow: hidden; }
+			canvas { display: block; }
 		</style>
-        <script type="importmap">
-            {
-              "imports": {
-                "three": "https://cdn.jsdelivr.net/npm/three@v0.174.0/build/three.module.js",
-                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.174.0/examples/jsm/"
-              }
-            }
-          </script>
-          <script>
-            function togglePageInvert() {
-            document.body.classList.toggle('inverted');
-        }
-          </script>
 	</head>
+
 	<body>
-		<script type="module" src="/main.js"></script>
-        <h1>THIS IS BEHIND THE CANVAS!!!</h1>
-	<canvas></canvas>
+		<div id="info">
+			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> - GLTFLoader<br />
+			Battle Damaged Sci-fi Helmet by
+			<a href="https://sketchfab.com/theblueturtle_" target="_blank" rel="noopener">theblueturtle_</a><br />
+			<a href="https://hdrihaven.com/hdri/?h=royal_esplanade" target="_blank" rel="noopener">Royal Esplanade</a> from <a href="https://hdrihaven.com/" target="_blank" rel="noopener">HDRI Haven</a>
+		</div>
+
+		<script type="importmap">
+			{
+				"imports": {
+					"three": "https://cdn.jsdelivr.net/npm/three@0.174.0/build/three.module.js",
+					"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.174.0/examples/jsm/"
+				}
+			}
+		</script>
+
+		<script type="module">
+
+			import * as THREE from 'three';
+
+			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+			import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+			import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+
+			let camera, scene, renderer;
+
+			init();
+
+      async function fetchNowPlaying() {
+  try {
+    const response = await fetch('/.netlify/functions/getCurrentTrack');
+    const data = await response.json();
+    
+    // Log the data to inspect it
+    console.log('Track data:', data);
+    
+    if (data.message) {
+      console.error(data.message);
+    } else {
+      // Call the function to update the 3D screen
+      updateScreen(data);
+    }
+  } catch (error) {
+    console.error('Error fetching track info:', error);
+  }
+}
+
+
+			function init() {
+
+				const container = document.createElement('div');
+				document.body.appendChild(container);
+
+				camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 20);
+				camera.position.set(90, 0, 0);
+
+				scene = new THREE.Scene();
+
+				new RGBELoader()
+					.load('assets/royal_esplanade_1k.hdr', function (texture) {
+
+						texture.mapping = THREE.EquirectangularReflectionMapping;
+
+						scene.background = texture;
+						scene.environment = texture;
+
+						render();
+
+						// Load the model
+						const loader = new GLTFLoader().setPath('assets/');
+						loader.load(
+							'scene.gltf',
+							async function (gltf) {
+								const model = gltf.scene;
+
+								// Debug material in case original materials fail
+								// model.traverse((child) => {
+								// 	if (child.isMesh) {
+								// 		child.material = new THREE.MeshNormalMaterial();
+								// 	}
+								// });
+
+								console.log('Model loaded:', model);
+
+								await renderer.compileAsync(model, camera, scene);
+
+								scene.add(model);
+                
+                // Create a plane for the iPod screen (adjust size to fit the model)
+const screenGeometry = new THREE.PlaneGeometry(0.08, 0.065); // Adjust the dimensions based on your model
+const screenMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.DoubleSide });
+const screen = new THREE.Mesh(screenGeometry, screenMaterial);
+
+// Position the screen where it would be on the iPod model (you might need to adjust these values)
+screen.position.set(0.009, 0.055, 0); // Adjust based on your model's screen position
+screen.rotation.set(0, 1.5708, 0);
+
+// Add the screen to the iPod model
+model.add(screen);
+
+
+                // Calculate bounding box
+                const box = new THREE.Box3().setFromObject(model);
+const center = box.getCenter(new THREE.Vector3());
+const size = box.getSize(new THREE.Vector3());
+
+// Focus controls on center
+controls.target.copy(center);
+controls.update();
+
+// Adjust camera distance based on model size (but closer)
+const maxDim = Math.max(size.x, size.y, size.z);
+const fov = camera.fov * (Math.PI / 180);
+
+// This brings the camera closer — adjust the multiplier to suit
+const cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 0.5;  // 0.5 makes it closer
+
+// Optional offset to move the camera slightly above or in front of the model
+camera.position.set(center.x, center.y + maxDim * 0.2, center.z + cameraZ);
+camera.lookAt(center);
+								render();
+							},
+							undefined, // onProgress callback (optional)
+							function (error) {
+								console.error('An error occurred while loading the GLTF model:', error);
+							}
+						);
+
+					});
+
+				renderer = new THREE.WebGLRenderer({ antialias: true });
+				renderer.setPixelRatio(window.devicePixelRatio);
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				renderer.toneMapping = THREE.ACESFilmicToneMapping;
+				renderer.toneMappingExposure = 1;
+				container.appendChild(renderer.domElement);
+
+				const controls = new OrbitControls(camera, renderer.domElement);
+				controls.addEventListener('change', render); // use if no animation loop
+				controls.minDistance = 2;
+				controls.maxDistance = 10;
+				controls.target.set(0, 0, -0.2);
+				controls.update();
+
+				window.addEventListener('resize', onWindowResize);
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize(window.innerWidth, window.innerHeight);
+
+				render();
+
+			}
+
+			function render() {
+				renderer.render(scene, camera);
+			}
+
+		</script>
 	</body>
 </html>

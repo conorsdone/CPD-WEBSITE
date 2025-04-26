@@ -33,7 +33,6 @@ html:focus-within {
 
 /* Set core body defaults */
 body {
-    overflow: hidden;
     min-height: 100vh;
     text-rendering: optimizeSpeed;
     line-height: 1.5;
@@ -573,4 +572,16 @@ h4 {
         text-align: center;
         transform: translate(0%, 0) scale(1); /* Scale up for mobile */
     }
+}
+
+#track-info {
+    border: 3px solid red;
+    margin: auto;
+    width: 50%;
+    text-align: center;
+}
+
+#track-info img {
+    border: 3px solid red;
+    width: 100%;
 }
