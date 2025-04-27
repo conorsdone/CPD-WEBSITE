@@ -145,6 +145,8 @@ function loadEnvironmentTexture(index) {
             artistName: data.artists || 'Unknown Artist',
             albumName: data.album || 'Unknown Album',
             albumImageUrl: data.album_image || '',
+            progressMs: data.progress_ms || 0,
+            durationMs: data.item ? data.item.duration_ms : 1 // avoid divide-by-zero
           };
 
           updateScreen(mappedTrackInfo); // update screen with data
@@ -161,7 +163,7 @@ function loadEnvironmentTexture(index) {
         return;
       }
 
-      const { trackName, artistName, albumName } = trackInfo; // create variables for track info
+      const { trackName, artistName, albumName, progressMs, durationMs } = trackInfo; // create variables for track info
 
       console.log('Updating screen with:', trackInfo);
 
@@ -220,6 +222,9 @@ function loadEnvironmentTexture(index) {
         ctx.font = '14px Arial';
         ctx.fillText('Album: ' + albumName, canvas.width / 2, imgY + imgSize + 95);
 
+        // call the progress bar function
+        drawProgressBar(progressMs, durationMs);
+
         // call the battery icon drawing function
         drawBatteryIcon();
 
@@ -231,6 +236,24 @@ function loadEnvironmentTexture(index) {
         console.error('Failed to load album cover image:', error);
       };
     }
+
+    function drawProgressBar(progressMs, durationMs) {
+  const barWidth = canvas.width * 0.6;
+  const barHeight = 8;
+  const barX = (canvas.width - barWidth) / 2;
+  const barY = canvas.height - 40; // near the bottom
+
+  const progress = Math.min(progressMs / durationMs, 1); // clamp to [0,1]
+
+  // background bar
+  ctx.fillStyle = '#555555';
+  ctx.fillRect(barX, barY, barWidth, barHeight);
+
+  // progress bar
+  ctx.fillStyle = '#1DB954'; // spotify green code
+  ctx.fillRect(barX, barY, barWidth * progress, barHeight);
+}
+
 
     // draw battery icon function
     function drawBatteryIcon() {
@@ -303,7 +326,7 @@ function loadEnvironmentTexture(index) {
         model.scale.set(5, 5, 5); // scale up screen
 
         fetchNowPlaying(); // fetch track info
-        setInterval(fetchNowPlaying, 10000); // update every 10 seconds
+        setInterval(fetchNowPlaying, 1000); // update every 1 seconds
       });
 
       // set up renderer

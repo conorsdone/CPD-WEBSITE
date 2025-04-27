@@ -262,6 +262,28 @@
 
   </div>
   <script src="js/loader.js"></script>
+  <!-- Cookie Banner -->
+<div id="cookie-banner" style="position:fixed; bottom:20px; left:20px; right:20px; padding:15px; background:#1e1e1e; color:white; font-family:sans-serif; display:flex; justify-content:space-between; align-items:center; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.2); z-index:9999;">
+  <div style="max-width:80%;">
+    We use cookies to improve your experience. By continuing, you agree to our cookie policy.
+  </div>
+  <button id="accept-cookies" style="background:#4CAF50; color:white; border:none; padding:10px 20px; border-radius:5px; margin-left:20px; cursor:pointer;">
+    Accept
+  </button>
+</div>
+
+<script>
+  // Check if user already accepted
+  if (localStorage.getItem('cookiesAccepted')) {
+    document.getElementById('cookie-banner').style.display = 'none';
+  }
+
+  // If not, show the banner and handle acceptance
+  document.getElementById('accept-cookies').addEventListener('click', function() {
+    localStorage.setItem('cookiesAccepted', true);
+    document.getElementById('cookie-banner').style.display = 'none';
+  });
+</script>
 </body>
 
 </html>
