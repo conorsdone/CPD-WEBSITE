@@ -2,6 +2,14 @@
 <html lang="en">
 
 <head>
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5P5GK6CQ');</script>
+  <!-- End Google Tag Manager -->
+
   <title>three.js webgl - GLTFloader</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
@@ -20,6 +28,10 @@
 </head>
 
 <body>
+  <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5P5GK6CQ"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
 
   <header>
     <div class="containerFull">
@@ -55,8 +67,66 @@
     // create variables
     let camera, scene, renderer, model, controls, screenTexture, ctx, canvas, envTexture;
 
+    const environmentTextures = [
+  'assets/royal_esplanade_1k.hdr',
+  'assets/kloppenheim_02_4k.hdr',
+  'assets/lakeside_night_4k.hdr',
+  'assets/little_paris_under_tower_4k.hdr',
+  'assets/pedestrian_overpass_4k.hdr'
+  // Add as many as you want!
+  // https://polyhaven.com/a/pedestrian_overpass
+];
+
+let currentEnvironmentIndex = 0; // start at 0
+let hdrLoader = new RGBELoader(); // reuse the loader
+
+
     // initiate app
     init();
+
+    window.addEventListener('keydown', function(event) {
+  if (!model) return;
+
+  const rotateAmount = Math.PI / 24;
+
+  switch (event.key) {
+    case 'ArrowLeft':
+      model.rotation.y += rotateAmount;
+      break;
+    case 'ArrowRight':
+      model.rotation.y -= rotateAmount;
+      break;
+    case 'ArrowUp':
+      model.rotation.x += rotateAmount;
+      break;
+    case 'ArrowDown':
+      model.rotation.x -= rotateAmount;
+      break;
+    case 'n': // NEXT environment
+      currentEnvironmentIndex = (currentEnvironmentIndex + 1) % environmentTextures.length;
+      loadEnvironmentTexture(currentEnvironmentIndex);
+      break;
+    case 'b': // BACK environment
+      currentEnvironmentIndex = (currentEnvironmentIndex - 1 + environmentTextures.length) % environmentTextures.length;
+      loadEnvironmentTexture(currentEnvironmentIndex);
+      break;
+    default:
+      break;
+  }
+});
+
+
+function loadEnvironmentTexture(index) {
+  const texturePath = environmentTextures[index];
+
+  hdrLoader.load(texturePath, function(texture) {
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+    scene.environment = texture;
+    scene.background = texture;
+    console.log(`Environment set to: ${texturePath}`);
+    render();
+  });
+}
 
     // spotify get now playing track function
     async function fetchNowPlaying() {
@@ -188,14 +258,14 @@
       document.body.appendChild(container);
 
       // set up the camera fov 35mm
-      camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 20);
+      camera = new THREE.PerspectiveCamera(85, window.innerWidth / window.innerHeight, 1, 20);
       camera.position.set(0, 0, 3);
 
       // create scene
       scene = new THREE.Scene();
 
       // load the environment texture
-      new RGBELoader().load('assets/royal_esplanade_1k.hdr', function (texture) {
+      new RGBELoader().load('assets/little_paris_under_tower_4k.hdr', function (texture) {
         texture.mapping = THREE.EquirectangularReflectionMapping;
         scene.background = texture;
         scene.environment = texture;
