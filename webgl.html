@@ -272,6 +272,8 @@ function loadEnvironmentTexture(index) {
   const barX = (canvas.width - barWidth) / 2;
   const barY = canvas.height - 40; // near the bottom
 
+  if (durationMs <= 0) return;
+
   const progress = Math.min(progressMs / durationMs, 1); // clamp to [0,1]
 
   // background bar
