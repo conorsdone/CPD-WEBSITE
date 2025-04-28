@@ -146,7 +146,7 @@ function loadEnvironmentTexture(index) {
             albumName: data.album || 'Unknown Album',
             albumImageUrl: data.album_image || '',
             progressMs: data.progress_ms || 0,
-            durationMs: data.item ? data.item.duration_ms : 1, // avoid divide-by-zero
+            durationMs: data.duration_ms || 1 ,
             isPlaying: data.is_playing || false,
             trackUrl: data.track_url || ''
           };
