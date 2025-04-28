@@ -134,7 +134,7 @@ function loadEnvironmentTexture(index) {
         const response = await fetch('/.netlify/functions/getCurrentTrack'); // call the netlify function
         const data = await response.json();
 
-        console.log('Fetched data:', data); // log the data from spotify api
+        console.log('Fetched data:', data); // log the data from the netlify function (netlify/getCurrentTrack.js)
 
         if (data.message) {
           console.error(data.message);
