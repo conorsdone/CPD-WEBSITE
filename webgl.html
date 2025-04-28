@@ -3,11 +3,14 @@
 
 <head>
   <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-5P5GK6CQ');</script>
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-5P5GK6CQ');</script>
   <!-- End Google Tag Manager -->
 
   <title>three.js webgl - GLTFloader</title>
@@ -29,8 +32,8 @@
 
 <body>
   <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5P5GK6CQ"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5P5GK6CQ" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
   <header>
@@ -39,12 +42,17 @@
         <img src="images/cpd logo.png" class="cpd-logo"></img>
       </a>
     </div>
-</header>
-
-  <!-- <div id="info">
-    <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> - GLTFLoader<br />
-    <a href="https://hdrihaven.com/hdri/?h=royal_esplanade" target="_blank" rel="noopener">Royal Esplanade</a> from <a href="https://hdrihaven.com/" target="_blank" rel="noopener">HDRI Haven</a>
-  </div> -->
+  </header>
+  <div id="controls" style="position: absolute; top: 20px; right: 20px; z-index: 100;">
+    <button id="prevEnv" style="margin-right: 10px;">Previous Environment</button>
+    <button id="nextEnv">Next Environment</button>
+    <br>
+    <br>
+    <div class="sliderContainer">
+      <input type="range" min="1" max="200" value="200" class="slider fovRangeSlider" id="fovRange">
+      <p>FOV Range: <p id="fovRangeNum"> </p></p>
+    </div>
+  </div>
 
   <script type="importmap">
 			{
@@ -67,66 +75,74 @@
     // create variables
     let camera, scene, renderer, model, controls, screenTexture, ctx, canvas, envTexture;
 
+    // hdri maps
     const environmentTextures = [
-  'assets/royal_esplanade_1k.hdr',
-  'assets/kloppenheim_02_4k.hdr',
-  'assets/lakeside_night_4k.hdr',
-  'assets/little_paris_under_tower_4k.hdr',
-  'assets/pedestrian_overpass_4k.hdr'
-  // Add as many as you want!
-  // https://polyhaven.com/a/pedestrian_overpass
-];
+      'assets/royal_esplanade_1k.hdr',
+      'assets/kloppenheim_02_4k.hdr',
+      'assets/lakeside_night_4k.hdr',
+      'assets/pedestrian_overpass_4k.hdr',
+      'assets/little_paris_under_tower_4k.hdr'
+      // Add as many as you want!
+      // https://polyhaven.com/a/pedestrian_overpass
+    ];
 
-let currentEnvironmentIndex = 0; // start at 0
-let hdrLoader = new RGBELoader(); // reuse the loader
-let currentTrackUrl = ''; // variable to store the current track URL
+    let currentEnvironmentIndex = 0; // start at 0
+    let hdrLoader = new RGBELoader(); // reuse the loader
+    let currentTrackUrl = ''; // variable to store the current track URL
+
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    let screenMesh = null; // store your screen panel here
+
+    var slider = document.getElementById("fovRange");
+    var output = document.getElementById("fovRangeNum");
+    let fov;
+    fov = slider.value;
+    output.innerHTML = slider.value; // Display the default slider value
+
+    // Update the current slider value (each time you drag the slider handle)
+    slider.oninput = function () {
+      output.innerHTML = this.value;
+      fov = this.value;
+    }
 
     // initiate app
     init();
 
-    window.addEventListener('keydown', function(event) {
-  if (!model) return;
+    window.addEventListener('keydown', function (event) {
+      if (!model) return;
 
-  const rotateAmount = Math.PI / 24;
+      const rotateAmount = Math.PI / 24;
 
-  switch (event.key) {
-    case 'ArrowLeft':
-      model.rotation.y += rotateAmount;
-      break;
-    case 'ArrowRight':
-      model.rotation.y -= rotateAmount;
-      break;
-    case 'ArrowUp':
-      model.rotation.x += rotateAmount;
-      break;
-    case 'ArrowDown':
-      model.rotation.x -= rotateAmount;
-      break;
-    case 'n': // NEXT environment
-      currentEnvironmentIndex = (currentEnvironmentIndex + 1) % environmentTextures.length;
-      loadEnvironmentTexture(currentEnvironmentIndex);
-      break;
-    case 'b': // BACK environment
-      currentEnvironmentIndex = (currentEnvironmentIndex - 1 + environmentTextures.length) % environmentTextures.length;
-      loadEnvironmentTexture(currentEnvironmentIndex);
-      break;
-    default:
-      break;
-  }
-});
+      switch (event.key) {
+        case 'ArrowLeft':
+          model.rotation.y += rotateAmount;
+          break;
+        case 'ArrowRight':
+          model.rotation.y -= rotateAmount;
+          break;
+        case 'ArrowUp':
+          model.rotation.x += rotateAmount;
+          break;
+        case 'ArrowDown':
+          model.rotation.x -= rotateAmount;
+          break;
+        default:
+          break;
+      }
+    });
 
+    function loadEnvironmentTexture(index) {
+      const texturePath = environmentTextures[index];
 
-function loadEnvironmentTexture(index) {
-  const texturePath = environmentTextures[index];
-
-  hdrLoader.load(texturePath, function(texture) {
-    texture.mapping = THREE.EquirectangularReflectionMapping;
-    scene.environment = texture;
-    scene.background = texture;
-    console.log(`Environment set to: ${texturePath}`);
-    render();
-  });
-}
+      hdrLoader.load(texturePath, function (texture) {
+        texture.mapping = THREE.EquirectangularReflectionMapping;
+        scene.environment = texture;
+        scene.background = texture;
+        console.log(`Environment set to: ${texturePath}`);
+        render();
+      });
+    }
 
     // spotify get now playing track function
     async function fetchNowPlaying() {
@@ -146,7 +162,7 @@ function loadEnvironmentTexture(index) {
             albumName: data.album || 'Unknown Album',
             albumImageUrl: data.album_image || '',
             progressMs: data.progress_ms || 0,
-            durationMs: data.duration_ms || 1 ,
+            durationMs: data.duration_ms || 1,
             isPlaying: data.is_playing || false,
             trackUrl: data.track_url || ''
           };
@@ -244,46 +260,45 @@ function loadEnvironmentTexture(index) {
     }
 
     function drawPlayPauseButton(isPlaying) {
-  const iconX = 30; // top-left corner
-  const iconY = 20;
-  const iconSize = 20;
+      const iconX = 30; // top-left corner
+      const iconY = 20;
+      const iconSize = 20;
 
-  ctx.fillStyle = '#ffffff';
+      ctx.fillStyle = '#ffffff';
 
-  if (isPlaying) {
-    // Draw pause icon (two rectangles)
-    ctx.fillRect(iconX, iconY, 5, iconSize);
-    ctx.fillRect(iconX + 10, iconY, 5, iconSize);
-  } else {
-    // Draw play icon (triangle)
-    ctx.beginPath();
-    ctx.moveTo(iconX, iconY);
-    ctx.lineTo(iconX, iconY + iconSize);
-    ctx.lineTo(iconX + 15, iconY + iconSize / 2);
-    ctx.closePath();
-    ctx.fill();
-  }
-}
-
+      if (isPlaying) {
+        // Draw pause icon (two rectangles)
+        ctx.fillRect(iconX, iconY, 5, iconSize);
+        ctx.fillRect(iconX + 10, iconY, 5, iconSize);
+      } else {
+        // Draw play icon (triangle)
+        ctx.beginPath();
+        ctx.moveTo(iconX, iconY);
+        ctx.lineTo(iconX, iconY + iconSize);
+        ctx.lineTo(iconX + 15, iconY + iconSize / 2);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
 
     function drawProgressBar(progressMs, durationMs) {
-  const barWidth = canvas.width * 0.6;
-  const barHeight = 8;
-  const barX = (canvas.width - barWidth) / 2;
-  const barY = canvas.height - 40; // near the bottom
+      const barWidth = canvas.width * 0.6;
+      const barHeight = 8;
+      const barX = (canvas.width - barWidth) / 2;
+      const barY = canvas.height - 40; // near the bottom
 
-  if (durationMs <= 0) return;
+      if (durationMs <= 0) return;
 
-  const progress = Math.min(progressMs / durationMs, 1); // clamp to [0,1]
+      const progress = Math.min(progressMs / durationMs, 1); // clamp to [0,1]
 
-  // background bar
-  ctx.fillStyle = '#555555';
-  ctx.fillRect(barX, barY, barWidth, barHeight);
+      // background bar
+      ctx.fillStyle = '#555555';
+      ctx.fillRect(barX, barY, barWidth, barHeight);
 
-  // progress bar
-  ctx.fillStyle = '#1DB954'; // spotify green code
-  ctx.fillRect(barX, barY, barWidth * progress, barHeight);
-}
+      // progress bar
+      ctx.fillStyle = '#1DB954'; // spotify green code
+      ctx.fillRect(barX, barY, barWidth * progress, barHeight);
+    }
 
 
     // draw battery icon function
@@ -312,7 +327,7 @@ function loadEnvironmentTexture(index) {
       document.body.appendChild(container);
 
       // set up the camera fov 35mm
-      camera = new THREE.PerspectiveCamera(85, window.innerWidth / window.innerHeight, 1, 20);
+      camera = new THREE.PerspectiveCamera(fov, window.innerWidth / window.innerHeight, 1, 20);
       camera.position.set(0, 0, 3);
 
       // create scene
@@ -345,8 +360,10 @@ function loadEnvironmentTexture(index) {
         const screenMaterial = new THREE.MeshBasicMaterial({ map: screenTexture, side: THREE.DoubleSide });
 
         // create 3d plane for ipod screen with updated dimensions
-        const screenGeometry = new THREE.PlaneGeometry(0.08, 0.066);  // Adjusted dimensions (in 3D units)
+        const screenGeometry = new THREE.PlaneGeometry(0.08, 0.066);  // adjusted dimensions
         const screen = new THREE.Mesh(screenGeometry, screenMaterial);
+
+        screenMesh = screen; // <-- save reference globally
 
         // place new screen onto the model
         screen.position.set(0.009, 0.0545, 0); // new screen position
@@ -356,8 +373,19 @@ function loadEnvironmentTexture(index) {
         model.add(screen);
         model.scale.set(5, 5, 5); // scale up screen
 
-        fetchNowPlaying(); // fetch track info
+        document.getElementById('prevEnv').addEventListener('click', function () {
+          currentEnvironmentIndex = (currentEnvironmentIndex - 1 + environmentTextures.length) % environmentTextures.length;
+          loadEnvironmentTexture(currentEnvironmentIndex);
+        });
+
+        document.getElementById('nextEnv').addEventListener('click', function () {
+          currentEnvironmentIndex = (currentEnvironmentIndex + 1) % environmentTextures.length;
+          loadEnvironmentTexture(currentEnvironmentIndex);
+        });
+
+        fetchNowPlaying(); // fetch track info 
         setInterval(fetchNowPlaying, 1000); // update every 1 seconds
+        setInterval(updateCameraFov, 1);
       });
 
       // set up renderer
@@ -372,12 +400,20 @@ function loadEnvironmentTexture(index) {
       controls.dampingFactor = 0.05;
       controls.enablePan = false;
 
-      window.addEventListener('click', function() {
-  if (currentTrackUrl) {
-    window.open(currentTrackUrl, '_blank');
-  }
-});
+      renderer.domElement.addEventListener('click', function (event) {
+        // Calculate mouse position in normalized device coordinates (-1 to +1)
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
 
+        raycaster.setFromCamera(mouse, camera);
+
+        // Check if the click intersects with the screen
+        const intersects = raycaster.intersectObject(screenMesh);
+
+        if (intersects.length > 0 && currentTrackUrl) {
+          window.open(currentTrackUrl, '_blank');
+        }
+      });
 
       render();
     }
@@ -387,6 +423,11 @@ function loadEnvironmentTexture(index) {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function updateCameraFov() {
+      camera.fov = fov;
+      camera.updateProjectionMatrix();
     }
 
     // render function
