@@ -61,8 +61,12 @@ async function getNowPlaying() {
       artists: track.artists.map(artist => artist.name).join(', '),
       album: track.album.name,
       album_image: track.album.images[0].url,
-      progress_ms: data.progress_ms,
-      duration_ms: data.item.duration_ms,  
+      progress_ms: track.progress_ms,
+      duration_ms: track.duration_ms,
+      popularity: track.popularity,
+      track_url: track.external_urls.spotify,
+      context: track.context,
+      is_playing: track.is_playing,
     };
 
     return {
