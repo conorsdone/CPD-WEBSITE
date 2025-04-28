@@ -79,7 +79,7 @@
 
 let currentEnvironmentIndex = 0; // start at 0
 let hdrLoader = new RGBELoader(); // reuse the loader
-
+let currentTrackUrl = ''; // variable to store the current track URL
 
     // initiate app
     init();
@@ -146,7 +146,9 @@ function loadEnvironmentTexture(index) {
             albumName: data.album || 'Unknown Album',
             albumImageUrl: data.album_image || '',
             progressMs: data.progress_ms || 0,
-            durationMs: data.item ? data.item.duration_ms : 1 // avoid divide-by-zero
+            durationMs: data.item ? data.item.duration_ms : 1, // avoid divide-by-zero
+            isPlaying: data.is_playing || false,
+            trackUrl: data.track_url || ''
           };
 
           updateScreen(mappedTrackInfo); // update screen with data
@@ -228,14 +230,41 @@ function loadEnvironmentTexture(index) {
         // call the battery icon drawing function
         drawBatteryIcon();
 
+        // call the pause/play button drawing function
+        drawPlayPauseButton(trackInfo.isPlaying);
+
         // update screen texture
         screenTexture.needsUpdate = true;
+        currentTrackUrl = trackInfo.trackUrl;
       };
 
       img.onerror = (error) => {
         console.error('Failed to load album cover image:', error);
       };
     }
+
+    function drawPlayPauseIcon(isPlaying) {
+  const iconX = 30; // top-left corner
+  const iconY = 20;
+  const iconSize = 20;
+
+  ctx.fillStyle = '#ffffff';
+
+  if (isPlaying) {
+    // Draw pause icon (two rectangles)
+    ctx.fillRect(iconX, iconY, 5, iconSize);
+    ctx.fillRect(iconX + 10, iconY, 5, iconSize);
+  } else {
+    // Draw play icon (triangle)
+    ctx.beginPath();
+    ctx.moveTo(iconX, iconY);
+    ctx.lineTo(iconX, iconY + iconSize);
+    ctx.lineTo(iconX + 15, iconY + iconSize / 2);
+    ctx.closePath();
+    ctx.fill();
+  }
+}
+
 
     function drawProgressBar(progressMs, durationMs) {
   const barWidth = canvas.width * 0.6;
@@ -340,6 +369,13 @@ function loadEnvironmentTexture(index) {
       controls.enableDamping = true;
       controls.dampingFactor = 0.05;
       controls.enablePan = false;
+
+      window.addEventListener('click', function() {
+  if (currentTrackUrl) {
+    window.open(currentTrackUrl, '_blank');
+  }
+});
+
 
       render();
     }
