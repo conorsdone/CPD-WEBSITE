@@ -36,7 +36,7 @@
       style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
-  <header>
+  <header id="header">
     <div class="containerFull">
       <a href="/home" class="webgl">
         <img src="images/cpd logo.png" class="cpd-logo"></img>
@@ -50,7 +50,9 @@
     <br>
     <div class="sliderContainer">
       <input type="range" min="1" max="200" value="200" class="slider fovRangeSlider" id="fovRange">
-      <p>FOV Range: <p id="fovRangeNum"> </p></p>
+      <p>FOV Range:
+      <p id="fovRangeNum"> </p>
+      </p>
     </div>
   </div>
 
@@ -82,7 +84,6 @@
       'assets/lakeside_night_4k.hdr',
       'assets/pedestrian_overpass_4k.hdr',
       'assets/little_paris_under_tower_4k.hdr'
-      // Add as many as you want!
       // https://polyhaven.com/a/pedestrian_overpass
     ];
 
@@ -164,7 +165,7 @@
             progressMs: data.progress_ms || 0,
             durationMs: data.duration_ms || 1,
             isPlaying: data.is_playing || false,
-            trackUrl: data.track_url || ''
+            trackUrl: data.track_url || 'https://neal.fun'
           };
 
           updateScreen(mappedTrackInfo); // update screen with data
@@ -391,7 +392,13 @@
       // set up renderer
       renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setPixelRatio(window.devicePixelRatio);
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      const header = document.getElementById('header'); // or whatever your header's ID is
+      const headerHeight = header ? header.offsetHeight : 0;
+
+      renderer.setSize(window.innerWidth, window.innerHeight - headerHeight);
+      renderer.domElement.style.top = `${headerHeight}px`; // move canvas down
+      renderer.domElement.style.position = 'absolute'; // make sure it's positioned
+
       container.appendChild(renderer.domElement);
 
       window.addEventListener('resize', onWindowResize);
@@ -401,28 +408,81 @@
       controls.enablePan = false;
 
       renderer.domElement.addEventListener('click', function (event) {
-        // Calculate mouse position in normalized device coordinates (-1 to +1)
+        const header = document.getElementById('header');
+        const headerHeight = header ? header.offsetHeight : 0;
+
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+        mouse.y = -((event.clientY - headerHeight) / (window.innerHeight - headerHeight)) * 2 + 1;
 
         raycaster.setFromCamera(mouse, camera);
 
-        // Check if the click intersects with the screen
         const intersects = raycaster.intersectObject(screenMesh);
 
-        if (intersects.length > 0 && currentTrackUrl) {
-          window.open(currentTrackUrl, '_blank');
+        if (intersects.length > 0) {
+          const intersect = intersects[0];
+
+          // Get the normal in world space
+          const normalMatrix = new THREE.Matrix3().getNormalMatrix(intersect.object.matrixWorld);
+          const worldNormal = intersect.face.normal.clone().applyMatrix3(normalMatrix).normalize();
+
+          // Get vector from intersection point to camera
+          const cameraDirection = camera.position.clone().sub(intersect.point).normalize();
+
+          // Dot product between normal and camera direction
+          const dot = worldNormal.dot(cameraDirection);
+
+          if (dot > 0) { // front side facing camera
+            if (currentTrackUrl) {
+              window.open(currentTrackUrl, '_blank');
+            }
+          }
         }
       });
 
+      renderer.domElement.addEventListener('mousemove', function (event) {
+        const header = document.getElementById('header');
+        const headerHeight = header ? header.offsetHeight : 0;
+
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -((event.clientY - headerHeight) / (window.innerHeight - headerHeight)) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+
+        const intersects = raycaster.intersectObject(screenMesh);
+
+        if (intersects.length > 0) {
+          const intersect = intersects[0];
+
+          // Get normal and check facing
+          const normalMatrix = new THREE.Matrix3().getNormalMatrix(intersect.object.matrixWorld);
+          const worldNormal = intersect.face.normal.clone().applyMatrix3(normalMatrix).normalize();
+          const cameraDirection = camera.position.clone().sub(intersect.point).normalize();
+          const dot = worldNormal.dot(cameraDirection);
+
+          if (dot > 0) {
+            renderer.domElement.style.cursor = 'pointer';
+          } else {
+            renderer.domElement.style.cursor = 'default';
+          }
+        } else {
+          renderer.domElement.style.cursor = 'default';
+        }
+      });
+
+
+
+      onWindowResize();
       render();
     }
 
     // window resize function
     function onWindowResize() {
-      camera.aspect = window.innerWidth / window.innerHeight;
+      const header = document.getElementById('header');
+      const headerHeight = header ? header.offsetHeight : 0;
+
+      camera.aspect = window.innerWidth / (window.innerHeight - headerHeight);
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setSize(window.innerWidth, window.innerHeight - headerHeight);
     }
 
     function updateCameraFov() {
