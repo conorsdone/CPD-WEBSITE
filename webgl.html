@@ -462,10 +462,28 @@
           console.log(`Far plane: ${camera.far.toFixed(3)}`);
         });
 
-        document.getElementById('saveFavorite').addEventListener('click', () => {
-          fetchNowPlaying().then(trackInfo => {
-            saveFavoriteTrack(trackInfo);
-          });
+        document.getElementById('saveFavorite').addEventListener('click', async () => {
+          try {
+            const response = await fetch('/.netlify/functions/getCurrentTrack');
+            const data = await response.json();
+            
+            // Create track info object from the current track data
+            const trackToSave = {
+              name: data.name,
+              artists: data.artists,
+              album: data.album,
+              album_image: data.album_image,
+              duration_ms: data.duration_ms,
+              is_playing: data.is_playing,
+              track_url: data.track_url
+            };
+
+            // Save as favorite
+            await saveFavoriteTrack(trackToSave);
+          } catch (error) {
+            console.error('Error saving favorite track:', error);
+            alert('Failed to save favorite track');
+          }
         });
 
         fetchNowPlaying(); // fetch track info 
