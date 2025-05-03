@@ -39,21 +39,26 @@
   <header id="header">
     <div class="containerFull">
       <a href="/home" class="webgl">
-        <img src="images/cpd logo.png" class="cpd-logo"></img>
+        <img src="images/cpd logo.png" class="cpd-logo" style="border: 3px solid red;"></img>
       </a>
     </div>
   </header>
-  <div id="controls" style="position: absolute; top: 20px; right: 20px; z-index: 100;">
+
+  <div id="controls" style="position: absolute; top: 20px; left: 20px; z-index: 100;">
     <button id="prevEnv" style="margin-right: 10px;">Previous Environment</button>
     <button id="nextEnv">Next Environment</button>
     <br>
     <br>
-    <div class="sliderContainer">
-      <input type="range" min="1" max="200" value="200" class="slider fovRangeSlider" id="fovRange">
-      <p>FOV Range:
-      <p id="fovRangeNum"> </p>
-      </p>
-    </div>
+    <button id="focusObject" style="margin-left: 10px;">Focus iPod</button>
+    <button id="logDebug" style="margin-left: 10px;">Log Scene Info</button>
+    <button id="saveFavorite" style="margin-left: 10px;">Save as Favorite</button>
+  </div>
+
+  <div id="controls" style="position: absolute; top: 20px; right: 20px; z-index: 100;">
+    <input type="range" min="1" max="200" value="200" class="slider fovRangeSlider" id="fovRange">
+    <p>FOV Range:
+    <p id="fovRangeNum"> </p>
+    </p>
   </div>
 
   <script type="importmap">
@@ -77,8 +82,15 @@
     // create variables
     let camera, scene, renderer, model, controls, screenTexture, ctx, canvas, envTexture;
 
+    let isFocusing = false;
+    let focusStartTime = 0;
+    let focusDuration = 2.0; // seconds
+    let startCameraPosition, startCameraTarget, endCameraPosition;
+
     // hdri maps
     const environmentTextures = [
+      'assets/sky_02_2k.png',
+      'assets/Train-Station-Georgensgmünd-4K.hdr',
       'assets/royal_esplanade_1k.hdr',
       'assets/kloppenheim_02_4k.hdr',
       'assets/lakeside_night_4k.hdr',
@@ -99,7 +111,7 @@
     var output = document.getElementById("fovRangeNum");
     let fov;
     fov = slider.value;
-    output.innerHTML = slider.value; // Display the default slider value
+    output.innerHTML = slider.value; // display the default slider value
 
     // Update the current slider value (each time you drag the slider handle)
     slider.oninput = function () {
@@ -158,13 +170,13 @@
         } else {
           // map spotify data
           const mappedTrackInfo = {
-            trackName: data.name || 'Unknown Track',
-            artistName: data.artists || 'Unknown Artist',
-            albumName: data.album || 'Unknown Album',
+            trackName: data.name || 'BUFFALO (feat. Shane Powers)',
+            artistName: data.artists || 'Tyler, The Creator & Shane Powers',
+            albumName: data.album || 'CHERRY BOMB',
             albumImageUrl: data.album_image || '',
-            progressMs: data.progress_ms || 0,
-            durationMs: data.duration_ms || 1,
-            isPlaying: data.is_playing || false,
+            progressMs: data.progress_ms || 125000,
+            durationMs: data.duration_ms || 160000,
+            isPlaying: data.is_playing || true,
             trackUrl: data.track_url || 'https://neal.fun'
           };
 
@@ -175,6 +187,23 @@
       }
     }
 
+    async function saveFavoriteTrack(trackInfo) {
+      try {
+        const response = await fetch('/.netlify/functions/getFavoriteTrack', {
+          method: 'POST',
+          body: JSON.stringify(trackInfo)
+        });
+        
+        if (response.ok) {
+          alert('Track saved as favorite!');
+        } else {
+          alert('Failed to save favorite track');
+        }
+      } catch (error) {
+        console.error('Error saving favorite track:', error);
+        alert('Failed to save favorite track');
+      }
+    }
 
     function updateScreen(trackInfo) {
       if (!canvas || !ctx) {
@@ -268,11 +297,11 @@
       ctx.fillStyle = '#ffffff';
 
       if (isPlaying) {
-        // Draw pause icon (two rectangles)
+        // draw pause button
         ctx.fillRect(iconX, iconY, 5, iconSize);
         ctx.fillRect(iconX + 10, iconY, 5, iconSize);
       } else {
-        // Draw play icon (triangle)
+        // draw play button
         ctx.beginPath();
         ctx.moveTo(iconX, iconY);
         ctx.lineTo(iconX, iconY + iconSize);
@@ -301,7 +330,6 @@
       ctx.fillRect(barX, barY, barWidth * progress, barHeight);
     }
 
-
     // draw battery icon function
     function drawBatteryIcon() {
       const batteryX = canvas.width - 50;
@@ -319,7 +347,7 @@
       ctx.fillRect(batteryX + batteryWidth, batteryY + 3, 4, 6);
 
       // battery %
-      ctx.fillStyle = '#00ff00'; // Green
+      ctx.fillStyle = '#00ff00';
       ctx.fillRect(batteryX + 2, batteryY + 2, batteryWidth * 0.7 - 4, batteryHeight - 4);
     }
 
@@ -382,6 +410,62 @@
         document.getElementById('nextEnv').addEventListener('click', function () {
           currentEnvironmentIndex = (currentEnvironmentIndex + 1) % environmentTextures.length;
           loadEnvironmentTexture(currentEnvironmentIndex);
+        });
+
+        document.getElementById('focusObject').addEventListener('click', () => {
+          if (!screenMesh) return;
+
+          const screenWorldPosition = new THREE.Vector3();
+          screenMesh.getWorldPosition(screenWorldPosition);
+
+          const screenWorldNormal = new THREE.Vector3(0, 0, 1);
+          screenWorldNormal.applyQuaternion(screenMesh.getWorldQuaternion(new THREE.Quaternion())).normalize();
+
+          // The new camera position will be pulled back from the screen along the normal
+          const distance = 3; // how far back the camera will be (adjust this)
+          endCameraPosition = screenWorldPosition.clone().add(screenWorldNormal.multiplyScalar(distance));
+
+          // fov = 40;
+          // document.getElementById("fovRange").value = fov;
+          startCameraPosition = camera.position.clone();
+          startCameraTarget = controls.target.clone(); // remember where OrbitControls is looking
+
+          focusStartTime = performance.now() / 1000; // seconds
+          isFocusing = true;
+        });
+
+        document.getElementById('logDebug').addEventListener('click', () => {
+          if (!model || !camera) {
+            console.warn('Model or camera not loaded yet.');
+            return;
+          }
+
+          // Log iPod info
+          const ipodPosition = model.position;
+          const ipodRotation = model.rotation;
+
+          console.log('--- iPod Info ---');
+          console.log(`Position: x=${ipodPosition.x.toFixed(3)}, y=${ipodPosition.y.toFixed(3)}, z=${ipodPosition.z.toFixed(3)}`);
+          console.log(`Rotation (radians): x=${ipodRotation.x.toFixed(3)}, y=${ipodRotation.y.toFixed(3)}, z=${ipodRotation.z.toFixed(3)}`);
+          console.log(`Rotation (degrees): x=${(THREE.MathUtils.radToDeg(ipodRotation.x)).toFixed(1)}°, y=${(THREE.MathUtils.radToDeg(ipodRotation.y)).toFixed(1)}°, z=${(THREE.MathUtils.radToDeg(ipodRotation.z)).toFixed(1)}°`);
+
+          // Log camera info
+          const camPosition = camera.position;
+          const camRotation = camera.rotation;
+
+          console.log('--- Camera Info ---');
+          console.log(`Position: x=${camPosition.x.toFixed(3)}, y=${camPosition.y.toFixed(3)}, z=${camPosition.z.toFixed(3)}`);
+          console.log(`Rotation (radians): x=${camRotation.x.toFixed(3)}, y=${camRotation.y.toFixed(3)}, z=${camRotation.z.toFixed(3)}`);
+          console.log(`Rotation (degrees): x=${(THREE.MathUtils.radToDeg(camRotation.x)).toFixed(1)}°, y=${(THREE.MathUtils.radToDeg(camRotation.y)).toFixed(1)}°, z=${(THREE.MathUtils.radToDeg(camRotation.z)).toFixed(1)}°`);
+          console.log(`FOV: ${camera.fov.toFixed(2)}°`);
+          console.log(`Near plane: ${camera.near.toFixed(3)}`);
+          console.log(`Far plane: ${camera.far.toFixed(3)}`);
+        });
+
+        document.getElementById('saveFavorite').addEventListener('click', () => {
+          fetchNowPlaying().then(trackInfo => {
+            saveFavoriteTrack(trackInfo);
+          });
         });
 
         fetchNowPlaying(); // fetch track info 
@@ -469,8 +553,6 @@
         }
       });
 
-
-
       onWindowResize();
       render();
     }
@@ -490,13 +572,36 @@
       camera.updateProjectionMatrix();
     }
 
+    function easeInOutCubic(t) {
+      // Bézier-like curve
+      return t < 0.5
+        ? 4 * t * t * t
+        : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
     // render function
     function render() {
       requestAnimationFrame(render);
+
+      const currentTime = performance.now() / 1000; // seconds
+
+      if (isFocusing) {
+        const elapsed = currentTime - focusStartTime;
+        const t = Math.min(elapsed / focusDuration, 1); // clamp from 0 to 1
+        const easedT = easeInOutCubic(t);// apply an easing function
+
+        camera.position.lerpVectors(startCameraPosition, endCameraPosition, easedT);
+        controls.target.lerpVectors(startCameraTarget, screenMesh.position, easedT); // target screen's center
+        controls.update();
+
+        if (t >= 1) {
+          isFocusing = false;
+        }
+      }
+
       controls.update();
       renderer.render(scene, camera);
     }
   </script>
 </body>
-
 </html>
