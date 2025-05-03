@@ -37,7 +37,7 @@ async function getAccessToken() {
 async function getNowPlaying() {
   try {
     const accessToken = await getAccessToken();
-    console.log('Access Token:', accessToken);
+console.log('Access Token:', accessToken);
     
     // Spotify API to get the current playing track
     const nowPlayingUrl = 'https://api.spotify.com/v1/me/player/currently-playing';
@@ -47,6 +47,16 @@ async function getNowPlaying() {
         'Authorization': `Bearer ${accessToken}`,
       },
     });
+
+    // If no track is playing, return favorite track
+    if (trackResponse.status === 204) {
+      const favoriteResponse = await fetch('/.netlify/functions/getFavoriteTrack');
+      const favoriteTrack = await favoriteResponse.json();
+      return {
+        statusCode: 200,
+        body: JSON.stringify(favoriteTrack)
+      };
+    }
 
     const trackData = await trackResponse.json();
     console.log('Full Spotify Response:', JSON.stringify(trackData, null, 2));
@@ -76,10 +86,20 @@ async function getNowPlaying() {
 
   } catch (error) {
     console.error('Error caught:', error.message);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: error.message }),
-    };
+    // On error, also try to return favorite track
+    try {
+      const favoriteResponse = await fetch('/.netlify/functions/getFavoriteTrack');
+      const favoriteTrack = await favoriteResponse.json();
+      return {
+        statusCode: 200,
+        body: JSON.stringify(favoriteTrack)
+      };
+    } catch (fallbackError) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: error.message }),
+      };
+    }
   }
 }
 
