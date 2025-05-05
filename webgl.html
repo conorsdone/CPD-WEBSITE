@@ -37,21 +37,51 @@
   <!-- End Google Tag Manager (noscript) -->
 
   <header id="header">
-    <div class="containerFull">
-      <a href="/home" class="webgl">
-        <img src="images/cpd logo.png" class="cpd-logo" style="border: 3px solid red;"></img>
-      </a>
+    <div class="container">
+
+      <div id="controls" class="width-2">
+        <button id="prevEnv" class="button">Previous Environment</button>
+        <button id="nextEnv" class="button">Next Environment</button>
+        <button id="focusObject" class="button">Focus iPod</button>
+        <button id="logDebug" class="button">Log Scene Info</button>
+      </div>
+
+      <div class="width-8">
+        <a href="/home">
+          <img src="images/cpd logo.png" class="cpd-logo"></img>
+        </a>
+      </div>
+
+      <div id="controls" class="width-2">
+        <!-- <input type="range" min="1" max="200" value="200" class="slider fovRangeSlider" id="fovRange">
+        <p>FOV Range:
+        <p id="fovRangeNum"> </p>
+        </p> -->
+                <!-- FOV Range -->
+<label for="fovRange">FOV Range</label>
+<input type="range" id="fovRange" min="1" max="200" value="40" class="slider">
+        <!-- X-axis rotation -->
+<label for="rotateX">Rotate X</label>
+<input type="range" id="rotateX" min="-180" max="180" value="0" class="slider">
+
+<!-- Y-axis rotation -->
+<label for="rotateY">Rotate Y</label>
+<input type="range" id="rotateY" min="-180" max="180" value="0" class="slider">
+
+<!-- Z-axis rotation -->
+<label for="rotateZ">Rotate Z</label>
+<input type="range" id="rotateZ" min="-180" max="180" value="0" class="slider">
+      </div>
     </div>
   </header>
 
-  <div id="controls" style="position: absolute; top: 20px; left: 20px; z-index: 100;">
+  <!-- <div id="controls" style="position: absolute; top: 20px; left: 20px; z-index: 100;">
     <button id="prevEnv" style="margin-right: 10px;">Previous Environment</button>
     <button id="nextEnv">Next Environment</button>
     <br>
     <br>
     <button id="focusObject" style="margin-left: 10px;">Focus iPod</button>
     <button id="logDebug" style="margin-left: 10px;">Log Scene Info</button>
-    <button id="saveFavorite" style="margin-left: 10px;">Save as Favorite</button>
   </div>
 
   <div id="controls" style="position: absolute; top: 20px; right: 20px; z-index: 100;">
@@ -59,7 +89,7 @@
     <p>FOV Range:
     <p id="fovRangeNum"> </p>
     </p>
-  </div>
+  </div> -->
 
   <script type="importmap">
 			{
@@ -108,16 +138,26 @@
     let screenMesh = null; // store your screen panel here
 
     var slider = document.getElementById("fovRange");
-    var output = document.getElementById("fovRangeNum");
     let fov;
-    fov = slider.value;
-    output.innerHTML = slider.value; // display the default slider value
-
+   
     // Update the current slider value (each time you drag the slider handle)
     slider.oninput = function () {
-      output.innerHTML = this.value;
-      fov = this.value;
+      fov = slider.value;
     }
+
+    const rotateX = document.getElementById('rotateX');
+const rotateY = document.getElementById('rotateY');
+const rotateZ = document.getElementById('rotateZ');
+
+function updateModelRotation() {
+  model.rotation.x = THREE.MathUtils.degToRad(rotateX.value);
+  model.rotation.y = THREE.MathUtils.degToRad(rotateY.value);
+  model.rotation.z = THREE.MathUtils.degToRad(rotateZ.value);
+}
+
+rotateX.addEventListener('input', updateModelRotation);
+rotateY.addEventListener('input', updateModelRotation);
+rotateZ.addEventListener('input', updateModelRotation);
 
     // initiate app
     init();
@@ -158,50 +198,65 @@
     }
 
     // spotify get now playing track function
+    let pausedStartTime = null;
+    const PAUSE_TIMEOUT = 60 * 1000; // 60 seconds in ms
+
+    const favouriteTrack = {
+      trackName: 'BUFFALO (feat. Shane Powers)',
+      artistName: 'Tyler, The Creator & Shane Powers',
+      albumName: 'CHERRY BOMB',
+      albumImageUrl: 'assets/cherrybombCover.jpg',
+      progressMs: 125000,
+      durationMs: 160000,
+      isPlaying: false,
+      trackUrl: 'https://neal.fun'
+    };
+
     async function fetchNowPlaying() {
       try {
-        const response = await fetch('/.netlify/functions/getCurrentTrack'); // call the netlify function
+        const response = await fetch('/.netlify/functions/getCurrentTrack');
         const data = await response.json();
 
-        console.log('Fetched data:', data); // log the data from the netlify function (netlify/getCurrentTrack.js)
+        console.log('Fetched data:', data);
 
-        if (data.message) {
-          console.error(data.message);
-        } else {
-          // map spotify data
+        // Check if there's valid Spotify data
+        const isValidTrack = data && data.name && data.artists;
+
+        if (isValidTrack) {
           const mappedTrackInfo = {
-            trackName: data.name || 'BUFFALO (feat. Shane Powers)',
-            artistName: data.artists || 'Tyler, The Creator & Shane Powers',
-            albumName: data.album || 'CHERRY BOMB',
-            albumImageUrl: data.album_image || '',
-            progressMs: data.progress_ms || 125000,
-            durationMs: data.duration_ms || 160000,
-            isPlaying: data.is_playing || true,
-            trackUrl: data.track_url || 'https://neal.fun'
+            trackName: data.name,
+            artistName: data.artists,
+            albumName: data.album,
+            albumImageUrl: data.album_image,
+            progressMs: data.progress_ms,
+            durationMs: data.duration_ms,
+            isPlaying: data.is_playing,
+            trackUrl: data.track_url
           };
 
-          updateScreen(mappedTrackInfo); // update screen with data
+          if (data.is_playing) {
+            pausedStartTime = null;
+            updateScreen(mappedTrackInfo);
+          } else {
+            if (!pausedStartTime) pausedStartTime = Date.now();
+            const elapsed = Date.now() - pausedStartTime;
+
+            if (elapsed >= PAUSE_TIMEOUT) {
+              updateScreen(favouriteTrack);
+            } else {
+              updateScreen(mappedTrackInfo);
+            }
+          }
+
+        } else {
+          // If invalid data, fallback immediately
+          pausedStartTime = null;
+          updateScreen(favouriteTrack);
         }
       } catch (error) {
         console.error('Error fetching track info:', error);
-      }
-    }
-
-    async function saveFavoriteTrack(trackInfo) {
-      try {
-        const response = await fetch('/.netlify/functions/getFavoriteTrack', {
-          method: 'POST',
-          body: JSON.stringify(trackInfo)
-        });
-        
-        if (response.ok) {
-          alert('Track saved as favorite!');
-        } else {
-          alert('Failed to save favorite track');
-        }
-      } catch (error) {
-        console.error('Error saving favorite track:', error);
-        alert('Failed to save favorite track');
+        pausedStartTime = null;
+        updateScreen(favouriteTrack);
       }
     }
 
@@ -462,30 +517,6 @@
           console.log(`Far plane: ${camera.far.toFixed(3)}`);
         });
 
-        document.getElementById('saveFavorite').addEventListener('click', async () => {
-          try {
-            const response = await fetch('/.netlify/functions/getCurrentTrack');
-            const data = await response.json();
-            
-            // Create track info object from the current track data
-            const trackToSave = {
-              name: data.name,
-              artists: data.artists,
-              album: data.album,
-              album_image: data.album_image,
-              duration_ms: data.duration_ms,
-              is_playing: data.is_playing,
-              track_url: data.track_url
-            };
-
-            // Save as favorite
-            await saveFavoriteTrack(trackToSave);
-          } catch (error) {
-            console.error('Error saving favorite track:', error);
-            alert('Failed to save favorite track');
-          }
-        });
-
         fetchNowPlaying(); // fetch track info 
         setInterval(fetchNowPlaying, 1000); // update every 1 seconds
         setInterval(updateCameraFov, 1);
@@ -622,4 +653,5 @@
     }
   </script>
 </body>
+
 </html>

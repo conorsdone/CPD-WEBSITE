@@ -400,8 +400,41 @@ h4 {
     padding: 15px;
 }
 
+header .container {
+    border: 3px solid red;
+    position: absolute;
+    z-index: 500;
+}
+header .container .width-2 {
+    border: 3px solid green;
+}
+
+header .container .width-8 {
+    border: 3px solid yellow;
+}
+
 .webgl .cpd-logo {
     width: 50%;
+}
+
+#controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.button {
+    background-color: #04AA6D;
+    border: none;
+    color: white;
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 5px 2px;
+    cursor: pointer;
 }
 
 @media (max-width: 540px) {

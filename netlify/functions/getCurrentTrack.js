@@ -37,26 +37,16 @@ async function getAccessToken() {
 async function getNowPlaying() {
   try {
     const accessToken = await getAccessToken();
-console.log('Access Token:', accessToken);
-    
+    console.log('Access Token:', accessToken);
+
     // Spotify API to get the current playing track
     const nowPlayingUrl = 'https://api.spotify.com/v1/me/player/currently-playing';
-    
+
     const trackResponse = await fetch(nowPlayingUrl, {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
       },
     });
-
-    // If no track is playing, return favorite track
-    if (trackResponse.status === 204) {
-      const favoriteResponse = await fetch('/.netlify/functions/getFavoriteTrack');
-      const favoriteTrack = await favoriteResponse.json();
-      return {
-        statusCode: 200,
-        body: JSON.stringify(favoriteTrack)
-      };
-    }
 
     const trackData = await trackResponse.json();
     console.log('Full Spotify Response:', JSON.stringify(trackData, null, 2));
@@ -71,12 +61,12 @@ console.log('Access Token:', accessToken);
       artists: track.artists.map(artist => artist.name).join(', '),
       album: track.album.name,
       album_image: track.album.images[0]?.url || '',
-      progress_ms: trackData.progress_ms, 
+      progress_ms: trackData.progress_ms,
       duration_ms: track.duration_ms,
       popularity: track.popularity,
       track_url: track.external_urls.spotify,
       is_playing: trackData.is_playing,
-      context: trackData.context || null 
+      context: trackData.context || null
     };
 
     return {
@@ -86,20 +76,10 @@ console.log('Access Token:', accessToken);
 
   } catch (error) {
     console.error('Error caught:', error.message);
-    // On error, also try to return favorite track
-    try {
-      const favoriteResponse = await fetch('/.netlify/functions/getFavoriteTrack');
-      const favoriteTrack = await favoriteResponse.json();
-      return {
-        statusCode: 200,
-        body: JSON.stringify(favoriteTrack)
-      };
-    } catch (fallbackError) {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: error.message }),
-      };
-    }
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: error.message }),
+    };
   }
 }
 
