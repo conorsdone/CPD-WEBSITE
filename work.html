@@ -2,151 +2,89 @@
 <html lang="en">
 
 <head>
-    <script>
-        async function fetchNowPlaying() {
-      try {
-        const response = await fetch('/.netlify/functions/getCurrentTrack');
-        const data = await response.json();
-        
-        // Log the data to inspect it
-        console.log('Track data:', data);
-        
-        const trackDiv = document.getElementById('track-info');
-    
-        if (data.message) {
-          trackDiv.innerHTML = `${data.message}`;
-        } else {
-          trackDiv.innerHTML = `
-            <div>
-              <img src="${data.album_image}" alt="Album Cover">
-              <h3>${data.name}</h3>
-              <p>by</p>
-              <p>${data.artist}</p>
-              <p>Album</p>
-              <p>${data.album}</p>
-            </div>
-          `;
-        }
-      } catch (error) {
-        document.getElementById('track-info').innerHTML = 'Error loading track info.';
-        console.error('Fetch error:', error);
-      }
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="css/all.min.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/grid.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/work.css">
+
+  <title>CPD.JPG Work</title>
+
+  <script>
+    function updateTime() {
+      const aspectRatio = window.innerWidth / window.innerHeight;
+      const now = new Date();
+      let hours = now.getUTCHours() + 1;
+      const realHours = hours.toString().padStart(2, '0'); // Get hours in GMT
+      const minutes = now.getUTCMinutes().toString().padStart(2, '0'); // Get minutes in GMT
+      const seconds = now.getUTCSeconds().toString().padStart(2, '0'); // Get seconds in GMT
+      const gmtTime = `Dublin, Éire ${realHours}:${minutes}:${seconds} GMT`; // Format the time string
+      document.getElementById("gmt-time").textContent = gmtTime;
+      // console.log(aspectRatio);
     }
-    
-    document.addEventListener('DOMContentLoaded', fetchNowPlaying);
-    
-    
-    </script>
 
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="https://use.typekit.net/qyt6jto.css">
-
-    <link rel="stylesheet" href="css/all.min.css">
-    <link rel="stylesheet" href="css/work.css">
-
-    <title>CPD.JPG Work</title>
-    
-    <script>
-if (window.location.hostname === "your-github-username.github.io") {
-    document.write('<base href="/CPD-WEBSITE/">');
-  }
-
-        function togglePageInvert() {
-            document.body.classList.toggle('inverted');
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            const modal = document.getElementById("imageModal");
-            const modalImg = document.getElementById("modalImg");
-            const modalText = document.getElementById("modalText");
-            const elementsToMove = document.querySelectorAll(".home, .enter, .cpd-logo");
-            const enterElement = document.querySelector(".enter");
-
-            // Set background images dynamically
-            document.querySelectorAll(".flyImage").forEach((item) => {
-                const imageUrl = item.getAttribute("data-image-url");
-                if (imageUrl) {
-                    item.style.backgroundImage = `url(${imageUrl})`;
-                }
-            });
-
-            // Attach event listener to both marquee containers
-            document.querySelectorAll(".marquee__content").forEach((marquee) => {
-                marquee.addEventListener("click", function (event) {
-                    const item = event.target.closest(".flyImage");
-                    if (!item) return; // Ignore clicks outside flyImage elements
-
-                    const bgImage = window.getComputedStyle(item).backgroundImage.match(/url\(["']?(.*?)["']?\)/);
-                    const imageSrc = bgImage ? bgImage[1] : "";
-                    const title = item.getAttribute("data-title") || "Image";
-
-                    openModal(imageSrc);
-                });
-            });
-
-            function openModal(imageSrc, description) {
-                modal.style.display = "flex";
-                modalImg.src = imageSrc;
-                modalText.textContent = description;
-                modalImg.style.animation = "fadeIn 0.5s ease-in-out forwards";
-
-                elementsToMove.forEach(el => el.classList.add("logo-transition"));
-                if (enterElement) {
-                    enterElement.classList.add("logo-transition");
-                    enterElement.style.animation = "fadeOut 0.5s ease-in-out forwards";
-                }
-            }
-
-            function closeModal() {
-                modal.style.display = "none";
-                modalImg.style.animation = "fadeOut 1s ease-in-out forwards";
-                elementsToMove.forEach(el => el.classList.remove("logo-transition"));
-                if (enterElement) {
-                    enterElement.classList.remove("logo-transition");
-                    enterElement.style.animation = "fadeIn 0.5s ease-in-out forwards";
-                }
-            }
-
-            // Close modal when clicking outside the image
-            modal.addEventListener("click", function (event) {
-                closeModal();
-            });
-        });
-
-        $(document).mousemove(function (e) {
-            $("#image").css({ left: e.pageX, top: e.pageY });
-        });
-
-    </script>
-    <script type="importmap">
-      {
-        "imports": {
-          "three": "https://cdn.jsdelivr.net/npm/three@0.174.0/build/three.module.js",
-          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.174.0/examples/jsm/"
-        }
-      }
-    </script>
+    setInterval(updateTime, 1000); // Update every second
+    window.onload = updateTime; // Update immediately when page loads
+  </script>
 </head>
 
-<body>
+<body class="work">
 
-    <header>
-        <div class="containerFull home">
-            <img src="images/cpd logo.png" class="cpd-logo"></img>
+  <header>
+    <div class="containerFull">
+      <a href="home.html">
+        <img src="images/cpd logo.png" class="cpd-logo">
+      </a>
+      <h3 class="liveTime" id="gmt-time"></h3>
+    </div>
+  </header>
+
+
+
+  <div class="containerFlex">
+      <div class="containerFlexMid" style="width: 50vw;">
+        <div style="width: 100%; padding-top: 4px;">
+          <img src="images/curtisy-1.jpg">
         </div>
-    </header>
-
-    <section id="now-playing">
-        <h2>Now Playing</h2>
-        <div id="track-info">
-          <p>Loading...</p>
+      </div>
+    
+    
+    <div class="realign">
+      <div class="containerColumnLeft">
+        <div class="columnLeft" style="height: 10%;"><img src="images/000012.JPG">
         </div>
-      </section>
+        <div class="columnLeft" style="height: 10%;"><img src="images/BroncoLokoSite1.webp">
+        </div>
+        <div class="columnLeft" style="height: 10%;"><img src="images/MlhSite3.jpg">
+        </div>
+        <div class="columnLeft" style="height: 10%;"><img src="images/MikeSite2.webp">
+        </div>
+        <div class="columnLeft" style="height: 10%;"><img src="images/BroncoLokoSite2.jpg"></div>
+      </div>
 
-    <!-- <footer>
+      <div class="containerColumnRight">
+        <div class="columnRight" style="height: 10%;"><img src="images/lord apex tester 5.jpg">
+        </div>
+        <div class="columnRight" style="height: 10%;"><img src="images/F3miiiSite.webp">
+        </div>
+        <div class="columnRight" style="height: 10%;"><img src="images/LordApexSite1.jpg"></div>
+        <div class="columnRight" style="height: 10%;"><img src="images/MlhSite2.webp">
+        </div>
+        <div class="columnRight" style="height: 10%;"><img src="images/MonjolaSite.webp">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- <footer>
         <p style="z-index: 5000; position: absolute; font-size: 0.5rem; bottom: 0%; padding: 1%;">
             © 2024 Conor Dunne.<br>
             The code on this website is released under <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank">CC0 1.0</a> (public domain).<br>
@@ -154,7 +92,6 @@ if (window.location.hostname === "your-github-username.github.io") {
             Unauthorized use of images is prohibited.
           </p>        
     </footer> -->
-    
 </body>
 
 </html>

@@ -3,7 +3,17 @@
     margin: auto;
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    grid-column-gap: 20px;
+    grid-column-gap: 0.75vw;
+    grid-row-gap: 0.75vw;
+    grid-row: auto;
+}
+
+.containerNoGap {
+    width: auto;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-column-gap: 0px;
     grid-row-gap: 1em;
     grid-row: auto;
 }
@@ -31,7 +41,7 @@
     margin: auto;
 }
 
-.container-no-padding {
+.containerNoPadding {
     width: 1200px;
     margin: auto;
     display: grid;
@@ -101,4 +111,12 @@
 
 .width-12 {
     grid-column: span 12;
+}
+
+.containerFlex {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    max-width: 200;
+    gap:0
 }

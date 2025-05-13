@@ -113,6 +113,12 @@ a {
 }
 
 @font-face {
+    font-family: Geist-Mono;
+    src: url("../assets/GeistMono/ttf/GeistMono-Regular.ttf") format("truetype"),
+        url("../assets/GeistMono/webfonts/GeistMono-Regular.woff2") format("woff2");
+}
+
+@font-face {
     font-family: Octuple;
     src: url("/CPD-WEBSITE/assets/Octuple-max-demo.ttf") format("truetype");
 }
@@ -416,7 +422,7 @@ h4 {
 .liveTime {
     font-size: 1.5vw;
     color: white;
-    font-family: monospace;
+    font-family: Geist-Mono;
     text-align: right;
 }
 

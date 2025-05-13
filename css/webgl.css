@@ -33,7 +33,6 @@ html:focus-within {
 
 /* Set core body defaults */
 body {
-    overflow: hidden;
     min-height: 100vh;
     text-rendering: optimizeSpeed;
     line-height: 1.5;
@@ -82,7 +81,7 @@ li {
 
 body {
     font-family: 'Public Sans', sans-serif;
-    color: var(--mainBlue);
+    color: white;
     width: 100%;
     margin: 0 auto;
     background-color: lightgray;
@@ -95,11 +94,11 @@ ul {
 
 a {
     text-decoration: none;
-    color: var(--mainBlue);
+    color: white;
 }
 
 /* STYLE.CSS */
-@font-face {
+/* @font-face {
     font-family: Generic;
     src: url("/CPD-WEBSITE/assets/Generic-G50-CC-Typic.ttf") format("truetype"),
         url("/CPD-WEBSITE/assets/Generic-G50-CC-Typic.woff") format("woff");
@@ -108,8 +107,7 @@ a {
 @font-face {
     font-family: Octuple;
     src: url("/CPD-WEBSITE/assets/Octuple-max-demo.ttf") format("truetype");
-}
-/* when pushing to git use " /CPD-WEBSITE/assets/  "*/
+} */
 
 body {
     font-family: Generic, sans-serif;
@@ -120,7 +118,7 @@ body {
 }
 
 p {
-    font-family: Generic;
+    font-family: Generic, serif;
     font-weight: 400;
     font-size: 15px;
 }
@@ -286,26 +284,9 @@ h4 {
 
 /* HEADER.CSS */
 
-.main-header {
-  z-index: 5000;
-  width: 34vw; /* Dynamic width (68vw) */
-  height: auto;
-  /* min-width: 350px; */
-  position: absolute;
-  top: 1vmax;
-  right: 0;
-  padding-right: 1vmax;
-}
-
-.main-header .cpd-logo {
-    animation: redAni 5s infinite;
-}
-
-.liveTime {
-  font-size: 1.5vw;
-    color: white;
-    font-family: monospace;
-    text-align: right;
+.imagesDisplay {
+    background-color: red;
+    height: 100vh;
 }
 
 @keyframes blueAni {
@@ -353,130 +334,180 @@ h4 {
 }
 
 /* LANDING.CSS */
-.mike-cutout {
-    position: absolute;
-    width: calc(35vmax - 5vmin);
-    height: auto;
-    border: 3px solid blue;
-    bottom: 0;
-    right: 0;
-    overflow: hidden;
-}
 
-@media (max-width: 750px) {
-  .mike-cutout {
-    right: 0;
-    transform: translate(5vw, 0%) scale(1);
-  }
-}
-
-.lauryn-cutout {
-    border-radius: 36rem;
-    border-width: 3px;
-    border-color: black;
-    border-style: solid;
-    border-top-left-radius: 0.3rem;
-    border-bottom-left-radius: 22.4rem;
-    border-bottom-right-radius: 90.6rem;
-    border-top-right-radius: 0.1rem;
-    /* width: 60vh;
-    margin-top: -20vh;
-    margin-left: -4vw; */
-    z-index: -1;
-    position: absolute;
-    width: 32.5vmax;
-    /* height: 55vh; */
-    top: -4vh;
-    left: 49.5vw;
-}
-
-.work-cutout {
-    position: absolute;
-    width: auto;
-    height: 11vh;
-    rotate: -1deg;
-    /* min-height: 90px;
-    max-height: 11.5vh; */
-    /* border: 3px solid red; */
-    bottom: 17.5vh;
-    left: 50.5vw;
-    margin-bottom: 15vh;
-}
-
-.about-cutout {
-    cursor: pointer;
-    position: absolute;
-    width: auto;
-    height: 10vh;
-    /* min-height: 90px;
-    max-height: 11.5vh; */
-    /* border: 3px solid teal; */
-    bottom: 17.5vh;
-    left: 50.5vw;
-}
-
-.instagram-cutout {
-    /* border: 3px solid greenyellow; */
-    cursor: pointer;
-    position: absolute;
-    width: auto;
-    height: 10vh;
-    /* min-height: 90px;
-    max-height: 11.5vh; */
-    /* border: 3px solid teal; */
-    bottom: 4vh;
-    left: 52.5vw;
-}
-
-.nova-cutout {
-    /* border: 3px solid greenyellow; */
-    cursor: pointer;
-    position: absolute;
-    width: auto;
-    height: 10vh;
-    /* min-height: 90px;
-    max-height: 11.5vh; */
-    /* border: 3px solid teal; */
-    bottom: 4vh;
-    left: 61.25vw;
-}
-
-.vsco-cutout {
-    /* border: 3px solid greenyellow; */
-    cursor: pointer;
-    position: absolute;
-    width: auto;
-    height: 10vh;
-    border-radius: 100%;
-    /* min-height: 90px;
-    max-height: 11.5vh; */
-    /* border: 3px solid teal; */
-    bottom: 4vh;
-    left: 70vw;
-}
-
-.work, .about, .instagram, .nova, .vsco {
+.work,
+.about,
+.instagram,
+.nova,
+.vsco {
     cursor: pointer;
 }
 
-.work:hover , .about:hover, .instagram:hover, .nova:hover, .vsco:hover {
+.work:hover,
+.about:hover,
+.instagram:hover,
+.nova:hover,
+.vsco:hover {
     filter: sepia(100) invert(100%) saturate(100) blur(0px) drop-shadow(0rem 0rem 0.25rem #ffffff);
 }
 
-html {
-  color-scheme: light dark;
+.page-wrapper {
+    display: flex;
+    /* Use Flexbox to create a 2-column layout */
+    width: 100vw;
+    /* Full viewport width */
+    height: 100vh;
 }
 
-html {
-  overflow: hidden;
-  position: fixed;
+.canvas-container {
+    width: 50vw;
+    /* Takes up 50% of the viewport width */
+    height: 100vh;
+    background: red;
+    /* Placeholder for your 3D rendered loop */
 }
 
-body {
-    max-width: 100%;
-    overflow: hidden;
+.content-container {
+    width: 50vw;
+    /* Takes up the other 50% */
+    height: 100vh;
+    position: relative;
+    /* Since you use absolute positioning inside */
+    /* transition: width 0.3s ease-in-out; */
 }
 
-.content {
-  overflow: hidden;
+@media (max-width: 540px) {
+    .canvas-container {
+        display: none;
+        /* Hides the left side */
+    }
+
+    .content-container {
+        width: 100vw;
+        /* Makes content full-width */
+        height: 100vh;
+    }
+}
+
+.cpd-logo {
+    /* border: 3px solid red; */
+    animation: redAni 5s infinite;
+}
+
+.webgl {
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+}
+
+header .container {
+    border: 3px solid red;
+    position: absolute;
+    z-index: 500;
+}
+header .container .width-2 {
+    border: 3px solid green;
+}
+
+header .container .width-8 {
+    border: 3px solid yellow;
+}
+
+.webgl .cpd-logo {
+    width: 50%;
+}
+
+#controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.button {
+    background-color: #04AA6D;
+    border: none;
+    color: white;
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 5px 2px;
+    cursor: pointer;
+}
+
+@media (max-width: 540px) {
+    .webgl .cpd-logo {
+        width: 90%;
+    }
+}
+
+#track-info {
+    border: 3px solid red;
+    margin: auto;
+    width: 50%;
+    text-align: center;
+}
+
+#track-info img {
+    border: 3px solid red;
+    width: 100%;
+}
+
+.slidecontainer {
+    width: 100%;
+    /* Width of the outside container */
+}
+
+/* The slider itself */
+.slider {
+    -webkit-appearance: none;
+    /* Override default CSS styles */
+    appearance: none;
+    width: 100%;
+    /* Full-width */
+    height: 25px;
+    /* Specified height */
+    background: #d3d3d3;
+    /* Grey background */
+    outline: none;
+    /* Remove outline */
+    opacity: 0.7;
+    /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s;
+    /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+}
+
+/* Mouse-over effects */
+.slider:hover {
+    opacity: 1;
+    /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    /* Override default look */
+    appearance: none;
+    width: 25px;
+    /* Set a specific slider handle width */
+    height: 25px;
+    /* Slider handle height */
+    background: #04AA6D;
+    /* Green background */
+    cursor: pointer;
+    /* Cursor on hover */
+}
+
+.slider::-moz-range-thumb {
+    width: 25px;
+    /* Set a specific slider handle width */
+    height: 25px;
+    /* Slider handle height */
+    background: #04AA6D;
+    /* Green background */
+    cursor: pointer;
+    /* Cursor on hover */
 }

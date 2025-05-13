@@ -27,7 +27,7 @@
     }
   </style>
   <link rel="stylesheet" href="css/all.min.css">
-  <link rel="stylesheet" href="css/work.css">
+  <link rel="stylesheet" href="css/webgl.css">
 </head>
 
 <body>
@@ -53,43 +53,23 @@
       </div>
 
       <div id="controls" class="width-2">
-        <!-- <input type="range" min="1" max="200" value="200" class="slider fovRangeSlider" id="fovRange">
-        <p>FOV Range:
-        <p id="fovRangeNum"> </p>
-        </p> -->
-                <!-- FOV Range -->
-<label for="fovRange">FOV Range</label>
-<input type="range" id="fovRange" min="1" max="200" value="40" class="slider">
+        <!-- FOV Range -->
+        <label for="fovRange">FOV Range</label>
+        <input type="range" id="fovRange" min="1" max="200" value="40" class="slider">
         <!-- X-axis rotation -->
-<label for="rotateX">Rotate X</label>
-<input type="range" id="rotateX" min="-180" max="180" value="0" class="slider">
+        <label for="rotateX">Rotate X</label>
+        <input type="range" id="rotateX" min="-180" max="180" value="0" class="slider">
 
-<!-- Y-axis rotation -->
-<label for="rotateY">Rotate Y</label>
-<input type="range" id="rotateY" min="-180" max="180" value="0" class="slider">
+        <!-- Y-axis rotation -->
+        <label for="rotateY">Rotate Y</label>
+        <input type="range" id="rotateY" min="-180" max="180" value="0" class="slider">
 
-<!-- Z-axis rotation -->
-<label for="rotateZ">Rotate Z</label>
-<input type="range" id="rotateZ" min="-180" max="180" value="0" class="slider">
+        <!-- Z-axis rotation -->
+        <label for="rotateZ">Rotate Z</label>
+        <input type="range" id="rotateZ" min="-180" max="180" value="0" class="slider">
       </div>
     </div>
   </header>
-
-  <!-- <div id="controls" style="position: absolute; top: 20px; left: 20px; z-index: 100;">
-    <button id="prevEnv" style="margin-right: 10px;">Previous Environment</button>
-    <button id="nextEnv">Next Environment</button>
-    <br>
-    <br>
-    <button id="focusObject" style="margin-left: 10px;">Focus iPod</button>
-    <button id="logDebug" style="margin-left: 10px;">Log Scene Info</button>
-  </div>
-
-  <div id="controls" style="position: absolute; top: 20px; right: 20px; z-index: 100;">
-    <input type="range" min="1" max="200" value="200" class="slider fovRangeSlider" id="fovRange">
-    <p>FOV Range:
-    <p id="fovRangeNum"> </p>
-    </p>
-  </div> -->
 
   <script type="importmap">
 			{
@@ -108,19 +88,26 @@
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+    import { AsciiEffect } from 'three/addons/effects/AsciiEffect.js';
 
     // create variables
-    let camera, scene, renderer, model, controls, screenTexture, ctx, canvas, envTexture;
+    let camera, scene, model, controls;
+    let screenTexture, ctx, envTexture;
 
     let isFocusing = false;
     let focusStartTime = 0;
     let focusDuration = 2.0; // seconds
     let startCameraPosition, startCameraTarget, endCameraPosition;
 
+    let currentEnvironmentIndex = 0; // start at 0
+    let hdrLoader = new RGBELoader(); // reuse the loader
+    let currentTrackUrl = ''; // variable to store the current track URL
+    let screenMesh = null; // store your screen panel here
+
     // hdri maps
     const environmentTextures = [
       'assets/sky_02_2k.png',
-      'assets/Train-Station-Georgensgmünd-4K.hdr',
+      'assets/TrainStation.hdr',
       'assets/royal_esplanade_1k.hdr',
       'assets/kloppenheim_02_4k.hdr',
       'assets/lakeside_night_4k.hdr',
@@ -129,38 +116,54 @@
       // https://polyhaven.com/a/pedestrian_overpass
     ];
 
-    let currentEnvironmentIndex = 0; // start at 0
-    let hdrLoader = new RGBELoader(); // reuse the loader
-    let currentTrackUrl = ''; // variable to store the current track URL
-
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
-    let screenMesh = null; // store your screen panel here
+    const clock = new THREE.Clock();
 
-    var slider = document.getElementById("fovRange");
-    let fov;
-   
-    // Update the current slider value (each time you drag the slider handle)
-    slider.oninput = function () {
-      fov = slider.value;
+    var fovSlider = document.getElementById("fovRange");
+    let fov = fovSlider.value;
+
+    fovSlider.oninput = function () {
+      fov = this.value;
     }
 
     const rotateX = document.getElementById('rotateX');
-const rotateY = document.getElementById('rotateY');
-const rotateZ = document.getElementById('rotateZ');
+    const rotateY = document.getElementById('rotateY');
+    const rotateZ = document.getElementById('rotateZ');
 
-function updateModelRotation() {
-  model.rotation.x = THREE.MathUtils.degToRad(rotateX.value);
-  model.rotation.y = THREE.MathUtils.degToRad(rotateY.value);
-  model.rotation.z = THREE.MathUtils.degToRad(rotateZ.value);
-}
+    function updateModelRotation() {
+      model.rotation.x = THREE.MathUtils.degToRad(rotateX.value);
+      model.rotation.y = THREE.MathUtils.degToRad(rotateY.value);
+      model.rotation.z = THREE.MathUtils.degToRad(rotateZ.value);
+    }
 
-rotateX.addEventListener('input', updateModelRotation);
-rotateY.addEventListener('input', updateModelRotation);
-rotateZ.addEventListener('input', updateModelRotation);
+    rotateX.addEventListener('input', updateModelRotation);
+    rotateY.addEventListener('input', updateModelRotation);
+    rotateZ.addEventListener('input', updateModelRotation);
+
+    var canvas = document.getElementsByTagName("canvas")[0];
+
+    var renderer = new THREE.WebGLRenderer({
+      canvas: canvas,
+      antialias: true,
+      alpha: true
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
     // initiate app
     init();
+
+    const effect = new AsciiEffect(renderer, ' .:-=+*#%@', { invert: false });
+    effect.setSize(window.innerWidth, window.innerHeight + 20);
+    effect.domElement.style.color = 'pink';
+    effect.domElement.style.backgroundColor = 'black';
+    effect.domElement.style.zIndex = '10000';
+    effect.domElement.style.position = 'absolute';
+    effect.domElement.style.top = '0';
+    effect.domElement.classList.add("AsciiCanvas");
+    effect.domElement.style.pointerEvents = 'none';
+    effect.domElement.style.rotate = '0deg';
+    document.body.appendChild(effect.domElement);
 
     window.addEventListener('keydown', function (event) {
       if (!model) return;
@@ -651,6 +654,47 @@ rotateZ.addEventListener('input', updateModelRotation);
       controls.update();
       renderer.render(scene, camera);
     }
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const elapsed = clock.getElapsedTime();
+
+      // Bouncing animation
+      const bounceAmplitude = 0.2;      // height
+      const bounceFrequency = 1;      // speed
+      const bounceWidth = 0.1;          // horizontal distance
+      const squashFactor = 0.2;       // squish/stretch amount
+
+      if (model) {
+        // Horizontal arc motion
+        // model.position.z = Math.sin(elapsed * bounceFrequency) * bounceWidth;
+        model.position.z = 0;
+
+        // Vertical bounce (sine arc)
+        // model.position.y = Math.abs(Math.sin(elapsed * bounceFrequency * Math.PI)) * bounceAmplitude;
+        model.position.y = 0;
+
+        // Squash at the bottom
+        const isOnGround = model.position.y < 0.00;
+
+        if (isOnGround) {
+          // model.scale.y = 1 - squashFactor;
+          // model.scale.x = 1 + squashFactor;
+          // model.scale.z = 1 + squashFactor;
+        } else {
+          // Smoothly return to normal scale
+          // model.scale.y += (1 - model.scale.y) * 0.1;
+          // model.scale.x += (1 - model.scale.x) * 0.1;
+          // model.scale.z += (1 - model.scale.z) * 0.1;
+        }
+      }
+
+      // Re-render scene
+      renderer.render(scene, camera);
+    }
+
+    animate(); // Start the loop
   </script>
 </body>
 

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script>
+    async function fetchNowPlaying() {
+      try {
+        const response = await fetch('/.netlify/functions/getCurrentTrack');
+        const data = await response.json();
+
+        // Log the data to inspect it
+        console.log('Track data:', data);
+
+        const trackDiv = document.getElementById('track-info');
+
+        if (data.message) {
+          trackDiv.innerHTML = `${data.message}`;
+        } else {
+          trackDiv.innerHTML = `
+            <div>
+              <img src="${data.album_image}" alt="Album Cover">
+              <h3>${data.name}</h3>
+              <p>by</p>
+              <p>${data.artists}</p>
+              <p>Album</p>
+              <p>${data.album}</p>
+            </div>
+          `;
+        }
+      } catch (error) {
+        document.getElementById('track-info').innerHTML = 'Error loading track info.';
+        console.error('Fetch error:', error);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchNowPlaying);
+</script>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="css/all.min.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/webgl.css">
+
+  <title>CPD.JPG Live Music Test</title>
+
+  <script>
+    if (window.location.hostname === "your-github-username.github.io") {
+      document.write('<base href="/CPD-WEBSITE/">');
+    }
+  </script>
+</head>
+
+<body>
+
+  <header>
+    <div class="containerFull home">
+      <img src="images/cpd logo.png" class="cpd-logo"></img>
+    </div>
+  </header>
+
+  <section id="now-playing">
+    <h2>Now Playing</h2>
+    <div id="track-info">
+      <p>Loading...</p>
+    </div>
+  </section>
+
+  <!-- <footer>
+        <p style="z-index: 5000; position: absolute; font-size: 0.5rem; bottom: 0%; padding: 1%;">
+            © 2024 Conor Dunne.<br>
+            The code on this website is released under <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank">CC0 1.0</a> (public domain).<br>
+            However, all images and media are protected under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a>.<br> 
+            Unauthorized use of images is prohibited.
+          </p>        
+    </footer> -->
+
+</body>
+
+</html>
