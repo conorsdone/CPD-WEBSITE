@@ -28,12 +28,10 @@
 }
 
 .containerFullFlex {
-    padding-top: 40px;
-    padding-bottom: 40px;
     width: 100%;
-    margin: auto;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .containerFull {
@@ -117,6 +115,6 @@
     display: flex;
     flex-direction: column;
     width: 100vw;
-    max-width: 200;
-    gap:0
+    /* max-width: 200; */
+    gap: 0;
 }

@@ -1,6 +1,22 @@
-body {
-    background-color: black;
-}
+:root {
+    --background: #000000;
+    --background-2: #0f0f0f;
+    --text: #ffffff;
+    --highlight: #ff0000;
+    --highlight-2: #63d2f4;
+    --noise-var: 0.1;
+    --animation-logo: redAni;
+
+    /* variable-white */
+    /* --background: #ffffff;
+    --background-2: #f5f5f5;
+    --text: #000000;
+    --highlight: #ff0000;
+    --highlight-2: #63d2f4;
+    --noise-var: 0.05; 
+    --animation-logo: blueAni; */
+   
+  }
 
 @font-face {
     font-family: Generic;
@@ -24,7 +40,8 @@ body {
     font-size: 16px;
     font-weight: 400;
     line-height: 1.45;
-    background: black;
+    background: var(--background);
+    background-color: var(--background);
 }
 
 p {
@@ -38,7 +55,7 @@ h1 {
     font-size: 5.8rem;
     line-height: 1;
     color: rgba(255, 0, 0, 0.85);
-    filter: drop-shadow(0rem 0rem 0.96rem #ff0000);
+    filter: drop-shadow(0rem 0rem 0.96rem var(--background));
     text-decoration: none;
 }
 
@@ -73,11 +90,11 @@ h4 {
 
     0%,
     100% {
-        filter: sepia(100) invert(100%) saturate(50) drop-shadow(0rem 0rem 0rem #63d2f4) blur(0px);
+        filter: sepia(100) invert(100%) saturate(50) drop-shadow(0rem 0rem 0rem var(--highlight-2)) blur(0px);
     }
 
     50% {
-        filter: sepia(100) invert(100%) saturate(100) drop-shadow(0rem 0rem 1rem #63d2f4);
+        filter: sepia(100) invert(100%) saturate(100) drop-shadow(0rem 0rem 1rem var(--highlight-2));
     }
 }
 
@@ -85,11 +102,11 @@ h4 {
 
     0%,
     100% {
-        filter: sepia(100) invert(0%) saturate(10) drop-shadow(0rem 0rem 0rem #ff0000) blur(0px);
+        filter: sepia(100) invert(0%) saturate(10) drop-shadow(0rem 0rem 0rem var(--highlight)) blur(0px);
     }
 
     50% {
-        filter: sepia(100) invert(0%) saturate(40) drop-shadow(0rem 0rem 1rem #ff0000);
+        filter: sepia(100) invert(0%) saturate(40) drop-shadow(0rem 0rem 1rem var(--highlight));
     }
 }
 

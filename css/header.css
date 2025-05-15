@@ -1,10 +1,13 @@
+:root {
+    --header-logo-width: 70%;
+}
+
 .cpd-logo {
-    animation: redAni 5s infinite;
+    animation: var(--animation-logo) 5s infinite;
 }
 
 header {
     z-index: 5000;
-    margin-bottom: 10vw;
 }
 
 header .containerFull {
@@ -16,12 +19,64 @@ header .containerFull {
     padding-right: 1vw;
 }
 
-header .liveTime {
+header .containerFullFlex {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+header .containerFullFlex a {
+    width: var(--header-logo-width);
+}
+
+header {
+    /* margin-bottom: 7.75vw; */
+    position: fixed;
+}
+
+.work .containerFlex {
+    padding-top: 19vw; 
+    /* 25% = 5vw 5% = 1vw +2.5 !!*/ /* with normal header */ 
+    /* 25% = 5vw 5% = 1vw +5 !!*/ /* with nav header */ 
+}
+
+.work header .containerNav {
+    padding-top: .5vw;
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.work header .containerNav .nav, .work header h3 {
     font-size: 1.5vw;
-    color: white;
+    color: var(--text);
     font-family: Geist-Mono;
     text-align: right;
 }
+
+.work header .containerNav .nav:hover, .work header .containerNav .active {
+    cursor: pointer;
+    color: var(--background);
+    background-color: var(--text);
+}
+
+@media (max-width: 540px) {
+    header {
+        margin-top: 2.5vw;
+    }
+
+    header .containerFullFlex a {
+        width: 90%;
+    }
+
+    header .liveTime {
+        font-size: 3vw;
+    }
+} 
+
 /* 
 @media (max-width: 540px) {
     .page-header {

@@ -2,6 +2,17 @@
 <html lang="en">
 
 <head>
+  <!-- Google Tag Manager -->
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-5P5GK6CQ');</script>
+  <!-- End Google Tag Manager -->
+
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,51 +42,66 @@
     setInterval(updateTime, 1000); // Update every second
     window.onload = updateTime; // Update immediately when page loads
   </script>
+  <script src="js/noiseGenerator.js"></script>
 </head>
 
 <body class="work">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5P5GK6CQ" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <canvas id="noise" class="noise"></canvas>
 
   <header>
-    <div class="containerFull">
-      <a href="home.html">
-        <img src="images/cpd logo.png" class="cpd-logo">
+    <!-- <div class="containerFull"> -->
+    <div class="containerFullFlex">
+      <a href="main.html">
+        <!-- <img src="images/cpd-blend-logo.png" class="cpd-logo"> -->
+        <img src="images/cpd-halftone-logo.png" class="cpd-logo logo-halftone">
       </a>
-      <h3 class="liveTime" id="gmt-time"></h3>
+      <h3 id="gmt-time"></h3>
+      <div class="containerNav">
+        <h3 class="nav">[LIVE GIGS]</h3>
+        <h3 class="nav active">[CREATIVE MEDIA]</h3> 
+        <h3 class="nav">[ARCHIVE]</h3>
+      </div>
     </div>
   </header>
 
 
 
   <div class="containerFlex">
-      <div class="containerFlexMid" style="width: 50vw;">
-        <div style="width: 100%; padding-top: 4px;">
-          <img src="images/curtisy-1.jpg">
-        </div>
+
+    <div class="containerFlexMid">
+      <div class="containerMid">
+        <img src="images/curtisy-1.jpg">
       </div>
-    
-    
+    </div>
+
     <div class="realign">
-      <div class="containerColumnLeft">
-        <div class="columnLeft" style="height: 10%;"><img src="images/000012.JPG">
+      <div class="containerColumn containerColumnLeft">
+        <div class="column columnLeft" style="height: 14%;"><img src="images/000012.JPG">
         </div>
-        <div class="columnLeft" style="height: 10%;"><img src="images/BroncoLokoSite1.webp">
+        <div class="column columnLeft" style="height: 14%;"><img src="images/BroncoLokoSite1.webp">
         </div>
-        <div class="columnLeft" style="height: 10%;"><img src="images/MlhSite3.jpg">
+        <div class="column columnLeft" style="height: 12%;"><img src="images/MikeSite2.webp">
         </div>
-        <div class="columnLeft" style="height: 10%;"><img src="images/MikeSite2.webp">
+        <div class="column columnLeft" style="height: 13%;"><img src="images/MlhSite3.jpg">
         </div>
-        <div class="columnLeft" style="height: 10%;"><img src="images/BroncoLokoSite2.jpg"></div>
+        <div class="column columnLeft" style="height: 10%;"><img src="images/BroncoLokoSite2.jpg"></div>
       </div>
 
-      <div class="containerColumnRight">
-        <div class="columnRight" style="height: 10%;"><img src="images/lord apex tester 5.jpg">
+      <div class="containerColumn containerColumnRight">
+        <div class="column columnRight" style="height: 11%;"><img src="images/lord apex tester 5.jpg">
         </div>
-        <div class="columnRight" style="height: 10%;"><img src="images/F3miiiSite.webp">
+        <div class="column columnRight" style="height: 10%;"><img src="images/F3miiiSite.webp">
         </div>
-        <div class="columnRight" style="height: 10%;"><img src="images/LordApexSite1.jpg"></div>
-        <div class="columnRight" style="height: 10%;"><img src="images/MlhSite2.webp">
+        <div class="column columnRight" style="height: 13%;"><img src="images/MlhSite2.webp">
         </div>
-        <div class="columnRight" style="height: 10%;"><img src="images/MonjolaSite.webp">
+        <div class="column columnRight" style="height: 10%;"><img src="images/MonjolaSite.webp">
+        </div>
+        <div class="column columnRight" style="height: 12%;"><img src="images/LordApexSite1.jpg">
         </div>
       </div>
     </div>
