@@ -3,11 +3,12 @@
 }
 
 .cpd-logo {
+    /* mix-blend-mode: difference; */
     animation: var(--animation-logo) 5s infinite;
 }
 
 header {
-    z-index: 5000;
+    z-index: 5000;  
 }
 
 header .containerFull {
@@ -32,18 +33,20 @@ header .containerFullFlex a {
 }
 
 header {
-    /* margin-bottom: 7.75vw; */
-    position: fixed;
+    position: sticky;
+    top: 0;
+    left: 0;
 }
 
 .work .containerFlex {
-    padding-top: 19vw; 
+    /* padding-top: 19vw;  */
     /* 25% = 5vw 5% = 1vw +2.5 !!*/ /* with normal header */ 
     /* 25% = 5vw 5% = 1vw +5 !!*/ /* with nav header */ 
 }
 
 .work header .containerNav {
     padding-top: .5vw;
+    padding-bottom: .5vw;
     width: 90%;
     display: flex;
     flex-direction: row;
@@ -74,6 +77,10 @@ header {
 
     header .liveTime {
         font-size: 3vw;
+    }
+
+    header h3 {
+        font-size: 2.5vw !important;
     }
 } 
 
