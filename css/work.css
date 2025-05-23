@@ -1,19 +1,3 @@
-/* #track-info {
-    border: 3px solid red;
-    margin: auto;
-    width: 50%;
-    text-align: center;
-}
-
-#track-info img {
-    border: 3px solid red;
-    width: 100%;
-} */
-
-/* .container {
-    margin: 5vw;
-} */
-
 :root {
     --gap: 0.75vw;
     --gap-mobile: 2.5vw;
@@ -42,6 +26,12 @@ body {
     width: 50%;
     /* width: 65%; */
     padding-top: 4px; 
+    transition: width 1s ease-in-out;
+}
+.work .containerFlex .containerFlexMid .containerMid:hover {
+    position: relative;
+    transition: width 1s ease-in-out;
+    width: 65%;
 }
 
 .work .containerFlex .containerFlexMid .containerMid img {
@@ -57,6 +47,7 @@ body {
     gap: var(--gap);
     height: 150vw;
     margin-top: var(--gap);
+    margin-bottom: var(--gap);
 }
 
 .work .containerFlex .realign .containerColumnLeft {
@@ -68,6 +59,8 @@ body {
 }
 
 .work .containerFlex .realign .containerColumn {
+    transition: min-height 0.3s ease;
+    min-height: 150vw;
     flex: 1 1;
     display: flex;
     flex-direction: column;
@@ -78,6 +71,7 @@ body {
 .work .containerFlex .realign .containerColumn .column {
     display: flex;
     flex: 1 0 auto;
+    transition: height 1s ease-in-out;
 }
 
 .work .containerFlex .realign .containerColumn .columnRight {
@@ -100,6 +94,41 @@ body {
     object-position: left center;
 }
 
+.work .height-0 {
+    height: 10%;
+}
+.work .height-0:hover {
+    height: 13%;
+}
+
+.work .height-1 {
+    height: 11%;
+}
+.work .height-1:hover {
+    height: 14.3%;
+}
+
+.work .height-2 {
+    height: 12%;
+}
+.work .height-2:hover {
+    height: 15.6%;
+}
+
+.work .height-3 {
+    height: 13%;
+}
+.work .height-3:hover {
+    height: 16.9%;
+}
+
+.work .height-4 {
+    height: 14%;
+}
+.work .height-4:hover {
+    height: 18.2%;
+}
+
 .work .containerFlex .containerFlexMid {
     display: flex;
     justify-content: center;
@@ -120,8 +149,34 @@ body {
         margin-top: var(--gap-mobile);
         height: 200vw;
     }
+    
 
     .work .containerFlex .realign .containerColumnLeft {
         gap: var(--gap-mobile);
     }
+}
+@media (max-width: 540px) {
+    .realign .containerColumn {
+      min-height: 200vw;
+    }
+  }
+
+[data-category] {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, height 0.3s ease;
+    display: none; /* Start hidden */
+    height: 0;
+    overflow: hidden;
+  }
+  
+  [data-category].active {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out, height 0.3s ease;
+    display: flex; /* Match your layout containers */
+    height: auto;
+    overflow: visible;
+  }
+
+.work .containerFlex .containerFlexMid {
+    height: auto;
 }

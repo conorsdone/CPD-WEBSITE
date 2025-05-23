@@ -18,6 +18,7 @@
   "homepage": "https://github.com/conorsdone/CPD-WEBSITE#readme",
   "description": "",
   "dependencies": {
+    "cloudinary": "^2.6.1",
     "node-fetch": "^2.6.1"
   }
 }

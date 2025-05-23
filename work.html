@@ -25,24 +25,8 @@
   <link rel="stylesheet" href="css/work.css">
 
   <title>CPD.JPG Work</title>
-
-  <script>
-    function updateTime() {
-      const aspectRatio = window.innerWidth / window.innerHeight;
-      const now = new Date();
-      let hours = now.getUTCHours() + 1;
-      const realHours = hours.toString().padStart(2, '0'); // Get hours in GMT
-      const minutes = now.getUTCMinutes().toString().padStart(2, '0'); // Get minutes in GMT
-      const seconds = now.getUTCSeconds().toString().padStart(2, '0'); // Get seconds in GMT
-      const gmtTime = `Dublin, Éire ${realHours}:${minutes}:${seconds} GMT`; // Format the time string
-      document.getElementById("gmt-time").textContent = gmtTime;
-      // console.log(aspectRatio);
-    }
-
-    setInterval(updateTime, 1000); // Update every second
-    window.onload = updateTime; // Update immediately when page loads
-  </script>
-  <script src="js/noiseGenerator.js"></script>
+  <!-- <script src="js/noiseGenerator.js"></script> -->
+  <script src="js/work.js"></script>
 </head>
 
 <body class="work">
@@ -58,58 +42,89 @@
     <div class="containerFullFlex">
       <a class="blendHeader" href="main.html">
         <!-- <img src="images/cpd-blend-logo.png" class="cpd-logo"> -->
-        <img src="images/cpd-halftone-logo.png" class="cpd-logo logo-halftone">
+        <img data-public-id="cpd-halftone-logo_v8ucjm" class="cpd-logo logo-halftone">
       </a>
-      
+
       <h3 id="gmt-time"></h3>
       <div class="containerNav">
-        <h3 class="nav">[LIVE GIGS]</h3>
-        <h3 class="nav active">[CREATIVE MEDIA]</h3>
-        <h3 class="nav">[ARCHIVE]</h3>
+        <h3 class="nav" data-filter="bts-work">[BTS WORK]</h3>
+        <h3 class="nav active" data-filter="live-gigs">[LIVE GIGS]</h3>
+        <h3 class="nav" data-filter="archive">[ARCHIVE]</h3>
       </div>
     </div>
   </header>
 
-
-
   <div class="containerFlex">
 
-    <div class="containerFlexMid">
+    <div class="containerFlexMid" data-category="bts-work">
       <div class="containerMid">
-        <img src="images/curtisy-1.jpg">
+        <img data-public-id="curtisy-1_fjshog">
       </div>
     </div>
 
-    <div class="realign">
+    <div class="realign" data-category="bts-work">
       <div class="containerColumn containerColumnLeft">
-        <div class="column columnLeft" style="height: 14%;"><img src="images/000012.JPG">
+        <div class="column columnLeft height-4"><img data-public-id="000012_dt65vh">
         </div>
-        <div class="column columnLeft" style="height: 14%;"><img src="images/BroncoLokoSite1.webp">
+        <div class="column columnLeft height-4"><img data-public-id="BroncoLokoSite1_tz85jl">
         </div>
-        <div class="column columnLeft" style="height: 12%;"><img src="images/MikeSite2.webp">
+        <div class="column columnLeft height-2"><img data-public-id="MikeSite2_k63dr8">
         </div>
-        <div class="column columnLeft" style="height: 13%;"><img src="images/MlhSite3.jpg">
+        <div class="column columnLeft height-3"><img data-public-id="MlhSite3-2_m60wgo">
         </div>
-        <div class="column columnLeft" style="height: 10%;"><img src="images/BroncoLokoSite2.jpg"></div>
+        <div class="column columnLeft height-0"><img data-public-id="BroncoLokoSite2_atlnso"></div>
       </div>
 
       <div class="containerColumn containerColumnRight">
-        <div class="column columnRight" style="height: 11%;"><img src="images/lord apex tester 5.jpg">
+        <div class="column columnRight height-1"><img data-public-id="lord_apex_tester_5_ftxpzx">
         </div>
-        <div class="column columnRight" style="height: 10%;"><img src="images/F3miiiSite.webp">
+        <div class="column columnRight height-0"><img data-public-id="F3miiiSite_mgbuwx">
         </div>
-        <div class="column columnRight" style="height: 13%;"><img src="images/MlhSite2.webp">
+        <div class="column columnRight height-3"><img data-public-id="MlhSite2_wtzmzx">
+
         </div>
-        <div class="column columnRight" style="height: 10%;"><img src="images/MonjolaSite.webp">
+        <div class="column columnRight height-0"><img data-public-id="MonjolaSite_ttkprp">
         </div>
-        <div class="column columnRight" style="height: 12%;"><img src="images/LordApexSite1.jpg">
+        <div class="column columnRight height-2"><img data-public-id="LordApexSite1_dpgqet">
         </div>
       </div>
     </div>
+
+    <div class="containerFlexMid" data-category="live-gigs">
+      <div class="containerMid">
+        <img data-public-id="MikeSite2_k63dr8">
+      </div>
+    </div>
+
+    <div class="realign" data-category="live-gigs">
+      <div class="containerColumn containerColumnLeft">
+        <div class="column columnLeft height-4"><img data-public-id="000012_dt65vh">
+        </div>
+        <div class="column columnLeft height-4"><img data-public-id="BroncoLokoSite1_tz85jl">
+        </div>
+        <div class="column columnLeft height-2"><img data-public-id="MikeSite2_k63dr8">
+        </div>
+        <div class="column columnLeft height-3"><img data-public-id="MlhSite3-2_m60wgo">
+        </div>
+        <div class="column columnLeft height-0"><img data-public-id="BroncoLokoSite2_atlnso"></div>
+      </div>
+
+      <div class="containerColumn containerColumnRight">
+        <div class="column columnRight height-1"><img data-public-id="lord_apex_tester_5_ftxpzx">
+        </div>
+        <div class="column columnRight height-0"><img data-public-id="F3miiiSite_mgbuwx">
+        </div>
+        <div class="column columnRight height-3"><img data-public-id="MlhSite2_wtzmzx">
+
+        </div>
+        <div class="column columnRight height-0"><img data-public-id="MonjolaSite_ttkprp">
+        </div>
+        <div class="column columnRight height-2"><img data-public-id="LordApexSite1_dpgqet">
+        </div>
+      </div>
+    </div>
+
   </div>
-
-
-
 
   <!-- <footer>
         <p style="z-index: 5000; position: absolute; font-size: 0.5rem; bottom: 0%; padding: 1%;">

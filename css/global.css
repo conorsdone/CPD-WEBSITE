@@ -4,6 +4,7 @@
     --text: #ffffff;
     --highlight: #ff0000;
     --highlight-2: #63d2f4;
+    --highlight-3: #d5d3bb;
     --noise-var: 0.1;
     --animation-logo: redAni;
 
@@ -107,6 +108,18 @@ h4 {
 
     50% {
         filter: sepia(100) invert(0%) saturate(40) drop-shadow(0rem 0rem 1rem var(--highlight));
+    }
+}
+
+@keyframes greenAni {
+
+    0%,
+    100% {
+        filter: drop-shadow(0rem 0rem 0rem var(--highlight-3)) blur(0px);
+    }
+
+    50% {
+        filter: drop-shadow(0rem 0rem 1rem var(--highlight-3));
     }
 }
 
