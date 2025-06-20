@@ -1,0 +1,2 @@
+// noise class fix for iphone. must render 2times bigger than window height and width
+find fix fir when zooming. probably a js fix somewhere here

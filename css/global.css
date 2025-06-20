@@ -36,6 +36,20 @@
     src: url("../assets/Octuple-max-demo.ttf") format("truetype");
 }
 
+@font-face {
+    font-family: Mirtha;
+    src: url("../assets/MirthaDisplayBold.otf") format("opentype");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Mirtha;
+    src: url("../assets/mirthadisplaytrial-bolditalic.otf") format("opentype");
+    font-weight: bold;
+    font-style: italic;
+}
+
 body {
     font-family: Generic, sans-serif;
     font-size: 16px;

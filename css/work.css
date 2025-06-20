@@ -8,37 +8,52 @@
     position: fixed;
     top: 0;
     left: 0;
-    
+
     width: 100%;
     height: 100%;
-    
+
     pointer-events: none;
     opacity: var(--noise-var);
     image-rendering: crisp-edges;
 }
 
 body {
-    /* background: linear-gradient(to right, rgba(36,31,31,1) 0%, rgba(36,31,31,1) 32%, rgba(74,71,70,1) 100%); */
     background: var(--background-2);
 }
 
+
 .work .containerFlex .containerFlexMid .containerMid {
-    width: 50%;
-    /* width: 65%; */
-    padding-top: 4px; 
+    padding-top: 4px;
     transition: width 1s ease-in-out;
 }
+
+.work .containerFlex .containerFlexMid .imgSquare {
+    width: 40%;
+}
+
+.work .containerFlex .containerFlexMid .imgLandscape {
+    width: 50%;
+}
+
 .work .containerFlex .containerFlexMid .containerMid:hover {
     position: relative;
     transition: width 1s ease-in-out;
+}
+
+.work .containerFlex .containerFlexMid .imgSquare:hover {
+    width: 50%;
+}
+
+.work .containerFlex .containerFlexMid .imgLandscape:hover {
     width: 65%;
 }
 
 .work .containerFlex .containerFlexMid .containerMid img {
     /* cursor: pointer; */
     width: 100%;
+
     @media (max-width: 768px) {
-        max-height:50dvw
+        max-height: 50dvw
     }
 }
 
@@ -77,11 +92,12 @@ body {
 .work .containerFlex .realign .containerColumn .columnRight {
     justify-content: flex-start;
 }
-.work .containerFlex .realign .containerColumn .columnLeft { 
+
+.work .containerFlex .realign .containerColumn .columnLeft {
     justify-content: flex-end;
 }
 
-.work .containerFlex .realign .containerColumn .column img  {
+.work .containerFlex .realign .containerColumn .column img {
     object-fit: fill;
     height: 100%;
 }
@@ -97,6 +113,7 @@ body {
 .work .height-0 {
     height: 10%;
 }
+
 .work .height-0:hover {
     height: 13%;
 }
@@ -104,6 +121,7 @@ body {
 .work .height-1 {
     height: 11%;
 }
+
 .work .height-1:hover {
     height: 14.3%;
 }
@@ -111,6 +129,7 @@ body {
 .work .height-2 {
     height: 12%;
 }
+
 .work .height-2:hover {
     height: 15.6%;
 }
@@ -118,6 +137,7 @@ body {
 .work .height-3 {
     height: 13%;
 }
+
 .work .height-3:hover {
     height: 16.9%;
 }
@@ -125,6 +145,7 @@ body {
 .work .height-4 {
     height: 14%;
 }
+
 .work .height-4:hover {
     height: 18.2%;
 }
@@ -134,8 +155,9 @@ body {
     justify-content: center;
     max-height: 80dvw;
     margin: 0 auto;
+
     @media (max-width: 768px) {
-        width:70dvw
+        width: 70dvw
     }
 }
 
@@ -149,34 +171,190 @@ body {
         margin-top: var(--gap-mobile);
         height: 200vw;
     }
-    
+
 
     .work .containerFlex .realign .containerColumnLeft {
         gap: var(--gap-mobile);
     }
 }
+
 @media (max-width: 540px) {
     .realign .containerColumn {
-      min-height: 200vw;
+        min-height: 200vw;
     }
-  }
+}
 
 [data-category] {
     opacity: 0;
     transition: opacity 0.3s ease-in-out, height 0.3s ease;
-    display: none; /* Start hidden */
+    display: none;
+    /* Start hidden */
     height: 0;
     overflow: hidden;
-  }
-  
-  [data-category].active {
+}
+
+[data-category].active {
     opacity: 1;
     transition: opacity 0.3s ease-in-out, height 0.3s ease;
-    display: flex; /* Match your layout containers */
+    display: flex;
+    /* Match your layout containers */
     height: auto;
     overflow: visible;
-  }
+}
 
 .work .containerFlex .containerFlexMid {
     height: auto;
+}
+
+
+/* Modal styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 45%;
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    background-color: var(--background-2);
+}
+
+.modal-content {
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-container {
+    overflow: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+  }
+  
+  /* WebKit browsers */
+  .modal-container::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+    background: transparent;
+  }
+  
+  @media screen and (-webkit-min-device-pixel-ratio:0) {
+    .modal-container {
+      overflow: hidden;
+    }
+  }
+
+.modal-image {
+    max-height: 80vh;
+    max-width: 80vw;
+    object-fit: contain;
+}
+
+.modal-title {
+    /* border: 3px solid red; */
+    font-family: Mirtha;
+    font-style: italic;
+    font-size: 20vh;
+    color: white;
+    text-align: center;
+    
+}
+
+@media (max-width: 540px) {
+    .modal-title {
+        /* border: 3px solid red; */
+        font-size: 7.5vh;
+        line-height: 7.5vh;
+    }
+
+    .work .containerFlex .containerFlexMid .imgSquare {
+        width: 70%;
+    }
+    
+    .work .containerFlex .containerFlexMid .imgLandscape {
+        width:80%;
+    }
+
+    .work .containerFlex .containerFlexMid .imgSquare:hover {
+        width: 80%;
+    }
+    
+    .work .containerFlex .containerFlexMid .imgLandscape:hover {
+        width: 90%;
+    }
+
+}
+
+/* Blur effect for background */
+.blur-background {
+    filter: blur(5px);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(0);
+    }
+}
+
+@keyframes fadeInColour {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOutColour {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes blurIn {
+    from {
+        filter: blur(0px);
+    }
+
+    to {
+        filter: blur(5px);
+    }
+}
+
+@keyframes blurOut {
+    from {
+        filter: blur(5px);
+    }
+
+    to {
+        filter: blur(0px);
+    }
 }

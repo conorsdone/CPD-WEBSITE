@@ -8,7 +8,7 @@
 }
 
 header {
-    z-index: 5000;  
+    z-index: 5000;
     /* mix-blend-mode: difference; */
 }
 
@@ -27,10 +27,17 @@ header .containerFullFlex {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background: var(--background-2);
+    background: linear-gradient(180deg, rgba(15, 15, 15, 1) 0%, rgba(15, 15, 15, 1) 80%, rgba(15, 15, 15, 0) 100%);
 }
 
-header .containerFullFlex a {
-    width: var(--header-logo-width);
+#headerShrink {
+    width: 70%;
+    transition: width 0.75s ease;
+}
+
+.scrolled #headerShrink {
+    width: 50%;
 }
 
 header {
@@ -39,45 +46,55 @@ header {
     left: 0;
 }
 
-.work .containerFlex {
+/* .work .containerFlex {
     /* padding-top: 19vw;  */
-    /* 25% = 5vw 5% = 1vw +2.5 !!*/ /* with normal header */ 
-    /* 25% = 5vw 5% = 1vw +5 !!*/ /* with nav header */ 
-}
+/* 25% = 5vw 5% = 1vw +2.5 !!*/
+/* with normal header */
+/* 25% = 5vw 5% = 1vw +5 !!*/
+/* with nav header */
+
 
 .work header .containerNav {
     padding-top: .5vw;
     padding-bottom: .5vw;
     width: 90%;
     display: grid;
-    grid-template-columns: 1fr auto 1fr; /* Key part */
+    grid-template-columns: 1fr auto 1fr;
+    /* Key part */
     align-items: center;
+    animation: "fadeIn 1.25s ease-in-out";
 }
 
 .work header .containerNav .nav:first-child {
-    justify-self: start; /* Align first item left */
+    justify-self: start;
+    /* Align first item left */
 }
 
 .work header .containerNav .active {
-    justify-self: center; /* Center middle item */
+    justify-self: center;
+    /* Center middle item */
 }
 
 .work header .containerNav .nav:last-child {
-    justify-self: end; /* Align last item right */
+    justify-self: end;
+    /* Align last item right */
 }
 
 .work header .containerNav .nav {
-    cursor: pointer; /* Makes it feel clickable */
-  }
+    cursor: pointer;
+    /* Makes it feel clickable */
+}
 
-.work header .containerNav .nav, .work header h3 {
+.work header .containerNav .nav,
+.work header h3 {
     font-size: 1.5vw;
     color: var(--text);
     font-family: Geist-Mono;
     /* text-align: right; */
 }
 
-.work header .containerNav .nav:hover, .work header .containerNav .active {
+.work header .containerNav .nav:hover,
+.work header .containerNav .active {
     cursor: pointer;
     color: var(--background);
     background-color: var(--text);
@@ -99,7 +116,7 @@ header {
     header h3 {
         font-size: 2.5vw !important;
     }
-} 
+}
 
 /* 
 @media (max-width: 540px) {
@@ -117,5 +134,3 @@ header {
         font-size: calc(3.25vw + 0.5vh);
     }
 } */
-
-
