@@ -28,16 +28,16 @@ header .containerFullFlex {
     align-items: center;
     justify-content: center;
     background: var(--background-2);
-    background: linear-gradient(180deg, rgba(15, 15, 15, 1) 0%, rgba(15, 15, 15, 1) 80%, rgba(15, 15, 15, 0) 100%);
+    background: linear-gradient(180deg, rgba(15, 15, 15, 1) 0%, rgba(15, 15, 15, 1) 70%, rgba(15, 15, 15, 0) 100%);
 }
 
 #headerShrink {
-    width: 70%;
+    width: 50%;
     transition: width 0.75s ease;
 }
 
 .scrolled #headerShrink {
-    width: 50%;
+    width: 30%;
 }
 
 header {
