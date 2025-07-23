@@ -2,7 +2,7 @@
   publish = "."
 
 [dev]
-  port = 3998
+  port = 3000
   auto_plugins = false  # This skips plugin installation
 
 [[redirects]]

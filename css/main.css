@@ -552,17 +552,17 @@ h4 {
 
 @media (max-width: 540px) {
     .instagram-image {
-        transform: translate(0%, -20%) scale(1);
+        transform: translate(0%, 0%) scale(1);
     }
 
     .nova-image {
-        transform: translate(0%, -60%) scale(1);
+        transform: translate(0%, 0%) scale(1);
     }
 
     .vsco-image {
         border: 2px solid 0;
         border-radius: 500px;
-        transform: translate(0%, -100%) scale(1);
+        transform: translate(0%, -0%) scale(1);
     }
 }
 
@@ -575,9 +575,38 @@ h4 {
 }
 
 .tall-ratio .media-container {
-    transform: translate(20vw, 30vw) scale(1);
+    transform: translate(0vw, 0vw) scale(1);
 }
 
 .tall-ratio .social-image {
     padding-bottom: 6.75vw;
+}
+
+.tap-the-glass {
+    position: absolute;
+    top: 35vh;
+    right: 5vw;
+}
+
+.tap-the-glass-image {
+    width: 10vw;
+    animation: rotate-glass 3s infinite;
+    cursor: pointer;
+}
+    :hover {
+    animation-play-state: paused;
+  }
+
+@keyframes rotate-glass {
+
+    0%,
+    100% {
+        rotate: 45deg;
+        scale: 1;
+    }
+
+    50% {
+        rotate: 0deg;
+        scale: 1.25;
+    }
 }
