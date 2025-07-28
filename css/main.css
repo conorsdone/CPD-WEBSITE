@@ -582,6 +582,18 @@ h4 {
     padding-bottom: 6.75vw;
 }
 
+/* .tall-ratio .tap-the-glass  {
+    transform: translate(0vw, 0vw) scale(1);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+} */
+
+.tall-ratio .social-image {
+    padding-bottom: 6.75vw;
+}
+
+
 .tap-the-glass {
     position: absolute;
     top: 35vh;
