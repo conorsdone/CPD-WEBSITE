@@ -184,7 +184,7 @@
 
     console.log('Fetched data:', data);
 
-    const isValidTrack = data?.name && Array.isArray(data.artists);
+    const isValidTrack = data && data.name && data.artists;
 
     if (isValidTrack) {
       const {
