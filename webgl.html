@@ -16,21 +16,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
   <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-    }
-
-    canvas {
-      display: block;
-    }
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
   </style>
   <link rel="stylesheet" href="css/webgl.css">
 </head>
 
 <body>
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5P5GK6CQ" height="0" width="0"
-      style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5P5GK6CQ" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <header id="header">
     <div class="container">
@@ -93,21 +86,21 @@
     let rotationSpeed = 1;
 
     // hdri maps
-    const environmentTextures = [
-      'assets/TrainStation.hdr',
-      'assets/royal_esplanade_1k.hdr',
-      'assets/kloppenheim_02_4k.hdr',
-      'assets/lakeside_night_4k.hdr',
-      'assets/pedestrian_overpass_4k.hdr',
-      'assets/little_paris_under_tower_4k.hdr',
-      'assets/meadow_4k.hdr'
-    ];
+   const environmentTextures = [
+  'assets/TrainStation.hdr',
+  'assets/royal_esplanade_1k.hdr',
+  'assets/kloppenheim_02_4k.hdr',
+  'assets/lakeside_night_4k.hdr',
+  'assets/pedestrian_overpass_4k.hdr',
+  'assets/little_paris_under_tower_4k.hdr',
+  'assets/meadow_4k.hdr'
+];
 
-    function getRandomEnvironmentIndex() {
-      return Math.floor(Math.random() * environmentTextures.length);
-    }
+function getRandomEnvironmentIndex() {
+  return Math.floor(Math.random() * environmentTextures.length);
+}
 
-    let currentEnvironmentIndex = getRandomEnvironmentIndex();
+let currentEnvironmentIndex = getRandomEnvironmentIndex();
 
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
@@ -136,8 +129,8 @@
     setupSlider("rotateZ", val => rotZ = val);
     setupSlider("fovRange", val => fov = val);
 
-    //      const targetPosition = new THREE.Vector3(0.489, -0.749, -0.526); // Focus on a point slightly above center
-    // const targetRotation = { x: 123.2, y: 26.6, z: -145.7 }; // 20 degree downward tilt
+//      const targetPosition = new THREE.Vector3(0.489, -0.749, -0.526); // Focus on a point slightly above center
+// const targetRotation = { x: 123.2, y: 26.6, z: -145.7 }; // 20 degree downward tilt
 
     let camPosX = 0.489;
     let camPosY = -26.25;//0.749
@@ -170,8 +163,9 @@
       });
     }
 
+    // spotify get now playing track function
     let pausedStartTime = null;
-    const PAUSE_TIMEOUT = 60 * 1000; // 60 seconds
+    const PAUSE_TIMEOUT = 60 * 1000; // 60 seconds in ms
 
     const favouriteTrack = {
       trackName: 'BUFFALO (feat. Shane Powers)',
@@ -189,15 +183,10 @@
         const response = await fetch('/.netlify/functions/getCurrentTrack');
         const data = await response.json();
 
-        // For debugging — remove or wrap in a debug flag for production
         console.log('Fetched data:', data);
 
-        const isValidTrack =
-          data &&
-          typeof data.name === 'string' &&
-          typeof data.album === 'string' &&
-          typeof data.album_image === 'string' &&
-          Array.isArray(data.artists);
+        // Check if there's valid Spotify data
+        const isValidTrack = data && data.name && data.artists;
 
         if (isValidTrack) {
           const mappedTrackInfo = {
@@ -211,27 +200,27 @@
             trackUrl: data.track_url
           };
 
-          const now = Date.now();
-
           if (data.is_playing) {
             pausedStartTime = null;
             updateScreen(mappedTrackInfo);
           } else {
-            if (!pausedStartTime) pausedStartTime = now;
+            if (!pausedStartTime) pausedStartTime = Date.now();
+            const elapsed = Date.now() - pausedStartTime;
 
-            const elapsed = now - pausedStartTime;
-
-            updateScreen(elapsed >= PAUSE_TIMEOUT ? favouriteTrack : mappedTrackInfo);
+            if (elapsed >= PAUSE_TIMEOUT) {
+              updateScreen(favouriteTrack);
+            } else {
+              updateScreen(mappedTrackInfo);
+            }
           }
 
         } else {
-          // Invalid or malformed data
+          // If invalid data, fallback immediately
           pausedStartTime = null;
           updateScreen(favouriteTrack);
         }
-
       } catch (error) {
-        console.error('Error fetching track info:', error.message || error);
+        console.error('Error fetching track info:', error);
         pausedStartTime = null;
         updateScreen(favouriteTrack);
       }
@@ -472,36 +461,36 @@
         }
 
         function loadFocus(targetPosition, targetRotation, distance = 1) {
-          if (!model || !camera || !controls) return;
+    if (!model || !camera || !controls) return;
 
-          // Store initial state for animation
-          startCameraPosition = camera.position.clone();
-          startCameraTarget = controls.target.clone();
-
-          // Calculate end position based on target position and distance
-          const direction = new THREE.Vector3();
-          camera.getWorldDirection(direction); // Gets camera's forward vector
-          direction.multiplyScalar(-distance); // Reverse and scale by distance
-
-          endCameraPosition = new THREE.Vector3().copy(targetPosition).add(direction);
-
-          // Set target rotation (convert to Quaternion for smooth interpolation)
-          const endRotation = new THREE.Quaternion().setFromEuler(
-            new THREE.Euler(
-              THREE.MathUtils.degToRad(targetRotation.x),
-              THREE.MathUtils.degToRad(targetRotation.y),
-              THREE.MathUtils.degToRad(targetRotation.z),
-              'XYZ'
-            )
-          );
-
-          // Animation control
-          focusStartTime = performance.now() / 1000;
-          isFocusing = true;
-
-          // Optional: Set OrbitControls target
-          controls.target.copy(targetPosition);
-        }
+    // Store initial state for animation
+    startCameraPosition = camera.position.clone();
+    startCameraTarget = controls.target.clone();
+    
+    // Calculate end position based on target position and distance
+    const direction = new THREE.Vector3();
+    camera.getWorldDirection(direction); // Gets camera's forward vector
+    direction.multiplyScalar(-distance); // Reverse and scale by distance
+    
+    endCameraPosition = new THREE.Vector3().copy(targetPosition).add(direction);
+    
+    // Set target rotation (convert to Quaternion for smooth interpolation)
+    const endRotation = new THREE.Quaternion().setFromEuler(
+        new THREE.Euler(
+            THREE.MathUtils.degToRad(targetRotation.x),
+            THREE.MathUtils.degToRad(targetRotation.y),
+            THREE.MathUtils.degToRad(targetRotation.z),
+            'XYZ'
+        )
+    );
+    
+    // Animation control
+    focusStartTime = performance.now() / 1000;
+    isFocusing = true;
+    
+    // Optional: Set OrbitControls target
+    controls.target.copy(targetPosition);
+}
 
         // Run on button click
         document.getElementById('focusObject').addEventListener('click', focusOnScreen);
@@ -554,8 +543,8 @@
         setInterval(updateCameraFov, 1);
         setInterval(updateModelRotation, 1);
         const targetPosition = new THREE.Vector3(0.489, -0.749, -0.526); // Focus on a point slightly above center
-        const targetRotation = { x: 123.2, y: 26.6, z: -145.7 }; // 20 degree downward tilt
-        loadFocus(targetPosition, targetRotation, 0); // 0.8 units distance
+const targetRotation = { x: 123.2, y: 26.6, z: -145.7 }; // 20 degree downward tilt
+loadFocus(targetPosition, targetRotation, 0); // 0.8 units distance
       });
 
       // set up renderer
@@ -675,73 +664,73 @@
 
     // render function
     function render() {
-      requestAnimationFrame(render);
+  requestAnimationFrame(render);
 
-      const currentTime = performance.now() / 1000; // seconds
+  const currentTime = performance.now() / 1000; // seconds
 
-      // Add your animation code here
-      if (model) { // Only animate when not focusing
-        const elapsed = clock.getElapsedTime();
-        // Calculate rotation and scale based on elapsed time
-        const rotationAngle = elapsed * rotationSpeed;
-        const scaleFactor = 4.8 + 0.2 * Math.abs(Math.sin(rotationAngle * 2)); // Pulsing between 0.8 and 1.0
+  // Add your animation code here
+  if (model) { // Only animate when not focusing
+    const elapsed = clock.getElapsedTime();
+    // Calculate rotation and scale based on elapsed time
+    const rotationAngle = elapsed * rotationSpeed;
+    const scaleFactor = 4.8 + 0.2 * Math.abs(Math.sin(rotationAngle * 2)); // Pulsing between 0.8 and 1.0
+    
+    // Apply transformations
+    model.rotation.y = rotationAngle;
+    model.scale.set(scaleFactor, scaleFactor, scaleFactor);
+    // const bounceAmplitude = 0.2;
+    // const bounceFrequency = 1;
+    // const bounceWidth = 0.1;
+    // const squashFactor = 0.2;
 
-        // Apply transformations
-        model.rotation.y = rotationAngle;
-        model.scale.set(scaleFactor, scaleFactor, scaleFactor);
-        // const bounceAmplitude = 0.2;
-        // const bounceFrequency = 1;
-        // const bounceWidth = 0.1;
-        // const squashFactor = 0.2;
-
-        // // Horizontal arc motion
-        // model.position.z = Math.sin(elapsed * bounceFrequency) * bounceWidth;
-
-        // // Vertical bounce
-        // model.position.y = Math.abs(Math.sin(elapsed * bounceFrequency * Math.PI)) * bounceAmplitude;
-
-        // // Squash effect
-        // const isOnGround = model.position.y < 0.00;
-        // if (isOnGround) {
-        //   model.scale.y = 1 - squashFactor;
-        //   model.scale.x = 1 + squashFactor;
-        //   model.scale.z = 1 + squashFactor;
-        // } else {
-        //   model.scale.y += (1 - model.scale.y) * 0.1;
-        //   model.scale.x += (1 - model.scale.x) * 0.1;
-        //   model.scale.z += (1 - model.scale.z) * 0.1;
-        // }
-      }
-
-      if (isFocusing) {
-        const elapsedFocus = currentTime - focusStartTime;
-        const t = Math.min(elapsedFocus / focusDuration, 1);
-        const easedT = easeInOutCubic(t);
-
-        camera.position.lerpVectors(startCameraPosition, endCameraPosition, easedT);
-        controls.target.lerpVectors(startCameraTarget, screenMesh.position, easedT);
-        controls.update();
-
-        if (t >= 1) {
-          isFocusing = false;
-        }
-      }
-
-      controls.update();
-      renderer.render(scene, camera);
-    }
-
-    // function animate() {
-    //   requestAnimationFrame(animate);
-
-    //   // Rotate HDRI background if it exists
-
-    //    model.rotation.y = THREE.MathUtils.degToRad(rotY += 2); // Rotate the model
-
-
-    //   // Keep your existing render call
-    //   renderer.render(scene, camera);
+    // // Horizontal arc motion
+    // model.position.z = Math.sin(elapsed * bounceFrequency) * bounceWidth;
+    
+    // // Vertical bounce
+    // model.position.y = Math.abs(Math.sin(elapsed * bounceFrequency * Math.PI)) * bounceAmplitude;
+    
+    // // Squash effect
+    // const isOnGround = model.position.y < 0.00;
+    // if (isOnGround) {
+    //   model.scale.y = 1 - squashFactor;
+    //   model.scale.x = 1 + squashFactor;
+    //   model.scale.z = 1 + squashFactor;
+    // } else {
+    //   model.scale.y += (1 - model.scale.y) * 0.1;
+    //   model.scale.x += (1 - model.scale.x) * 0.1;
+    //   model.scale.z += (1 - model.scale.z) * 0.1;
     // }
+  }
+
+  if (isFocusing) {
+    const elapsedFocus = currentTime - focusStartTime;
+    const t = Math.min(elapsedFocus / focusDuration, 1);
+    const easedT = easeInOutCubic(t);
+
+    camera.position.lerpVectors(startCameraPosition, endCameraPosition, easedT);
+    controls.target.lerpVectors(startCameraTarget, screenMesh.position, easedT);
+    controls.update();
+
+    if (t >= 1) {
+      isFocusing = false;
+    }
+  }
+
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+// function animate() {
+//   requestAnimationFrame(animate);
+  
+//   // Rotate HDRI background if it exists
+  
+//    model.rotation.y = THREE.MathUtils.degToRad(rotY += 2); // Rotate the model
+  
+  
+//   // Keep your existing render call
+//   renderer.render(scene, camera);
+// }
 
     // function animate() {
     //   requestAnimationFrame(animate);
