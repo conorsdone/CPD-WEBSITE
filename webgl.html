@@ -16,14 +16,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
   <style>
-    body { margin: 0; overflow: hidden; }
-    canvas { display: block; }
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    canvas {
+      display: block;
+    }
   </style>
   <link rel="stylesheet" href="css/webgl.css">
 </head>
 
 <body>
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5P5GK6CQ" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5P5GK6CQ" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
 
   <header id="header">
     <div class="container">
@@ -86,21 +93,21 @@
     let rotationSpeed = 1;
 
     // hdri maps
-   const environmentTextures = [
-  'assets/TrainStation.hdr',
-  'assets/royal_esplanade_1k.hdr',
-  'assets/kloppenheim_02_4k.hdr',
-  'assets/lakeside_night_4k.hdr',
-  'assets/pedestrian_overpass_4k.hdr',
-  'assets/little_paris_under_tower_4k.hdr',
-  'assets/meadow_4k.hdr'
-];
+    const environmentTextures = [
+      'assets/TrainStation.hdr',
+      'assets/royal_esplanade_1k.hdr',
+      'assets/kloppenheim_02_4k.hdr',
+      'assets/lakeside_night_4k.hdr',
+      'assets/pedestrian_overpass_4k.hdr',
+      'assets/little_paris_under_tower_4k.hdr',
+      'assets/meadow_4k.hdr'
+    ];
 
-function getRandomEnvironmentIndex() {
-  return Math.floor(Math.random() * environmentTextures.length);
-}
+    function getRandomEnvironmentIndex() {
+      return Math.floor(Math.random() * environmentTextures.length);
+    }
 
-let currentEnvironmentIndex = getRandomEnvironmentIndex();
+    let currentEnvironmentIndex = getRandomEnvironmentIndex();
 
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
@@ -129,15 +136,8 @@ let currentEnvironmentIndex = getRandomEnvironmentIndex();
     setupSlider("rotateZ", val => rotZ = val);
     setupSlider("fovRange", val => fov = val);
 
-//      const targetPosition = new THREE.Vector3(0.489, -0.749, -0.526); // Focus on a point slightly above center
-// const targetRotation = { x: 123.2, y: 26.6, z: -145.7 }; // 20 degree downward tilt
-
-    let camPosX = 0.489;
-    let camPosY = -26.25;//0.749
-    let camPosZ = -0.5;
-    let camRotX = 123.2;
-    let camRotY = 26.6;
-    let camRotZ = -145.7;
+    let camPosX = 0.489, camPosY = -26.25, camPosZ = -0.5;
+    let camRotX = 123.2, camRotY = 26.6, camRotZ = -145.7;
 
     var canvas = document.getElementsByTagName("canvas")[0];
 
@@ -148,7 +148,6 @@ let currentEnvironmentIndex = getRandomEnvironmentIndex();
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    // initiate app
     init();
 
     function loadEnvironmentTexture(index) {
@@ -180,50 +179,56 @@ let currentEnvironmentIndex = getRandomEnvironmentIndex();
 
     async function fetchNowPlaying() {
       try {
-        const response = await fetch('/.netlify/functions/getCurrentTrack');
-        const data = await response.json();
+    const response = await fetch('/.netlify/functions/getCurrentTrack');
+    const data = await response.json();
 
-        console.log('Fetched data:', data);
+    console.log('Fetched data:', data);
 
-        // Check if there's valid Spotify data
-        const isValidTrack = data && data.name && data.artists;
+    const isValidTrack = data?.name && Array.isArray(data.artists);
 
-        if (isValidTrack) {
-          const mappedTrackInfo = {
-            trackName: data.name,
-            artistName: data.artists,
-            albumName: data.album,
-            albumImageUrl: data.album_image,
-            progressMs: data.progress_ms,
-            durationMs: data.duration_ms,
-            isPlaying: data.is_playing,
-            trackUrl: data.track_url
-          };
+    if (isValidTrack) {
+      const {
+        name,
+        artists,
+        album,
+        album_image,
+        progress_ms,
+        duration_ms,
+        is_playing,
+        track_url
+      } = data;
 
-          if (data.is_playing) {
-            pausedStartTime = null;
-            updateScreen(mappedTrackInfo);
-          } else {
-            if (!pausedStartTime) pausedStartTime = Date.now();
-            const elapsed = Date.now() - pausedStartTime;
+      const mappedTrackInfo = {
+        trackName: name,
+        artistName: artists,
+        albumName: album,
+        albumImageUrl: album_image,
+        progressMs: progress_ms,
+        durationMs: duration_ms,
+        isPlaying: is_playing,
+        trackUrl: track_url
+      };
 
-            if (elapsed >= PAUSE_TIMEOUT) {
-              updateScreen(favouriteTrack);
-            } else {
-              updateScreen(mappedTrackInfo);
-            }
-          }
-
-        } else {
-          // If invalid data, fallback immediately
-          pausedStartTime = null;
-          updateScreen(favouriteTrack);
-        }
-      } catch (error) {
-        console.error('Error fetching track info:', error);
+      if (is_playing) {
         pausedStartTime = null;
-        updateScreen(favouriteTrack);
+        updateScreen(mappedTrackInfo);
+      } else {
+        if (!pausedStartTime) pausedStartTime = Date.now();
+        const elapsed = Date.now() - pausedStartTime;
+        const trackToShow = (elapsed >= PAUSE_TIMEOUT) ? favouriteTrack : mappedTrackInfo;
+        updateScreen(trackToShow);
       }
+
+    } else {
+      pausedStartTime = null;
+      updateScreen(favouriteTrack);
+    }
+
+  } catch (error) {
+    console.error('Error fetching track info:', error.message || error);
+    pausedStartTime = null;
+    updateScreen(favouriteTrack);
+  }
     }
 
     function updateScreen(trackInfo) {
@@ -461,36 +466,36 @@ let currentEnvironmentIndex = getRandomEnvironmentIndex();
         }
 
         function loadFocus(targetPosition, targetRotation, distance = 1) {
-    if (!model || !camera || !controls) return;
+          if (!model || !camera || !controls) return;
 
-    // Store initial state for animation
-    startCameraPosition = camera.position.clone();
-    startCameraTarget = controls.target.clone();
-    
-    // Calculate end position based on target position and distance
-    const direction = new THREE.Vector3();
-    camera.getWorldDirection(direction); // Gets camera's forward vector
-    direction.multiplyScalar(-distance); // Reverse and scale by distance
-    
-    endCameraPosition = new THREE.Vector3().copy(targetPosition).add(direction);
-    
-    // Set target rotation (convert to Quaternion for smooth interpolation)
-    const endRotation = new THREE.Quaternion().setFromEuler(
-        new THREE.Euler(
-            THREE.MathUtils.degToRad(targetRotation.x),
-            THREE.MathUtils.degToRad(targetRotation.y),
-            THREE.MathUtils.degToRad(targetRotation.z),
-            'XYZ'
-        )
-    );
-    
-    // Animation control
-    focusStartTime = performance.now() / 1000;
-    isFocusing = true;
-    
-    // Optional: Set OrbitControls target
-    controls.target.copy(targetPosition);
-}
+          // Store initial state for animation
+          startCameraPosition = camera.position.clone();
+          startCameraTarget = controls.target.clone();
+
+          // Calculate end position based on target position and distance
+          const direction = new THREE.Vector3();
+          camera.getWorldDirection(direction); // Gets camera's forward vector
+          direction.multiplyScalar(-distance); // Reverse and scale by distance
+
+          endCameraPosition = new THREE.Vector3().copy(targetPosition).add(direction);
+
+          // Set target rotation (convert to Quaternion for smooth interpolation)
+          const endRotation = new THREE.Quaternion().setFromEuler(
+            new THREE.Euler(
+              THREE.MathUtils.degToRad(targetRotation.x),
+              THREE.MathUtils.degToRad(targetRotation.y),
+              THREE.MathUtils.degToRad(targetRotation.z),
+              'XYZ'
+            )
+          );
+
+          // Animation control
+          focusStartTime = performance.now() / 1000;
+          isFocusing = true;
+
+          // Optional: Set OrbitControls target
+          controls.target.copy(targetPosition);
+        }
 
         // Run on button click
         document.getElementById('focusObject').addEventListener('click', focusOnScreen);
@@ -543,8 +548,8 @@ let currentEnvironmentIndex = getRandomEnvironmentIndex();
         setInterval(updateCameraFov, 1);
         setInterval(updateModelRotation, 1);
         const targetPosition = new THREE.Vector3(0.489, -0.749, -0.526); // Focus on a point slightly above center
-const targetRotation = { x: 123.2, y: 26.6, z: -145.7 }; // 20 degree downward tilt
-loadFocus(targetPosition, targetRotation, 0); // 0.8 units distance
+        const targetRotation = { x: 123.2, y: 26.6, z: -145.7 }; // 20 degree downward tilt
+        loadFocus(targetPosition, targetRotation, 0); // 0.8 units distance
       });
 
       // set up renderer
@@ -664,115 +669,60 @@ loadFocus(targetPosition, targetRotation, 0); // 0.8 units distance
 
     // render function
     function render() {
-  requestAnimationFrame(render);
+      requestAnimationFrame(render);
 
-  const currentTime = performance.now() / 1000; // seconds
+      const currentTime = performance.now() / 1000; // seconds
 
-  // Add your animation code here
-  if (model) { // Only animate when not focusing
-    const elapsed = clock.getElapsedTime();
-    // Calculate rotation and scale based on elapsed time
-    const rotationAngle = elapsed * rotationSpeed;
-    const scaleFactor = 4.8 + 0.2 * Math.abs(Math.sin(rotationAngle * 2)); // Pulsing between 0.8 and 1.0
-    
-    // Apply transformations
-    model.rotation.y = rotationAngle;
-    model.scale.set(scaleFactor, scaleFactor, scaleFactor);
-    // const bounceAmplitude = 0.2;
-    // const bounceFrequency = 1;
-    // const bounceWidth = 0.1;
-    // const squashFactor = 0.2;
+      // Add your animation code here
+      if (model) { // Only animate when not focusing
+        const elapsed = clock.getElapsedTime();
+        // Calculate rotation and scale based on elapsed time
+        const rotationAngle = elapsed * rotationSpeed;
+        const scaleFactor = 4.8 + 0.2 * Math.abs(Math.sin(rotationAngle * 2)); // Pulsing between 0.8 and 1.0
 
-    // // Horizontal arc motion
-    // model.position.z = Math.sin(elapsed * bounceFrequency) * bounceWidth;
-    
-    // // Vertical bounce
-    // model.position.y = Math.abs(Math.sin(elapsed * bounceFrequency * Math.PI)) * bounceAmplitude;
-    
-    // // Squash effect
-    // const isOnGround = model.position.y < 0.00;
-    // if (isOnGround) {
-    //   model.scale.y = 1 - squashFactor;
-    //   model.scale.x = 1 + squashFactor;
-    //   model.scale.z = 1 + squashFactor;
-    // } else {
-    //   model.scale.y += (1 - model.scale.y) * 0.1;
-    //   model.scale.x += (1 - model.scale.x) * 0.1;
-    //   model.scale.z += (1 - model.scale.z) * 0.1;
-    // }
-  }
+        // Apply transformations
+        model.rotation.y = rotationAngle;
+        model.scale.set(scaleFactor, scaleFactor, scaleFactor);
+        // const bounceAmplitude = 0.2;
+        // const bounceFrequency = 1;
+        // const bounceWidth = 0.1;
+        // const squashFactor = 0.2;
 
-  if (isFocusing) {
-    const elapsedFocus = currentTime - focusStartTime;
-    const t = Math.min(elapsedFocus / focusDuration, 1);
-    const easedT = easeInOutCubic(t);
+        // // Horizontal arc motion
+        // model.position.z = Math.sin(elapsed * bounceFrequency) * bounceWidth;
 
-    camera.position.lerpVectors(startCameraPosition, endCameraPosition, easedT);
-    controls.target.lerpVectors(startCameraTarget, screenMesh.position, easedT);
-    controls.update();
+        // // Vertical bounce
+        // model.position.y = Math.abs(Math.sin(elapsed * bounceFrequency * Math.PI)) * bounceAmplitude;
 
-    if (t >= 1) {
-      isFocusing = false;
-    }
-  }
+        // // Squash effect
+        // const isOnGround = model.position.y < 0.00;
+        // if (isOnGround) {
+        //   model.scale.y = 1 - squashFactor;
+        //   model.scale.x = 1 + squashFactor;
+        //   model.scale.z = 1 + squashFactor;
+        // } else {
+        //   model.scale.y += (1 - model.scale.y) * 0.1;
+        //   model.scale.x += (1 - model.scale.x) * 0.1;
+        //   model.scale.z += (1 - model.scale.z) * 0.1;
+        // }
+      }
 
-  controls.update();
-  renderer.render(scene, camera);
-}
+      if (isFocusing) {
+        const elapsedFocus = currentTime - focusStartTime;
+        const t = Math.min(elapsedFocus / focusDuration, 1);
+        const easedT = easeInOutCubic(t);
 
-// function animate() {
-//   requestAnimationFrame(animate);
-  
-//   // Rotate HDRI background if it exists
-  
-//    model.rotation.y = THREE.MathUtils.degToRad(rotY += 2); // Rotate the model
-  
-  
-//   // Keep your existing render call
-//   renderer.render(scene, camera);
-// }
+        camera.position.lerpVectors(startCameraPosition, endCameraPosition, easedT);
+        controls.target.lerpVectors(startCameraTarget, screenMesh.position, easedT);
+        controls.update();
 
-    // function animate() {
-    //   requestAnimationFrame(animate);
+        if (t >= 1) {
+          isFocusing = false;
+        }
+      }
 
-    //   const elapsed = clock.getElapsedTime();
-
-    //   // Bouncing animation
-    //   const bounceAmplitude = 0.2;      // height
-    //   const bounceFrequency = 1;      // speed
-    //   const bounceWidth = 0.1;          // horizontal distance
-    //   const squashFactor = 0.2;       // squish/stretch amount
-
-    //   if (model) {
-    //     // Horizontal arc motion
-    //     model.position.z = Math.sin(elapsed * bounceFrequency) * bounceWidth;
-    //     // model.position.z = 0;
-
-    //     // Vertical bounce (sine arc)
-    //     model.position.y = Math.abs(Math.sin(elapsed * bounceFrequency * Math.PI)) * bounceAmplitude;
-    //     // model.position.y = 0;
-
-    //     // Squash at the bottom
-    //     const isOnGround = model.position.y < 0.00;
-
-    //     if (isOnGround) {
-    //       model.scale.y = 1 - squashFactor;
-    //       model.scale.x = 1 + squashFactor;
-    //       model.scale.z = 1 + squashFactor;
-    //     } else {
-    //       model.scale.y += (1 - model.scale.y) * 0.1;
-    //       model.scale.x += (1 - model.scale.x) * 0.1;
-    //       model.scale.z += (1 - model.scale.z) * 0.1;
-    //     }
-    //   }
-
-    //   // Re-render scene
-    //   renderer.render(scene, camera);
-    // }
-
-    function onload() {
-      // Load the first environment texture
-      loadEnvironmentTexture(currentEnvironmentIndex);
+      controls.update();
+      renderer.render(scene, camera);
     }
   </script>
 </body>
