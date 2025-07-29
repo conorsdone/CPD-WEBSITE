@@ -395,13 +395,13 @@ h4 {
 }
 
 .webgl {
-    display: none;
+    display: flex;
     justify-content: center;
     padding: 15px;
 }
 
 header .container {
-    /* border: 3px solid red; */
+    border: 3px solid red;
     position: absolute;
     z-index: 500;
 }
@@ -418,7 +418,7 @@ header .container .width-8 {
 }
 
 #controls {
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -444,14 +444,14 @@ header .container .width-8 {
 }
 
 #track-info {
-    /* border: 3px solid red; */
+    border: 3px solid red;
     margin: auto;
     width: 50%;
     text-align: center;
 }
 
 #track-info img {
-    /* border: 3px solid red; */
+    border: 3px solid red;
     width: 100%;
 }
 
