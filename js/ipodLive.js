@@ -4,6 +4,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+import { MathUtils } from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+
 
 // ===== CONFIGURATION VALUES =====
 // Camera beginning values
@@ -104,7 +106,7 @@ let currentTrackUrl = '';
 let pausedStartTime = null;
 
 // Environment
-let currentEnvironmentIndex = 0;
+let currentEnvironmentIndex = Math.floor(THREE.MathUtils.randFloat(0, ENVIRONMENT_TEXTURES.length));
 
 // Reusable objects (performance optimization)
 const raycaster = new THREE.Raycaster();

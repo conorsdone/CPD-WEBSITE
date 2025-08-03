@@ -33,10 +33,10 @@
   <link rel="stylesheet" href="css/grid.css">
   <link rel="stylesheet" href="css/header.css">
   <link rel="stylesheet" href="css/global.css">
-  <!-- <link rel="stylesheet" href="css/IpodLive.css"> -->
+  <link rel="stylesheet" href="css/IpodLive.css">
 </head>
 
-<body class="work">
+<body class="ipodLive">
   <!-- GOOGLE TAG MANAGER NOSCRIPT -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5P5GK6CQ" height="0" width="0"
       style="display:none;visibility:hidden"></iframe></noscript>
@@ -49,10 +49,10 @@
 
       <h3 id="gmt-time"></h3>
       <div class="containerNav" id="controls">
-        <h3 class="nav"><button id="nextEnv" class="button">Next Environment</button></h3>
-        <h3 class="nav"><button id="prevEnv" class="button">Previous Environment</button></h3>
+        <h3 class="nav"><button id="prevEnv" class="button"><--</button></h3>
         <h3 class="nav"><button id="focusObject" class="button">Focus iPod</button></h3>
         <h3 class="nav"><button id="pauseRotation" class="button">⏸️</button></h3>
+        <h3 class="nav"><button id="nextEnv" class="button">--></button></h3>
       </div>
     </div>
 
@@ -69,10 +69,21 @@
   </header>
 
   <!-- LOADING PAGE -->
-  <div id="loading-indicator"
+  <!-- <div id="loading-indicator"
     style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-family: Arial, sans-serif; z-index: 1000; text-align: center;">
     <div style="font-size: 24px; margin-bottom: 10px;">Loading iPod Experience...</div>
     <div style="font-size: 14px; opacity: 0.7;">Loading 3D model and environment</div>
+  </div> -->
+  <div id="loading-indicator">
+    <h3 class="load-text">Loading</h3>
+    <div class="spinner-box">
+      <div class="configure-border-1">
+        <div class="configure-core"></div>
+      </div>
+      <div class="configure-border-2">
+        <div class="configure-core"></div>
+      </div>
+    </div>
   </div>
 
   <!-- THREE.JS IMPORT MAP -->

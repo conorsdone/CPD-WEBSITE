@@ -1,11 +1,12 @@
-#hide-me {
-    display: none;
+:root {
+    --button-text: #ffffff;
+    --button-bg: #000000;
 }
 
 .button {
-    background-color: #04AA6D;
+    background-color: var(--button-bg);
     border: none;
-    color: white;
+    color: var(--button-text);
     padding: 5px;
     text-align: center;
     text-decoration: none;
@@ -13,6 +14,11 @@
     font-size: 16px;
     margin: 5px 2px;
     cursor: pointer;
+}
+
+.button:hover {
+    background-color: var(--button-text);
+    color: var(--button-bg);
 }
 
 .slidecontainer {
@@ -70,4 +76,90 @@
     /* Green background */
     cursor: pointer;
     /* Cursor on hover */
+}
+
+@keyframes configure-clockwise {
+    0% {
+        transform: rotate(0);
+    }
+
+    25% {
+        transform: rotate(90deg);
+    }
+
+    50% {
+        transform: rotate(180deg);
+    }
+
+    75% {
+        transform: rotate(270deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes configure-xclockwise {
+    0% {
+        transform: rotate(45deg);
+    }
+
+    25% {
+        transform: rotate(-45deg);
+    }
+
+    50% {
+        transform: rotate(-135deg);
+    }
+
+    75% {
+        transform: rotate(-225deg);
+    }
+
+    100% {
+        transform: rotate(-315deg);
+    }
+}
+
+.configure-border-1 {
+    width: 115px;
+    height: 115px;
+    padding: 7.5px;
+    position: absolute;
+    background: #169B62;
+    animation: configure-clockwise 3s ease-in-out 0s infinite alternate;
+}
+
+.configure-border-2 {
+    width: 115px;
+    height: 115px;
+    padding: 7.5px;
+    background: #FF883E;
+    transform: rotate(45deg);
+    animation: configure-xclockwise 3s ease-in-out 0s infinite alternate;
+}
+
+.configure-core {
+    width: 100%;
+    height: 100%;
+    background-color: var(--text);
+}
+
+.spinner-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#loading-indicator {
+    color: var(--text);
+    z-index: 1000;
+    text-align: center;
+}
+
+.load-text {
+    transform: translate(0%, 20vh);
+    font-size: 24px;
 }
