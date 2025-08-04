@@ -31,13 +31,14 @@ html:focus-within {
     scroll-behavior: smooth;
 }
 
-html, body {
-    overscroll-behavior: smooth;  
+html,
+body {
+    overscroll-behavior: smooth;
     /* touch-action: none;        */
-    position: fixed;  
-  /* overflow-x: hidden; */
-  width: 100%;   
-  }
+    position: fixed;
+    /* overflow-x: hidden; */
+    width: 100%;
+}
 
 /* Set core body defaults */
 body {
@@ -371,7 +372,7 @@ h4 {
 .canvas-container {
     width: 50vw;
     height: calc(var(--vh, 1vh) * 100);
-    
+
 }
 
 .content-container {
@@ -379,7 +380,7 @@ h4 {
     height: calc(var(--vh, 1vh) * 100);
     overflow: hidden;
     position: relative;
-    
+
 }
 
 @media (max-width: 540px) {
@@ -550,6 +551,18 @@ h4 {
     border-radius: 500px;
 }
 
+.tap-the-glass {
+    position: absolute;
+    top: 35vh;
+    right: 5vw;
+}
+
+.tap-the-glass-image {
+    width: 10vw;
+    animation: rotate-glass 3s infinite;
+    cursor: pointer;
+}
+
 @media (max-width: 540px) {
     .instagram-image {
         transform: translate(0%, 0%) scale(1);
@@ -564,13 +577,24 @@ h4 {
         border-radius: 500px;
         transform: translate(0%, -0%) scale(1);
     }
+
+    .tap-the-glass {
+        transform: translate(50%, -50%) scale(1);
+        position: absolute;
+        top: 67.5vh;
+        right: 70vw;
+    }
+
+    .tap-the-glass-image {
+        width: 17.5vw;
+    }
 }
 
 .empty {
     display: none;
 }
 
-.tall-ratio  .empty {
+.tall-ratio .empty {
     display: block;
 }
 
@@ -582,32 +606,9 @@ h4 {
     padding-bottom: 6.75vw;
 }
 
-/* .tall-ratio .tap-the-glass  {
-    transform: translate(0vw, 0vw) scale(1);
-    position: absolute;
-    bottom: 0;
-    left: 0;
-} */
-
-.tall-ratio .social-image {
-    padding-bottom: 6.75vw;
-}
-
-
-.tap-the-glass {
-    position: absolute;
-    top: 35vh;
-    right: 5vw;
-}
-
-.tap-the-glass-image {
-    width: 10vw;
-    animation: rotate-glass 3s infinite;
-    cursor: pointer;
-}
-    :hover {
+:hover {
     animation-play-state: paused;
-  }
+}
 
 @keyframes rotate-glass {
 

@@ -6,6 +6,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 import { MathUtils } from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 
+const orientation = window.innerWidth > window.innerHeight ? "landscape" : "portrait";
+let extraRotation;
+if (orientation === "portrait") {
+    extraRotation = 0;
+} else {
+    extraRotation = 180;
+}
 
 // ===== CONFIGURATION VALUES =====
 // Camera beginning values
@@ -21,7 +28,7 @@ const CAMERA_CONFIG = {
 // Model values
 const MODEL_CONFIG = {
     position: { x: 0, y: 0, z: 0 },
-    rotation: { x: 0, y: 25 - 180, z: 0 },
+    rotation: { x: 0, y: 25 - extraRotation, z: 0 },
     // rotation: { x: -17, y: 95.6, z: -14 }
     scale: 5,
     animationRotationSpeed: 1
@@ -41,8 +48,9 @@ const SCREEN_CONFIG = {
     width: 400,
     height: 330,
     geometry: { width: 0.08, height: 0.066 },
-    position: { x: 0.009, y: 0.0545, z: 0 },
-    rotation: { x: 0, y: Math.PI / 2, z: 0 }
+    position: { x: 0.0139, y: 0.0545, z: 0 },
+    rotation: { x: 0, y: Math.PI / 2, z: 0 },
+    radius: 20
 };
 
 // Animation values
@@ -187,37 +195,64 @@ async function fetchNowPlaying() {
 
 // ===== SCREEN RENDERING FUNCTIONS =====
 // Update the screen with track information
+function drawRoundedRect(ctx, x, y, width, height, radius) {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+}
+
+// Update your updateScreen function to use rounded corners:
 function updateScreen(trackInfo) {
     if (!canvas || !ctx) {
         console.error('Canvas or ctx is not initialized');
         return;
     }
 
-    // Pull track information and map it to variables
     const { trackName, artistName, albumName, progressMs, durationMs } = trackInfo;
 
-    // Clear and create background gradient
+    // Clear with transparent background
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw rounded rectangle with solid background
+    const backgroundRadius = SCREEN_CONFIG.radius;
+    ctx.save();
+    
+    // Create the rounded rectangle path
+    drawRoundedRect(ctx, 0, 0, canvas.width, canvas.height, backgroundRadius);
+    
+    // Fill with gradient
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
     gradient.addColorStop(0, '#111111');
     gradient.addColorStop(1, '#333333');
     ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fill();
+    
+    // Clip all future drawing to this rounded shape
+    ctx.clip();
 
     // Load and map album cover
     const img = new Image();
     img.crossOrigin = 'anonymous';
     img.src = trackInfo.albumImageUrl || 'assets/cherrybombCover.jpg';
 
-    // Variables for screen rendering
     img.onload = () => {
         drawAlbumCover(img);
         drawTrackInfo(trackName, artistName, albumName);
         drawProgressBar(progressMs, durationMs);
         drawBatteryIcon();
         drawPlayPauseButton(trackInfo.isPlaying);
+        
+        ctx.restore();
 
-        // Update texture and current track URL
+        // Update texture
         screenTexture.needsUpdate = true;
         currentTrackUrl = trackInfo.trackUrl;
     };
@@ -370,14 +405,14 @@ function toggleRotation() {
         const pauseDuration = currentTime - pausedAtTime;
         totalPausedDuration += pauseDuration;
         isRotationPaused = false;
-        button.innerHTML = '⏸️';
+        button.innerHTML = '⏸ Pause';
         button.title = 'Pause Rotation';
         console.log('Model rotation resumed');
     } else {
         // Pause rotation, store when we paused
         pausedAtTime = currentTime;
         isRotationPaused = true;
-        button.innerHTML = '▶️';
+        button.innerHTML = '▶ Play';
         button.title = 'Resume Rotation';
         console.log('Model rotation paused');
     }
@@ -689,6 +724,47 @@ function init() {
         });
     });
 
+    function fixModelMaterials(model) {
+    model.traverse((child) => {
+        if (child.isMesh && child.material) {
+            // Handle single material
+            if (child.material.isMaterial) {
+                fixSingleMaterial(child.material);
+            }
+            // Handle material array
+            else if (Array.isArray(child.material)) {
+                child.material.forEach(material => {
+                    if (material.isMaterial) {
+                        fixSingleMaterial(material);
+                    }
+                });
+            }
+        }
+    });
+}
+
+function fixSingleMaterial(material) {
+    // Fix common transparency issues
+    if (material.transparent && material.opacity === 1) {
+        material.transparent = false;
+    }
+    
+    // Ensure proper side rendering - try DoubleSide for see-through issues
+    material.side = THREE.DoubleSide;
+    
+    // Fix alpha test issues
+    if (material.alphaTest > 0 && material.alphaTest < 0.1) {
+        material.alphaTest = 0;
+    }
+    
+    // Ensure proper depth testing
+    material.depthTest = true;
+    material.depthWrite = !material.transparent;
+    
+    // Force material update
+    material.needsUpdate = true;
+}
+
     // Load the 3D model using GLTFLoader
     const loader = new GLTFLoader();
 
@@ -696,6 +772,8 @@ function init() {
     const modelPromise = new Promise((resolve) => {
         loader.load('assets/scene.gltf', function (gltf) {
             model = gltf.scene;
+             fixModelMaterials(model);
+
             // Set initial model position and rotation from MODEL_CONFIG using standardized format
             model.position.set(MODEL_CONFIG.position.x, MODEL_CONFIG.position.y, MODEL_CONFIG.position.z);
             model.rotation.x = THREE.MathUtils.degToRad(MODEL_CONFIG.rotation.x);
@@ -723,7 +801,12 @@ function init() {
         screenTexture = new THREE.CanvasTexture(canvas);
 
         // Create screen mesh
-        const screenMaterial = new THREE.MeshBasicMaterial({ map: screenTexture, side: THREE.DoubleSide });
+       const screenMaterial = new THREE.MeshBasicMaterial({ 
+    map: screenTexture, 
+    side: THREE.DoubleSide,
+    transparent: true,
+    alphaTest: 0.1
+});
         const screenGeometry = new THREE.PlaneGeometry(SCREEN_CONFIG.geometry.width, SCREEN_CONFIG.geometry.height);
         screenMesh = new THREE.Mesh(screenGeometry, screenMaterial);
 
