@@ -2,7 +2,7 @@
     --button-text: #ffffff;
     --button-bg: #000000;
 }
-
+/* 
 .button {
     background-color: var(--button-bg);
     border: none;
@@ -14,11 +14,26 @@
     font-size: 16px;
     margin: 5px 2px;
     cursor: pointer;
+} */
+
+.button {
+    -webkit-text-stroke: 0.5px var(--button-text);
+    background-color: transparent;
+    border: none;
+    color: var(--button-bg);
+    /* padding: 5px; */
+    text-align: center;
+    text-decoration: none;
+    /* display: inline-block; */
+    font-size: 2vw;
+    /* margin: 5px 2px; */
+    cursor: pointer;
 }
 
 .button:hover {
-    background-color: var(--button-text);
-    color: var(--button-bg);
+    -webkit-text-stroke: 0.5px var(--button-bg);
+    background-color: transparent;
+    color: var(--button-text);
 }
 
 .slidecontainer {

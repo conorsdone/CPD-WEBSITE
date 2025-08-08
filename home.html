@@ -3,11 +3,14 @@
 
 <head>
   <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-5P5GK6CQ');</script>
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-5P5GK6CQ');</script>
   <!-- End Google Tag Manager -->
 
   <meta charset="UTF-8">
@@ -17,78 +20,12 @@
   <link rel="stylesheet" href="https://use.typekit.net/qyt6jto.css">
 
   <link rel="stylesheet" href="css/all.min.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/grid.css">
+  <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/home.css">
 
-  <title>CPD.JPG Homepage</title>
-
-  <script>
-    function togglePageInvert() {
-      document.body.classList.toggle('inverted');
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
-      const modal = document.getElementById("imageModal");
-      const modalImg = document.getElementById("modalImg");
-      const modalText = document.getElementById("modalText");
-      const elementsToMove = document.querySelectorAll(".home, .enter, .cpd-logo");
-      const enterElement = document.querySelector(".enter");
-
-      // Set background images dynamically
-      document.querySelectorAll(".flyImage").forEach((item) => {
-        const imageUrl = item.getAttribute("data-image-url");
-        if (imageUrl) {
-          item.style.backgroundImage = `url(${imageUrl})`;
-        }
-      });
-
-      // Attach event listener to both marquee containers
-      document.querySelectorAll(".marquee__content").forEach((marquee) => {
-        marquee.addEventListener("click", function (event) {
-          const item = event.target.closest(".flyImage");
-          if (!item) return; // Ignore clicks outside flyImage elements
-
-          const bgImage = window.getComputedStyle(item).backgroundImage.match(/url\(["']?(.*?)["']?\)/);
-          const imageSrc = bgImage ? bgImage[1] : "";
-          const title = item.getAttribute("data-title") || "Image";
-
-          openModal(imageSrc);
-        });
-      });
-
-      function openModal(imageSrc, description) {
-        modal.style.display = "flex";
-        modalImg.src = imageSrc;
-        modalText.textContent = description;
-        modalImg.style.animation = "fadeIn 0.5s ease-in-out forwards";
-
-        elementsToMove.forEach(el => el.classList.add("logo-transition"));
-        if (enterElement) {
-          enterElement.classList.add("logo-transition");
-          enterElement.style.animation = "fadeOut 0.5s ease-in-out forwards";
-        }
-      }
-
-      function closeModal() {
-        modal.style.display = "none";
-        modalImg.style.animation = "fadeOut 1s ease-in-out forwards";
-        elementsToMove.forEach(el => el.classList.remove("logo-transition"));
-        if (enterElement) {
-          enterElement.classList.remove("logo-transition");
-          enterElement.style.animation = "fadeIn 0.5s ease-in-out forwards";
-        }
-      }
-
-      // Close modal when clicking outside the image
-      modal.addEventListener("click", function (event) {
-        closeModal();
-      });
-    });
-
-    $(document).mousemove(function (e) {
-      $("#image").css({ left: e.pageX, top: e.pageY });
-    });
-
-  </script>
+  <title>CPD.JPG Home</title>
   <script type="importmap">
       {
         "imports": {
@@ -101,8 +38,8 @@
 
 <body>
   <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5P5GK6CQ"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5P5GK6CQ" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
   <!-- Preloader -->
@@ -111,13 +48,12 @@
     <span id="percentage">0%</span>
   </div>
 
-  <script type="module" src="js/home.js"></script>
-
   <div id="content" style="display: none;">
 
     <header>
       <div class="containerFull home">
-        <img src="images/cpd logo.png" class="cpd-logo"></img>
+        <!-- <img data-public-id="cpd-halftone-logo_v8ucjm" class="cpd-logo halftone"> -->
+        <img data-public-id="cpd-blend-logo_dseiig" class="cpd-logo og">
         <h1 class="enter">
           <a style=" text-align: center; height: 120px; z-index: 7000;" class="width-6 dazzle fluid"
             href="javascript:setTimeout(()=>{window.location = 'main.html' },1400);">
@@ -163,85 +99,61 @@
 
       <div class="marquee marquee--reverse">
         <ul class="container marquee__content marquee__content__1">
-          <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/000012.JPG"></li>
-          <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/000038.JPG"></li>
-          <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.webp">
-          </li>
-          <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.webp">
-          </li>
-          <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="images/000040.JPG">
-          </li>
-          <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="images/LordApexSite1.jpg">
-          </li>
+          <li class="flyImage width-2" data-image-url="Curtisy-BITB-DSCF1346-Enhanced-NR-01-PS-1_ubud0r"></li>
+          <li class="flyImage width-2" data-image-url="000038_lbacgj"></li>
+          <li class="flyImage width-2" data-image-url="MikeSite2_k63dr8"></li>
+          <li class="flyImage width-2" data-image-url="F3miiiSite_mgbuwx"></li>
+          <li class="flyImage width-2" data-image-url="000040_wiq5am"></li>
+          <li class="flyImage width-2" data-image-url="LordApexSite1_dpgqet"></li>
         </ul>
 
         <ul class="container marquee__content marquee__content__1">
-          <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/000012.JPG"></li>
-          <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/000038.JPG"></li>
-          <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.webp">
-          </li>
-          <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.webp">
-          </li>
-          <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="images/000040.JPG">
-          </li>
-          <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="images/LordApexSite1.jpg">
-          </li>
+          <li class="flyImage width-2" data-image-url="Curtisy-BITB-DSCF1346-Enhanced-NR-01-PS-1_ubud0r"></li>
+          <li class="flyImage width-2" data-image-url="000038_lbacgj"></li>
+          <li class="flyImage width-2" data-image-url="MikeSite2_k63dr8"></li>
+          <li class="flyImage width-2" data-image-url="F3miiiSite_mgbuwx"></li>
+          <li class="flyImage width-2" data-image-url="000040_wiq5am"></li>
+          <li class="flyImage width-2" data-image-url="LordApexSite1_dpgqet"></li>
         </ul>
       </div>
 
       <div class="marquee marquee--reverse">
         <ul class="container marquee__content marquee__content__2">
-          <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.webp"></li>
-          <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.webp"></li>
-          <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.webp">
-          </li>
-          <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.webp">
-          </li>
-          <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="images/BroncoLokoSite1.webp">
-          </li>
-          <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="images/MlhSite1.webp">
-          </li>
+          <li class="flyImage width-2" data-image-url="MonjolaSite_ttkprp"></li>
+          <li class="flyImage width-2" data-image-url="MlhSite3-2_m60wgo"></li>
+          <li class="flyImage width-2" data-image-url="MikeSite2_k63dr8"></li>
+          <li class="flyImage width-2" data-type="video" data-image-url="RETO-OutputVideo-20250717131746_hdy5kr"></li>
+          <li class="flyImage width-2" data-image-url="BroncoLokoSite1_tz85jl"></li>
+          <li class="flyImage width-2" data-image-url="MlhSite1_izxzrq"></li>
         </ul>
 
         <ul class="container marquee__content marquee__content__2">
-          <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.webp"></li>
-          <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.webp"></li>
-          <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.webp">
-          </li>
-          <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/F3miiiSite.webp">
-          </li>
-          <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="images/BroncoLokoSite1.webp">
-          </li>
-          <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="images/MlhSite1.webp">
-          </li>
+          <li class="flyImage width-2" data-image-url="MonjolaSite_ttkprp"></li>
+          <li class="flyImage width-2" data-image-url="MlhSite3-2_m60wgo"></li>
+          <li class="flyImage width-2" data-image-url="MikeSite2_k63dr8"></li>
+          <li class="flyImage width-2" data-type="video" data-image-url="RETO-OutputVideo-20250717131746_hdy5kr"></li>
+          <li class="flyImage width-2" data-image-url="BroncoLokoSite1_tz85jl"></li>
+          <li class="flyImage width-2" data-image-url="MlhSite1_izxzrq"></li>
         </ul>
       </div>
 
       <div class="marquee marquee--reverse">
         <ul class="container marquee__content marquee__content__3">
-          <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.webp"></li>
-          <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.webp"></li>
-          <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.webp">
-          </li>
-          <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/000012.JPG">
-          </li>
-          <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="images/LordApexSite1.jpg">
-          </li>
-          <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="images/MlhSite1.webp">
-          </li>
+          <li class="flyImage width-2" data-image-url="curtisy-1_fjshog"></li>
+          <li class="flyImage width-2" data-image-url="MlhSite2_wtzmzx"></li>
+          <li class="flyImage width-2" data-image-url="MikeSite3_otvvqw"></li>
+          <li class="flyImage width-2" data-image-url="000012_dt65vh"></li>
+          <li class="flyImage width-2" data-image-url="LordApexSite1_dpgqet"></li>
+          <li class="flyImage width-2" data-image-url="MlhSite1_izxzrq"></li>
         </ul>
 
         <ul class="container marquee__content marquee__content__3">
-          <li class="flyImage width-2" data-title="Michael J Bonema" data-image-url="images/MonjolaSite.webp"></li>
-          <li class="flyImage width-2" data-title="A colorful MLH logo" data-image-url="images/MlhSite2.webp"></li>
-          <li class="flyImage width-2" data-title="F3MIII Poster Image" data-image-url="images/MikeSite2.webp">
-          </li>
-          <li class="flyImage width-2" data-title="Igor OG PS cover art" data-image-url="images/000012.JPG">
-          </li>
-          <li class="flyImage width-2" data-title="Instagram post of MLH-4" data-image-url="images/LordApexSite1.jpg">
-          </li>
-          <li class="flyImage width-2" data-title="BroncoLoko PS full-scale image" data-image-url="images/MlhSite1.webp">
-          </li>
+          <li class="flyImage width-2" data-image-url="curtisy-1_fjshog"></li>
+          <li class="flyImage width-2" data-image-url="MlhSite2_wtzmzx"></li>
+          <li class="flyImage width-2" data-image-url="MikeSite3_otvvqw"></li>
+          <li class="flyImage width-2" data-image-url="000012_dt65vh"></li>
+          <li class="flyImage width-2" data-image-url="LordApexSite1_dpgqet"></li>
+          <li class="flyImage width-2" data-image-url="MlhSite1_izxzrq"></li>
         </ul>
       </div>
 
@@ -259,27 +171,32 @@
   </div>
   <script src="js/loader.js"></script>
   <!-- Cookie Banner -->
-<div id="cookie-banner" style="position:fixed; bottom:20px; left:20px; right:20px; padding:15px; background:#1e1e1e; color:white; font-family:sans-serif; display:flex; justify-content:space-between; align-items:center; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.2); z-index:9999;">
-  <div style="max-width:80%;">
-    We use cookies to improve your experience. By continuing, you agree to our cookie policy.
+  <div id="cookie-banner"
+    style="position:fixed; bottom:20px; left:20px; right:20px; padding:15px; background:#1e1e1e; color:white; font-family:sans-serif; display:flex; justify-content:space-between; align-items:center; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.2); z-index:9999;">
+    <div style="max-width:80%;">
+      We use cookies to improve your experience. By continuing, you agree to our cookie policy.
+    </div>
+    <button id="accept-cookies"
+      style="background:#4CAF50; color:white; border:none; padding:10px 20px; border-radius:5px; margin-left:20px; cursor:pointer;">
+      Accept
+    </button>
   </div>
-  <button id="accept-cookies" style="background:#4CAF50; color:white; border:none; padding:10px 20px; border-radius:5px; margin-left:20px; cursor:pointer;">
-    Accept
-  </button>
-</div>
 
-<script>
-  // Check if user already accepted
-  if (localStorage.getItem('cookiesAccepted')) {
-    document.getElementById('cookie-banner').style.display = 'none';
-  }
+  <script>
+    // Check if user already accepted
+    if (localStorage.getItem('cookiesAccepted')) {
+      document.getElementById('cookie-banner').style.display = 'none';
+    }
 
-  // If not, show the banner and handle acceptance
-  document.getElementById('accept-cookies').addEventListener('click', function() {
-    localStorage.setItem('cookiesAccepted', true);
-    document.getElementById('cookie-banner').style.display = 'none';
-  });
-</script>
+    // If not, show the banner and handle acceptance
+    document.getElementById('accept-cookies').addEventListener('click', function () {
+      localStorage.setItem('cookiesAccepted', true);
+      document.getElementById('cookie-banner').style.display = 'none';
+    });
+  </script>
+
+  <script type="module" src="js/global.js"></script>
+  <script type="module" src="js/home.js"></script>
 </body>
 
 </html>

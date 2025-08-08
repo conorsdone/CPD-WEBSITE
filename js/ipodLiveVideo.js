@@ -20,7 +20,7 @@ if (orientation === "portrait") {
 const CAMERA_CONFIG = {
     fov: 90,
     near: 0.1,
-    far: 20,
+    far: 50,
     position: { x: 0, y: -50, z: 0 },
     // position: { x: 0.489, y: -50.25, z: -0.5 },
     rotation: { x: -30, y: -45, z: 0 }
@@ -225,10 +225,10 @@ function updateScreen(trackInfo) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const backgroundRadius = SCREEN_CONFIG.radius;
     ctx.save();
-    
+
     // Create rounded rect
     drawRoundedRect(ctx, 0, 0, canvas.width, canvas.height, backgroundRadius);
-    
+
     // Fill gradient
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
     gradient.addColorStop(0, '#111111');
@@ -248,7 +248,7 @@ function updateScreen(trackInfo) {
         drawProgressBar(progressMs, durationMs);
         drawBatteryIcon();
         drawPlayPauseButton(trackInfo.isPlaying);
-        
+
         ctx.restore();
 
         // Update texture
@@ -370,6 +370,54 @@ function drawBatteryIcon() {
     ctx.fillStyle = '#00ff00';
     ctx.fillRect(batteryX + 2, batteryY + 2, batteryWidth * 0.7 - 4, batteryHeight - 4);
 }
+
+function VideoRender(){
+    video = document.getElementById('video');
+
+        const texture = new THREE.VideoTexture(video);
+        texture.colorSpace = THREE.SRGBColorSpace;
+
+        const geometry = new THREE.PlaneGeometry(16, 9);
+        geometry.scale(0.5, 0.5, 0.5);
+        const material = new THREE.MeshBasicMaterial({ map: texture });
+
+        const count = 64;
+        const radius = 32;
+
+        for (let i = 1, l = count; i <= l; i++) {
+
+            const phi = Math.acos(- 1 + (2 * i) / l);
+            const theta = Math.sqrt(l * Math.PI) * phi;
+
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.position.setFromSphericalCoords(radius, phi, theta);
+            mesh.lookAt(camera.position);
+            scene.add(mesh);
+        }
+
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+
+            const constraints = { video: { width: 1280, height: 720, facingMode: 'user' } };
+
+            navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
+
+                // apply the stream to the video element used in the texture
+
+                video.srcObject = stream;
+                video.play();
+
+            }).catch(function (error) {
+
+                console.error('Unable to access the camera/webcam.', error);
+
+            });
+
+        } else {
+
+            console.error('MediaDevices interface not available.');
+
+        }
+    }
 
 // Ui controls
 // Setup slider with debounce
@@ -727,45 +775,45 @@ function init() {
 
     // Fix model materials for proper rendering (fixes seeing thru the ports on the model)
     function fixModelMaterials(model) {
-    model.traverse((child) => {
-        if (child.isMesh && child.material) {
-            // Handle single material
-            if (child.material.isMaterial) {
-                fixSingleMaterial(child.material);
+        model.traverse((child) => {
+            if (child.isMesh && child.material) {
+                // Handle single material
+                if (child.material.isMaterial) {
+                    fixSingleMaterial(child.material);
+                }
+                // Handle material array
+                else if (Array.isArray(child.material)) {
+                    child.material.forEach(material => {
+                        if (material.isMaterial) {
+                            fixSingleMaterial(material);
+                        }
+                    });
+                }
             }
-            // Handle material array
-            else if (Array.isArray(child.material)) {
-                child.material.forEach(material => {
-                    if (material.isMaterial) {
-                        fixSingleMaterial(material);
-                    }
-                });
-            }
-        }
-    });
-}
+        });
+    }
 
-function fixSingleMaterial(material) {
-    // Fix transparency issues
-    if (material.transparent && material.opacity === 1) {
-        material.transparent = false;
+    function fixSingleMaterial(material) {
+        // Fix transparency issues
+        if (material.transparent && material.opacity === 1) {
+            material.transparent = false;
+        }
+
+        // Ensure proper side rendering
+        material.side = THREE.DoubleSide;
+
+        // Fix alpha test issues
+        if (material.alphaTest > 0 && material.alphaTest < 0.1) {
+            material.alphaTest = 0;
+        }
+
+        // depth testing
+        material.depthTest = true;
+        material.depthWrite = !material.transparent;
+
+        // Force material update
+        material.needsUpdate = true;
     }
-    
-    // Ensure proper side rendering
-    material.side = THREE.DoubleSide;
-    
-    // Fix alpha test issues
-    if (material.alphaTest > 0 && material.alphaTest < 0.1) {
-        material.alphaTest = 0;
-    }
-    
-    // depth testing
-    material.depthTest = true;
-    material.depthWrite = !material.transparent;
-    
-    // Force material update
-    material.needsUpdate = true;
-}
 
     // Load 3D model using GLTFLoader
     const loader = new GLTFLoader();
@@ -774,7 +822,7 @@ function fixSingleMaterial(material) {
     const modelPromise = new Promise((resolve) => {
         loader.load('assets/scene.gltf', function (gltf) {
             model = gltf.scene;
-             fixModelMaterials(model);
+            fixModelMaterials(model);
 
             // Set initial model position and rotation from MODEL_CONFIG
             model.position.set(MODEL_CONFIG.position.x, MODEL_CONFIG.position.y, MODEL_CONFIG.position.z);
@@ -803,12 +851,12 @@ function fixSingleMaterial(material) {
         screenTexture = new THREE.CanvasTexture(canvas);
 
         // Create screen mesh
-       const screenMaterial = new THREE.MeshBasicMaterial({ 
-    map: screenTexture, 
-    side: THREE.DoubleSide,
-    transparent: true,
-    alphaTest: 0.1
-});
+        const screenMaterial = new THREE.MeshBasicMaterial({
+            map: screenTexture,
+            side: THREE.DoubleSide,
+            transparent: true,
+            alphaTest: 0.1
+        });
         const screenGeometry = new THREE.PlaneGeometry(SCREEN_CONFIG.geometry.width, SCREEN_CONFIG.geometry.height);
         screenMesh = new THREE.Mesh(screenGeometry, screenMaterial);
 
@@ -858,6 +906,8 @@ function fixSingleMaterial(material) {
 
         // Log model rotation every 5 seconds (debug)
         setInterval(logModelRotation, 5000);
+
+        setTimeout(VideoRender,5000);
 
         // log when assets are loaded fully
         console.log('All assets loaded');

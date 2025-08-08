@@ -63,6 +63,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalContent = document.createElement("div");
     modalContent.className = "modal-content";
 
+    // Create close button
+    const modalCloseButton = document.createElement("button");
+    modalCloseButton.className = "modal-close-button";
+    modalCloseButton.innerHTML = "&times;"; // × symbol
+    modalCloseButton.setAttribute("aria-label", "Close modal");
+    modalCloseButton.style.display = "none"; // Ensure it's hidden initially
+
     const modalTitle = document.createElement("h3");
     modalTitle.className = "modal-title";
 
@@ -79,6 +86,48 @@ document.addEventListener('DOMContentLoaded', () => {
     modalContent.appendChild(modalImageGroupContainer);
     modalOverlay.appendChild(modalContent);
     document.body.appendChild(modalOverlay);
+    
+    // Add close button directly to body (completely independent)
+    document.body.appendChild(modalCloseButton);
+
+    // Function to close modal
+    function closeModal() {
+        modalOverlay.classList.remove("ani-fadeInColour");
+        modalOverlay.classList.add("ani-fadeOutColour");
+
+        modalContent.classList.remove("ani-fadeIn");
+        modalContent.classList.add("ani-fadeOut");
+
+        blurBackground.classList.remove("ani-blurIn");
+        blurBackground.classList.add("ani-blurOut");
+
+        navBar.style.animation = "fadeIn 1.25s forwards";
+        
+        // Hide close button
+        modalCloseButton.style.display = "none";
+
+        setTimeout(() => {
+            document.body.style.overflow = "auto";
+            navBar.style.display = "grid";
+            navBar.style.opacity = "1";
+
+            modalOverlay.scrollTop = 0;
+            modalOverlay.classList.remove("ani-fadeOutColour");
+            modalOverlay.classList.remove("modal-overlay-open");
+
+            modalContent.classList.remove("ani-fadeOut");
+            modalContent.classList.remove("modal-content-open");
+
+            blurBackground.classList.remove("blur-background");
+            blurBackground.classList.remove("ani-blurOut");
+        }, 1250);
+    }
+
+    // Add click event to close button
+    modalCloseButton.addEventListener("click", function(e) {
+        e.stopPropagation(); // Prevent any parent click events
+        closeModal();
+    });
 
     // Add click event to all images in the layout
     images.forEach(img => {
@@ -125,6 +174,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             navBar.style.animation = "fadeOut 1.25s forwards";
             modalImageGroupContainer.style.display = "flex";
+            
+            // Show close button
+            modalCloseButton.style.display = "flex";
 
             document.body.style.overflow = "hidden";
             const style = document.createElement('style');
@@ -139,35 +191,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Close modal when clicking overlay
+    // Close modal when clicking overlay (but not the content)
     modalOverlay.addEventListener("click", function (e) {
-        if (e.target === modalOverlay || e.target === modalContent) {
-            modalOverlay.classList.remove("ani-fadeInColour");
-            modalOverlay.classList.add("ani-fadeOutColour");
-
-            modalContent.classList.remove("ani-fadeIn");
-            modalContent.classList.add("ani-fadeOut");
-
-            blurBackground.classList.remove("ani-blurIn");
-            blurBackground.classList.add("ani-blurOut");
-
-            navBar.style.animation = "fadeIn 1.25s forwards";
-
-            setTimeout(() => {
-                document.body.style.overflow = "auto";
-                navBar.style.display = "grid";
-                navBar.style.opacity = "1";
-
-                modalOverlay.scrollTop = 0;
-                modalOverlay.classList.remove("ani-fadeOutColour");
-                modalOverlay.classList.remove("modal-overlay-open");
-
-                modalContent.classList.remove("ani-fadeOut");
-                modalContent.classList.remove("modal-content-open");
-
-                blurBackground.classList.remove("blur-background");
-                blurBackground.classList.remove("ani-blurOut");
-            }, 1250);
+        if (e.target === modalOverlay) {
+            closeModal();
         }
     });
 
@@ -176,41 +203,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
-
-function updateTime() {
-    const aspectRatio = window.innerWidth / window.innerHeight;
-    const now = new Date();
-    let hours = now.getUTCHours() + 1;
-    const realHours = hours.toString().padStart(2, '0'); // Get hours in GMT
-    const minutes = now.getUTCMinutes().toString().padStart(2, '0'); // Get minutes in GMT
-    const seconds = now.getUTCSeconds().toString().padStart(2, '0'); // Get seconds in GMT
-    const gmtTime = `Dublin, Éire ${realHours}:${minutes}:${seconds} GMT`; // Format the time string
-    document.getElementById("gmt-time").textContent = gmtTime;
-    // console.log(aspectRatio);
-}
-
-setInterval(updateTime, 1000); // Update every second
-window.onload = updateTime; // Update immediately when page loads
-
-// function videoPlayerTemplate(data) {
-//     return `
-//         <h1>${data.header}</h1>
-//         <p>${data.subheader}</p>
-//         <a href="#" id="playButton">Play</a>
-//         <a href="javascript: void(0)" id="muteUnmute">Mute</a>
-//         <div id="progressBarOuter"> 
-//             <div id="bytesLoaded"></div>
-//             <div id="progressBar"></div>
-//         </div>
-//         <time id="currentTime">0:00</time>
-//         <time id="totalTime">0:00</time>
-//     `
-// }
-
-// var data = {
-//      header: 'My video player',
-//      subheader: 'Version 2 coming soon'
-// }
-
-// const videoplayer = videoPlayerTemplate(data);
-// document.getElementById('myRandomElement').insertAdjacentHTML("afterbegin", videoplayer);

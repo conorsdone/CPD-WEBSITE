@@ -413,3 +413,40 @@ body {
     object-fit: contain;
     margin-bottom: 5vh; 
 }
+
+/* Modal close button styles */
+.modal-close-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    display: none; /* Hidden by default, no !important */
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    transition: all 0.3s ease;
+    line-height: 1;
+}
+
+.modal-close-button:hover {
+    background: rgba(0, 0, 0, 0.9);
+    transform: scale(1.1);
+}
+
+.modal-close-button:focus {
+    outline: 2px solid white;
+    outline-offset: 2px;
+}
+
+/* Remove the extra padding since close button is no longer in content */
+.modal-content {
+    position: relative;
+}

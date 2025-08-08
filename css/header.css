@@ -58,7 +58,7 @@ header {
 /* with nav header */
 
 /* Navigation container - defaults to 3-button layout (work page) */
-header .containerNav {
+.work header .containerNav {
     padding-top: .5vw;
     padding-bottom: .5vw;
     width: 90%;
@@ -69,29 +69,29 @@ header .containerNav {
 }
 
 /* 3-button layout: first left, middle center, last right */
-header .containerNav .nav:first-child {
+.work header .containerNav .nav:first-child {
     justify-self: start;
+    text-align: left;
 }
 
-header .containerNav .nav {
+.work header .containerNav .nav {
     justify-self: center;
     cursor: pointer;
 }
 
-header .containerNav .nav:last-child {
+.work header .containerNav .nav:last-child {
     justify-self: end;
 }
 
 /* 4-button layout: use flexbox for even distribution */
-header .containerNav:has(.nav:nth-child(4)) {
+/* header .containerNav:has(.nav:nth-child(4)) {
     display: flex;
     justify-content: space-evenly;
 }
 
 header .containerNav:has(.nav:nth-child(4)) .nav {
     justify-self: unset;
-    /* Reset grid positioning for flexbox */
-}
+} */
 
 .work header .containerNav .nav,
 .work header h3 {
@@ -106,6 +106,26 @@ header .containerNav:has(.nav:nth-child(4)) .nav {
     cursor: pointer;
     color: var(--background);
     background-color: var(--text);
+}
+
+.ipodLive header .containerNav {
+    width: 90%;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-column-gap: 20px;
+    grid-row-gap: 1em;
+    grid-row: auto;
+    animation: fadeIn 1.25s ease-in-out;
+}
+
+.ipodLive header .containerNav .left {
+    text-align: center;
+}
+.ipodLive header .containerNav .right {
+    text-align: center;
+}
+.ipodLive header .containerNav .mid {
+    text-align: center;
 }
 
 /* Smaller logo and header scale for ipodLive page */
