@@ -1,178 +1,195 @@
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { AsciiEffect } from 'three/addons/effects/AsciiEffect.js';
+function applyAspectRatioClass() {
+    const aspectRatio = window.innerWidth / window.innerHeight;
 
-// Get the first canvas element
-var canvas = document.getElementsByTagName("canvas")[0];
+    // Access body element
+    const body = document.body;
 
-// Create scene, camera, and renderer
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(35, 
-    window.innerWidth/window.innerHeight, 0.1, 1000);
+    // Remove existing ratio classes to avoid conflicts
+    body.classList.remove('ultra-wide-ratio', 'wide-ratio', 'tall-ratio', 'square-ratio');
 
-var renderer = new THREE.WebGLRenderer({
-    canvas: canvas,
-    antialias: true,
-    alpha: true
-});
-renderer.setSize(window.innerWidth, window.innerHeight);
-
-// Set up the ASCII effect
-const effect = new AsciiEffect(renderer, ' ***********█', { invert: false });
-effect.setSize(window.innerWidth, window.innerHeight+20);
-effect.domElement.style.color = 'yellow';
-effect.domElement.style.zIndex = '10000';
-effect.domElement.style.position = 'absolute';
-effect.domElement.style.top = '0';
-effect.domElement.classList.add("AsciiCanvas");
-effect.domElement.style.pointerEvents = 'none';
-effect.domElement.style.rotate = '20deg';
-
-// Append ASCII effect's DOM to the body, not the renderer's DOM
-document.body.appendChild(effect.domElement);
-
-effect.domElement.addEventListener('click', () => {
-    togglePageInvert();
-});
-
-// Load the GLTF model
-const loader = new GLTFLoader();
-let model;
-
-loader.load('./assets/super_mario_star.glb', function (gltf) {
-    model = gltf.scene;
-    scene.add(model);
-    
-    // Scale down the model if it's too large
-    model.scale.set(0.3, 0.3, 0.3);
-    
-    // Position the model slightly away from the camera
-    model.position.set(0, 0, -5);
-}, undefined, function (error) {
-    console.error(error);
-});
-
-// Set initial camera position further back
-if (window.innerWidth < 541) {  
-    // Mobile view: adjust position
-    camera.position.set(-0.35, -2.6, 8);
-} else {  
-    // Desktop view: default position
-    camera.position.set(7, -3, 10);
-}
-// camera.position.set(0, 0, 10);
-
-// Mouse move event listener to rotate the model
-// Mouse move event listener for larger rotation effect
-window.addEventListener('mousemove', (event) => {
-    if (!model) return;
-
-    // Calculate the center of the model in 2D screen space
-    let modelCenter = new THREE.Vector3();
-    model.getWorldPosition(modelCenter); // Get the model's world position
-
-    // Project the model's world position into 2D screen space
-    let screenCenter = modelCenter.project(camera);
-    screenCenter.x = (screenCenter.x + 1) / 2 * window.innerWidth;
-    screenCenter.y = -(screenCenter.y - 1) / 2 * window.innerHeight;
-
-    // Get the mouse position in 2D screen space
-    let mouseX = event.clientX;
-    let mouseY = event.clientY;
-
-    // Normalize mouse position relative to the model's screen center
-    let diffX = (mouseX - screenCenter.x) / window.innerWidth * 2;
-    let diffY = (mouseY - screenCenter.y) / window.innerHeight * 2;
-
-    // Adjust sensitivity for mobile or smaller screens
-    let sensitivity = window.innerWidth < 768 ? 0.2 : 1;
-
-    let mobileoffset = diffX * Math.PI / 4 * sensitivity;
-    let mobileoffset2 = diffY * Math.PI / 4 * sensitivity;
-    // Apply the rotation to the model based on the difference in mouse position
-    model.rotation.y = mobileoffset; // Horizontal rotation (Y-axis)
-    
-    // **Flip the vertical rotation (X-axis) to fix the up/down issue**
-    model.rotation.x = mobileoffset2; // Vertical rotation (X-axis)
-    model.rotation.z = 0; // Vertical rotation (X-axis)
-});
-
-
-window.addEventListener('touchmove', (event) => {
-    if (!model || event.touches.length < 1) return;
-
-    let touch = event.touches[0];
-
-    // Calculate the center of the model in 2D screen space
-    let modelCenter = new THREE.Vector3();
-    model.getWorldPosition(modelCenter); // Get the model's world position
-
-    // Project the model's world position into 2D screen space
-    let screenCenter = modelCenter.project(camera);
-    screenCenter.x = (screenCenter.x + 1) / 2 * window.innerWidth;
-    screenCenter.y = -(screenCenter.y - 1) / 2 * window.innerHeight;
-
-    // Get the touch position in 2D screen space
-    let touchX = touch.clientX;
-    let touchY = touch.clientY;
-
-    // Normalize touch position relative to the model's screen center
-    let diffX = (touchX - screenCenter.x) / window.innerWidth * 2;
-    let diffY = (touchY - screenCenter.y) / window.innerHeight * 2;
-
-    // Adjust sensitivity for mobile or smaller screens
-    let sensitivity = window.innerWidth < 768 ? 2 : 1;
-
-    // Apply the rotation to the model based on the difference in touch position
-    model.rotation.y = diffX * Math.PI / 4 * sensitivity; // Horizontal rotation (Y-axis)
-
-    // **Flip the vertical rotation (X-axis) to fix the up/down issue**
-    model.rotation.x = diffY * Math.PI / 4 * sensitivity; // Vertical rotation (X-axis)
-});
-
-// Raycasting for detecting clicks on the model
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-
-window.addEventListener('click', (event) => {
-    if (!model) return;
-    
-    // Calculate mouse position in normalized device coordinates (-1 to +1)
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObject(model, true);
-    
-    if (intersects.length > 0) {
-        // Call the togglePageInvert function when the star is clicked
-        togglePageInvert();
+    // Add class based on ratio
+    if (aspectRatio > 2.3) {
+        body.classList.add('ultra-wide-ratio');   // Landscape-like ratio
+    } else if (aspectRatio > 1.3) {
+        body.classList.add('wide-ratio');   // Landscape-like ratio
+    } else if (aspectRatio < 0.75) {
+        body.classList.add('tall-ratio');   // Portrait-like ratio
+    } else {
+        body.classList.add('square-ratio'); // Close to a square aspect ratio
     }
-});
-
-// Function to toggle page inversion
-function togglePageInvert() {
-    document.body.classList.toggle('inverted');
 }
 
-// Resize handling to adjust the canvas and effect size
-window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    effect.setSize(window.innerWidth, window.innerHeight);
-});
+// Run the function on load and resize to handle toolbar show/hide
+applyAspectRatioClass();
 
-// Animation loop
+
+window.addEventListener('resize', applyAspectRatioClass);
+
+function adjustViewportHeight() {
+    // Calculate 1vh based on the current visible viewport height
+    const vh = window.innerHeight * 0.01;
+
+    // Set the custom CSS variable to update dynamically
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
+// Adjust viewport height on load
+adjustViewportHeight();
+
+// Handle viewport changes due to the toolbar showing/hiding (resize events)
+window.addEventListener('resize', adjustViewportHeight);
+
+const images = [
+    'images/000012.jpg',
+    'images/000038.jpg',
+    'images/000040.jpg',
+    'images/mlhSite2.webp',
+    'images/MonjolaSite.webp',
+    'images/F3miiiSite.webp'
+];
+
+let currentImageIndex = 0;
+let gl, program, texture, nextTexture;
+let imageSize = [1, 1];
+let fadeProgress = 0.0;
+let isFading = false;
+let nextImageIndex = (currentImageIndex + 1) % images.length;
+
+function initWebGL() {
+    const canvas = document.getElementById('morphCanvas');
+    gl = canvas.getContext('webgl');
+    if (!gl) return alert("WebGL not supported!");
+
+    // Initialize textures
+    texture = gl.createTexture();
+    nextTexture = gl.createTexture();
+    [texture, nextTexture].forEach(tex => {
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    });
+
+    // Shader setup
+    const vs = gl.createShader(gl.VERTEX_SHADER);
+    const fs = gl.createShader(gl.FRAGMENT_SHADER);
+    gl.shaderSource(vs, document.getElementById('vertexShader').text);
+    gl.shaderSource(fs, document.getElementById('fragmentShader').text);
+    gl.compileShader(vs);
+    gl.compileShader(fs);
+
+    program = gl.createProgram();
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+    gl.useProgram(program);
+
+    // Set texture uniform locations
+    gl.uniform1i(gl.getUniformLocation(program, 'u_image'), 0);
+    gl.uniform1i(gl.getUniformLocation(program, 'u_nextImage'), 1);
+
+    // Geometry setup
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    const aPos = gl.getAttribLocation(program, 'a_position');
+    gl.enableVertexAttribArray(aPos);
+    gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+}
+
+async function loadImage(url) {
+    const img = await new Promise((resolve, reject) => {
+        const image = new Image();
+        image.crossOrigin = "anonymous";
+        image.onload = () => resolve(image);
+        image.onerror = reject;
+        image.src = url;
+    });
+
+    // Create texture-ready canvas
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    return canvas;
+}
+
+async function updateTexture() {
+    const img = await loadImage(images[currentImageIndex]);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+    imageSize = [img.width, img.height];
+    resize();
+}
+
+async function startFade() {
+    if (isFading) return;
+    isFading = true;
+
+    // Load next image
+    const nextImg = await loadImage(images[nextImageIndex]);
+    gl.bindTexture(gl.TEXTURE_2D, nextTexture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, nextImg);
+
+    // Animate fade
+    const startTime = performance.now();
+    const fadeStep = () => {
+        const elapsed = performance.now() - startTime;
+        fadeProgress = Math.min(elapsed / 1000, 1.0);
+
+        if (fadeProgress < 1.0) {
+            requestAnimationFrame(fadeStep);
+        } else {
+            isFading = false;
+            currentImageIndex = nextImageIndex;
+            nextImageIndex = (currentImageIndex + 1) % images.length;
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, nextImg);
+            fadeProgress = 0.0;
+        }
+    };
+    fadeStep();
+}
+
+function resize() {
+    const canvas = document.getElementById('morphCanvas');
+    canvas.width = window.innerWidth * 0.5;
+    canvas.height = window.innerHeight;
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.uniform2f(gl.getUniformLocation(program, 'u_canvasSize'), canvas.width, canvas.height);
+    gl.uniform2f(gl.getUniformLocation(program, 'u_imageSize'), imageSize[0], imageSize[1]);
+}
+
 function animate() {
+    gl.uniform1f(gl.getUniformLocation(program, 'time'), performance.now() / 1000);
+    gl.uniform1f(gl.getUniformLocation(program, 'u_strength'), 0.05);
+    gl.uniform1f(gl.getUniformLocation(program, 'u_fadeProgress'), fadeProgress);
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, nextTexture);
+
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     requestAnimationFrame(animate);
-    
-    if (model) {
-        // Apply the bouncing effect with floor collision
-        model.position.y = Math.sin(Date.now() * 0.006) * 0.06;
-    }
-    
-    // Render the scene with the effect
-    effect.render(scene, camera);
 }
-animate();
+
+function nextImage() {
+    if (!isFading) startFade();
+}
+
+async function prevImage() {
+    currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+    await updateTexture();
+}
+
+// Initialize
+initWebGL();
+updateTexture().then(() => {
+    window.addEventListener('resize', resize);
+    animate();
+    // Start slideshow after first load
+    setInterval(nextImage, 3000);
+});
