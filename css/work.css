@@ -1,26 +1,12 @@
 :root {
-    --gap: 0.75vw;
+    --gap: 0.75vh;
+    --h3-font-size: clamp(25px, calc(2vh + 3vw), calc(3vh + 3vw));
     --gap-mobile: 2.5vw;
-}
-
-.noise {
-    z-index: 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-
-    pointer-events: none;
-    opacity: var(--noise-var);
-    image-rendering: crisp-edges;
 }
 
 body {
     background: var(--background-2);
 }
-
 
 .work .containerFlex .containerFlexMid .containerMid {
     padding-top: 4px;
@@ -206,13 +192,11 @@ body {
     height: auto;
 }
 
-
 /* Modal styles */
 .modal-overlay {
     position: fixed;
-    top: 0;
+    top: 5%;
     left: 0;
-    padding-top: 5%;
     width: 100%;
     height: 100%;
     display: none;
@@ -220,6 +204,8 @@ body {
     align-items: center;
     z-index: 1000;
     background-color: var(--background-2);
+    transition: all 0.5s ease-in-out;
+
 }
 
 .modal-overlay-open {
@@ -228,10 +214,9 @@ body {
 }
 
 .modal-content {
-    flex-direction: column;
     display: flex;
-    justify-content: center;
     align-items: center;
+    position: relative;
 }
 
 .modal-content-open {
@@ -261,24 +246,91 @@ body {
     }
 }
 
-.modal-title {
-    /* border: 3px solid red; */
+.modal-title,
+.modal-description {
+    position: fixed;
+    animation: fadeInColour 2.5s ease-in-out;
+    width: 100%;
     font-family: Mirtha;
     font-style: italic;
-    font-size: 10vh;
+    font-size: var(--h3-font-size);
+    line-height: 6vh;
     color: white;
     text-align: center;
-
+    z-index: 10000;
+    margin: 0;
 }
 
-@media (max-width: 540px) {
-    .modal-title {
-        /* border: 3px solid red; */
-        font-size: 7.5vh;
-        line-height: 7.5vh;
-    }
+.modal-title {
+    align-self: start;
+    transform: translate(0%, -150%);
+}
 
-    .work .containerFlex .containerFlexMid .imgSquare {
+.modal-description {
+    align-self: end;
+    transform: translate(0%, 150%);
+}
+
+.modal-image-group-container {
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    height: clamp(300px, 50vh, 50vh);
+    gap: calc(var(--gap) * 2);
+}
+
+.modal-group-image {
+    -webkit-transition: transform 0.5s ease-in-out;
+    transition: transform 0.5s ease-in-out;
+    width: auto;
+    object-fit: contain;
+}
+
+.modal-group-image:hover {
+    transform: scale(1.03);
+}
+
+.modal-group-image:first-child {
+    padding-left: calc(var(--gap) * 2);
+}
+
+.modal-group-image:last-child {
+    padding-right: calc(var(--gap) * 2);
+}
+
+/* Modal close button styles */
+.modal-close-button {
+    position: fixed;
+    top: 2.5vh;
+    right: 2.5vh;
+    background: none;
+    color: white;
+    border: none;
+    width: 5vh;
+    height: 5vh;
+    font-size: 50px;
+    font-weight: normal;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    transition: all 0.5s ease-in-out;
+    line-height: auto;
+    font-family: Geist-Mono;
+}
+
+.modal-close-button:hover {
+    transform: scale(1.2) rotate(135deg);
+}
+
+.modal-close-button:focus {
+    outline: 2px solid white;
+    outline-offset: 2px;
+} 
+
+@media (max-aspect-ratio: 4/5) {
+.work .containerFlex .containerFlexMid .imgSquare {
         width: 70%;
     }
 
@@ -293,12 +345,81 @@ body {
     .work .containerFlex .containerFlexMid .imgLandscape:hover {
         width: 90%;
     }
+}
+
+@media (max-aspect-ratio: 5/5) {
+
+    /*  vertical iphone */
+    :root {
+        --h3-font-size: 6vh;
+    }
+
+    .modal-title {
+        align-self: start;
+        transform: translate(0%, -125%);
+    }
+
+    .modal-description {
+        align-self: end;
+        transform: translate(0%, 125%);
+    }
+}
+
+@media (max-width: 1000px) and (max-height: 500px) {
+
+    /* horizontal iphone */
+    :root {
+        --h3-font-size: 6vh;
+    }
+
+    .modal-image-group-container {
+        height: 45vh;
+    }
+
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .modal-overlay {
+
+        top: 2.5%;
+        left: 0;
+
+    }
 
 }
 
 /* Blur effect for background */
 .blur-background {
     filter: blur(5px);
+}
+
+.ani-fadeInColour {
+    animation: fadeInColour 1.25s ease-in-out;
+}
+
+.ani-fadeOutColour {
+    animation: fadeOutColour 1.25s ease-in-out;
+}
+
+.ani-fadeIn {
+    animation: fadeIn 1.25s ease-in-out;
+}
+
+.ani-fadeOut {
+    animation: fadeOut 1.25s ease-in-out;
+}
+
+.ani-blurIn {
+    animation: blurIn 1.25s ease-in-out;
+}
+
+.ani-blurOut {
+    animation: blurOut 1.25s ease-in-out;
 }
 
 @keyframes fadeIn {
@@ -365,88 +486,11 @@ body {
     }
 }
 
-.ani-fadeInColour {
-    animation: fadeInColour 1.25s ease-in-out;
-}
-
-.ani-fadeOutColour {
-    animation: fadeOutColour 1.25s ease-in-out;
-}
-
-.ani-fadeIn {
-    animation: fadeIn 1.25s ease-in-out;
-}
-
-.ani-fadeOut {
-    animation: fadeOut 1.25s ease-in-out;
-}
-
-.ani-blurIn {
-    animation: blurIn 1.25s ease-in-out;
-}
-
-.ani-blurOut {
-    animation: blurOut 1.25s ease-in-out;
-}
-
-.modal-image-group-container {
-    /* border: 3px solid red; */
-    display: inline-flex;
-    flex-direction: row;
-    height: 60vh;
-    /* width: fit-content; */
-    gap: calc(var(--gap) * 2);
-    /* margin-bottom: var(--gap); */
-}
-
-.modal-group-image {
-    /* border: 3px solid red; */
-    width: auto;
-    object-fit: contain;
-}
-
-.modal-main-image {
-    display: inline-flex;
-    flex-direction: column;
-    max-height: 60vh;
-    max-width: 80vw;
-    object-fit: contain;
-    margin-bottom: 5vh; 
-}
-
-/* Modal close button styles */
-.modal-close-button {
+.displayMiddleLength {
     position: fixed;
-    top: 20px;
-    right: 20px;
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 24px;
-    font-weight: bold;
-    cursor: pointer;
-    display: none; /* Hidden by default, no !important */
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-    transition: all 0.3s ease;
-    line-height: 1;
-}
-
-.modal-close-button:hover {
-    background: rgba(0, 0, 0, 0.9);
-    transform: scale(1.1);
-}
-
-.modal-close-button:focus {
-    outline: 2px solid white;
-    outline-offset: 2px;
-}
-
-/* Remove the extra padding since close button is no longer in content */
-.modal-content {
-    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    /* width: 40vh; */
 }

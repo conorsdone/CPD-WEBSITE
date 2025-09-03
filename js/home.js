@@ -164,43 +164,58 @@ animate();
 document.addEventListener("DOMContentLoaded", function () {
     const base = 'https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto/';
 
-    // document.querySelectorAll('li[data-public-id]').forEach(li => {
-    //     const id = li.dataset.publicId;
-    //     li.src = `${base}w_1600/${id}`;
-    //     li.srcset = [800, 1600].map(w => `${base}w_${w}/${id} ${w}w`).join(', ');
-    //     li.sizes = '(max-width: 800px) 800px, (max-width: 1600px) 1600px';
-    //     li.alt = li.alt || id.split('_')[0].replace('-', ' ');
-    // });
-
     const modal = document.getElementById("imageModal");
     const modalImg = document.getElementById("modalImg");
     const modalText = document.getElementById("modalText");
     const elementsToMove = document.querySelectorAll(".home, .enter, .cpd-logo");
     const enterElement = document.querySelector(".enter");
 
-    // // Set background images dynamically
-    // document.querySelectorAll(".flyImage").forEach((item) => {
-    //     const imageUrl = item.getAttribute("data-image-url");
-    //     if (imageUrl) {
-    //         item.style.backgroundImage = `url(${imageUrl})`;
-    //     }
-    // });
+    // Func to detect actual mobile devices
+    function isMobileDevice() {
+        const userAgent = navigator.userAgent.toLowerCase();
+        const mobileKeywords = [
+            'android', 'iphone', 'ipad', 'ipod', 'blackberry',
+            'windows phone', 'mobile', 'webos', 'opera mini'
+        ];
 
-    // Set background images dynamically
+        const hasMobileUA = mobileKeywords.some(keyword => userAgent.includes(keyword));
+        const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        const hasSmallScreen = window.screen.width <= 1000 || window.screen.height <= 1000;
+
+        return hasMobileUA || (hasSmallScreen && hasTouch);
+    }
+
     document.querySelectorAll("li").forEach((li) => {
         const type = li.getAttribute("data-type");
         const id = li.getAttribute("data-image-url");
-        if (type === null) {
-            li.src = `${base}w_1600/${id}`;
-            li.srcset = [800, 1600].map(w => `${base}w_${w}/${id} ${w}w`).join(', ');
-            li.sizes = '(max-width: 800px) 800px, (max-width: 1600px) 1600px';
-            li.alt = li.alt || id.split('_')[0].replace('-', ' ');
-        } else if (type === "video") {
-            li.src = `https://res.cloudinary.com/dcouze1qx/video/upload/v1754667301/${id}.mp4`
-        }
-        const imageUrl = li.src;
-        if (imageUrl) {
-            li.style.backgroundImage = `url(${imageUrl})`;
+
+        // console.log('Processing LI:', { type, id }); // Debug log
+
+        if (type === null && id) { // Make sure id exists
+            const isMobile = isMobileDevice();
+
+            let imageUrl;
+
+            if (isMobile) {
+                // Mobile devices, 1200px only
+                imageUrl = `${base}w_1200/${id}`;
+                li.style.backgroundImage = `url(${imageUrl})`;
+                // console.log(`LI Mobile: ${id} - 1200px`);
+            } else {
+                // Mobile devices, 2400px only
+                imageUrl = `${base}w_2400/${id}`;
+                li.style.backgroundImage = `url(${imageUrl})`;
+                // console.log(`LI Desktop: ${id} - 2400px`);
+            }
+
+            if (li.hasAttribute('alt')) {
+                li.alt = li.alt || id.split('_')[0].replace('-', ' ');
+            }
+
+        } else if (type === "video" && id) {
+            // video handler
+            const videoUrl = `https://res.cloudinary.com/dcouze1qx/video/upload/v1754667301/${id}.mp4`;
+            li.style.backgroundImage = `url(${videoUrl})`;
         }
     });
 

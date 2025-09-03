@@ -549,3 +549,25 @@ table {
 .home a {
     color: red;
 }
+
+/* .fadein #f1 {
+    width: 85vw;
+    height: auto;
+    position: absolute;
+    right: 0;
+    padding-right: 1vw;
+}
+
+@media (max-aspect-ratio: 5/5) {
+    .fadein #f1 {
+        width: 65vw;
+    }
+}
+
+
+@media (max-aspect-ratio: 4/5) {
+    .fadein #f1 {
+        width: 100vw;
+        padding: 0 5vh;
+    }
+  } */

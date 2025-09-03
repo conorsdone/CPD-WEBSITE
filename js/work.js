@@ -7,12 +7,24 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: "curtisy-1_fjshog", title: "Curtisy" },
         ],
         "mikeSet": [
-            { id: "MikeSite1_y4dgtd", title: "Mike" },
-            { id: "MikeSite3_otvvqw", title: "Mike" },
-            { id: "MikeSite2_k63dr8", title: "Mike" },
-            { id: "BroncoLokoSite1_tz85jl", title: "Ahmed, With Love." },
-            { id: "curtisy-1_fjshog", title: "Curtisy" },
-        ]
+            { id: "MikeSite2_k63dr8", title: "MIKE" },
+            { id: "MIKE-2024-ig-1_rdfumc", title: "MIKE" },
+            { id: "MIKE-2024-ig-3_rry3ve", title: "MIKE" },
+            { id: "MIKE-2024-ig-10_b8sznp", title: "MIKE" },
+            { id: "MIKE-2024-ig-6_ze2qer", title: "MIKE" },
+            { id: "MIKE-2024-ig-5_mhhw0j", title: "MIKE" },
+            { id: "MIKE-2024-ig-8_jntndx", title: "MIKE" },
+            { id: "MIKE-2024-ig-2_wi8hms", title: "MIKE" },
+            { id: "MIKE-2024-ig-7_os2kdz", title: "MIKE" },
+            { id: "MIKE-2024-ig-9_s6sjza", title: "MIKE" }
+        ],
+        "lordApexSet": [
+            { id: "LordApex-2_vpfzjz_c_crop_w_4160_h_5605_g_auto_ndxkr1", title: "Lord Apex" },
+            { id: "LordApex-1_dcmjlc", title: "Lord Apex" },
+            { id: "LordApex-4_ltj0fp", title: "Lord Apex" },
+            { id: "LordApex-3_no1a1s", title: "Lord Apex" },
+            { id: "LordApex-5_jlw0g2", title: "Lord Apex" }
+        ],
     };
 
     document.querySelectorAll('img[data-public-id]').forEach(img => {
@@ -73,6 +85,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalTitle = document.createElement("h3");
     modalTitle.className = "modal-title";
 
+    const modalDescription = document.createElement("h3");
+    modalDescription.className = "modal-description";
+
     const modalImg = document.createElement("img");
     modalImg.className = "modal-main-image";
 
@@ -81,30 +96,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const blurBackground = document.querySelector(".containerFlex");
 
-    modalContent.appendChild(modalTitle);
-    // modalContent.appendChild(modalImg);
-    modalContent.appendChild(modalImageGroupContainer);
-    modalOverlay.appendChild(modalContent);
     document.body.appendChild(modalOverlay);
+    modalOverlay.appendChild(modalContent);
+    modalContent.appendChild(modalTitle);
+    modalContent.appendChild(modalImageGroupContainer);
+    modalContent.appendChild(modalDescription);
     
     // Add close button directly to body (completely independent)
     document.body.appendChild(modalCloseButton);
 
     // Function to close modal
     function closeModal() {
-        modalOverlay.classList.remove("ani-fadeInColour");
-        modalOverlay.classList.add("ani-fadeOutColour");
+    //     modalTitle.classList.remove('show');
+    // modalDescription.classList.remove('show');
+    
+    modalOverlay.classList.remove("ani-fadeInColour");
+    modalOverlay.classList.add("ani-fadeOutColour");
 
-        modalContent.classList.remove("ani-fadeIn");
-        modalContent.classList.add("ani-fadeOut");
+    modalContent.classList.remove("ani-fadeIn");
+    modalContent.classList.add("ani-fadeOut");
 
-        blurBackground.classList.remove("ani-blurIn");
-        blurBackground.classList.add("ani-blurOut");
+    blurBackground.classList.remove("ani-blurIn");
+    blurBackground.classList.add("ani-blurOut");
 
-        navBar.style.animation = "fadeIn 1.25s forwards";
-        
-        // Hide close button
-        modalCloseButton.style.display = "none";
+    navBar.style.animation = "fadeIn 1.25s forwards";
+    
+    modalCloseButton.style.display = "none";
 
         setTimeout(() => {
             document.body.style.overflow = "auto";
@@ -141,11 +158,15 @@ document.addEventListener('DOMContentLoaded', () => {
             modalImg.src = imageSrc;
 
             modalTitle.textContent = img.dataset.imgTitle;
+            modalDescription.textContent = img.dataset.imgDescription;
+
+        //      modalTitle.classList.remove('show');
+        // modalDescription.classList.remove('show');
 
             modalImageGroupContainer.innerHTML = '';
 
             groupImages.forEach(image => {
-                if (image.id !== img.dataset.publicId) { // Skip the clicked image
+                // if (image.id !== img.dataset.publicId) { // Skip the clicked image
                     const groupImg = document.createElement("img");
                     groupImg.src = `${base}w_1600/${image.id}`; // Smaller thumbnails
                     groupImg.alt = image.title;
@@ -159,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
 
                     modalImageGroupContainer.appendChild(groupImg);
-                }
+                // }
             });
 
             modalOverlay.scrollTop = 0;
@@ -177,8 +198,13 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Show close button
             modalCloseButton.style.display = "flex";
-
             document.body.style.overflow = "hidden";
+
+        //     setTimeout(() => {
+        //     modalTitle.classList.add('show');
+        //     modalDescription.classList.add('show');
+        // }, 100);
+
             const style = document.createElement('style');
             style.innerHTML = `.modal-content::-webkit-scrollbar { display: none !important; }`;
             document.head.appendChild(style);

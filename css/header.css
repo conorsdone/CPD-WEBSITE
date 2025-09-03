@@ -1,27 +1,29 @@
+/* GLOBAL HEADER */
 :root {
-    --header-logo-width: 70%;
+    --header-font-size: 1.5vw;
 }
 
-.cpd-logo {
-    /* mix-blend-mode: difference; */
-    animation: var(--animation-logo) 2s infinite;
+.fadein {
+    position: relative;
+    display: inline-block;
 }
 
-header {
-    z-index: 5000;
-    /* mix-blend-mode: difference; */
-}
-
-header .containerFull {
-    width: 34vw;
+.fadein #f1 {
+    position: relative;
+    display: block;
+    width: 100%;
     height: auto;
-    position: absolute;
-    top: 1vw;
-    right: 0;
-    padding-right: 1vw;
 }
 
-header .containerFullFlex {
+.fadein #f2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+}
+
+header .page-header {
     padding-top: 2vh;
     width: 100%;
     display: flex;
@@ -30,34 +32,95 @@ header .containerFullFlex {
     justify-content: center;
 }
 
-.work header .containerFullFlex {
+header .page-header .logo-text {
+    z-index: 5001;
     background: var(--background-2);
-    background: linear-gradient(180deg, rgba(15, 15, 15, 1) 0%, rgba(15, 15, 15, 1) 70%, rgba(15, 15, 15, 0) 100%);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-#headerShrink {
+.cpd-logo {
     width: 50%;
+    animation: redAni 5s infinite;
     transition: width 0.75s ease;
 }
 
-.scrolled #headerShrink {
+.scrolled .cpd-logo {
     width: 30%;
 }
 
 header {
+    z-index: 5000;
     position: sticky;
     top: 0;
     left: 0;
 }
 
-/* .work .containerFlex {
- /* padding-top: 19vw; */
-/* 25% = 5vw 5% = 1vw +2.5 !!*/
-/* with normal header */
-/* 25% = 5vw 5% = 1vw +5 !!*/
-/* with nav header */
+.work header {
+    background: linear-gradient(180deg, rgba(15, 15, 15, 1) 0%, rgba(15, 15, 15, 1) 25%, rgba(15, 15, 15, 0) 100%);
+}
 
-/* Navigation container - defaults to 3-button layout (work page) */
+.work header .containerNav {
+    background: linear-gradient(180deg, rgba(15, 15, 15, 1) 0%, rgba(15, 15, 15, 1) 50%, rgba(15, 15, 15, 0) 100%);
+}
+
+@media (max-aspect-ratio: 5/5) {
+    /*  vertical iphone */
+    :root {
+        --header-font-size: 2.75vw;
+    }
+}
+
+@media (max-aspect-ratio: 4/5) {
+    /*  vertical iphone */
+    :root {
+        --header-font-size: 3.5vw;
+    }
+
+    .cpd-logo {
+        width: 75%;
+    }
+
+    .scrolled .cpd-logo {
+        width: 50%;
+    }
+}
+
+@media (max-width: 1000px) and (max-height: 500px) {
+    /* horizontal iphone */
+    :root {
+        --header-font-size: 3.5vh;
+    }
+
+    .work header .page-header {
+        align-items: center;
+    }
+
+    .work header .page-header .logo-text {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        align-items: end;
+        width: 91%;
+    }
+
+    .work header .containerNav {
+        flex-direction: row;
+        background: linear-gradient(180deg, rgba(15, 15, 15, 1) 0%, rgba(15, 15, 15, 1) 25%, rgba(15, 15, 15, 0)75%, rgba(15, 15, 15, 0) 100%);
+    }
+
+    .cpd-logo {
+        width: 25%;
+    }
+
+    .scrolled .cpd-logo {
+        width: 20%;
+    }
+}
+
 .work header .containerNav {
     padding-top: .5vw;
     padding-bottom: .5vw;
@@ -68,7 +131,6 @@ header {
     animation: fadeIn 1.25s ease-in-out;
 }
 
-/* 3-button layout: first left, middle center, last right */
 .work header .containerNav .nav:first-child {
     justify-self: start;
     text-align: left;
@@ -83,22 +145,11 @@ header {
     justify-self: end;
 }
 
-/* 4-button layout: use flexbox for even distribution */
-/* header .containerNav:has(.nav:nth-child(4)) {
-    display: flex;
-    justify-content: space-evenly;
-}
-
-header .containerNav:has(.nav:nth-child(4)) .nav {
-    justify-self: unset;
-} */
-
-.work header .containerNav .nav,
+.work header .nav,
 .work header h3 {
-    font-size: 1.5vw;
+    font-size: var(--header-font-size);
     color: var(--text);
     font-family: Geist-Mono;
-    /* text-align: right; */
 }
 
 .work header .containerNav .nav:hover,
@@ -107,6 +158,8 @@ header .containerNav:has(.nav:nth-child(4)) .nav {
     color: var(--background);
     background-color: var(--text);
 }
+
+/* IPOD PAGE SPECIFIC */
 
 .ipodLive header .containerNav {
     width: 90%;
@@ -121,9 +174,11 @@ header .containerNav:has(.nav:nth-child(4)) .nav {
 .ipodLive header .containerNav .left {
     text-align: center;
 }
+
 .ipodLive header .containerNav .right {
     text-align: center;
 }
+
 .ipodLive header .containerNav .mid {
     text-align: center;
 }
@@ -139,7 +194,7 @@ header .containerNav:has(.nav:nth-child(4)) .nav {
     /* Smaller than default 30% */
 }
 
-.ipodLive header .containerFullFlex {
+.ipodLive header .page-header {
     padding-top: 1.5vh;
     /* Smaller than default 2vh */
 }
@@ -150,12 +205,12 @@ header .containerNav:has(.nav:nth-child(4)) .nav {
     /* Smaller than default 1.5vw */
 }
 
-@media (max-width: 540px) {
+/* @media (max-width: 540px) {
     header {
         padding-top: 2.5vw;
     }
 
-    header .containerFullFlex a {
+    header .page-header a {
         width: 90%;
     }
 
@@ -166,4 +221,4 @@ header .containerNav:has(.nav:nth-child(4)) .nav {
     header h3 {
         font-size: 2.5vw !important;
     }
-}
+} */
