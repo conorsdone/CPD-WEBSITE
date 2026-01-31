@@ -249,6 +249,7 @@ body {
 .modal-title,
 .modal-description {
     position: fixed;
+    left: 0vh;
     animation: fadeInColour 2.5s ease-in-out;
     width: 100%;
     font-family: Mirtha;
@@ -301,27 +302,21 @@ body {
 /* Modal close button styles */
 .modal-close-button {
     position: fixed;
-    top: 2.5vh;
-    right: 2.5vh;
+    top: 3vh;
+    right: 3vw;
     background: none;
     color: white;
     border: none;
-    width: 5vh;
-    height: 5vh;
-    font-size: 50px;
-    font-weight: normal;
+    font-size: 75px;
     cursor: pointer;
     display: none;
-    align-items: center;
-    justify-content: center;
     z-index: 10000;
-    transition: all 0.5s ease-in-out;
-    line-height: auto;
+    transition: all 1s ease-in-out;
     font-family: Geist-Mono;
 }
 
 .modal-close-button:hover {
-    transform: scale(1.2) rotate(135deg);
+    transform: scale(1.25);
 }
 
 .modal-close-button:focus {
@@ -385,10 +380,8 @@ body {
     }
 
     .modal-overlay {
-
         top: 2.5%;
         left: 0;
-
     }
 
 }
@@ -420,6 +413,14 @@ body {
 
 .ani-blurOut {
     animation: blurOut 1.25s ease-in-out;
+}
+
+.ani-rotateOut {
+    animation: rotateOut 1.25s ease-in-out;
+}
+
+.ani-rotateIn {
+    animation: rotateIn 1.25s ease-in-out;
 }
 
 @keyframes fadeIn {
@@ -483,6 +484,26 @@ body {
 
     to {
         filter: blur(0px);
+    }
+}
+
+@keyframes rotateIn {
+    from {
+        transform: scale(0) rotate(0deg);
+    }
+
+    to {
+        transform: scale(1) rotate(360deg);
+    }
+}
+
+@keyframes rotateOut {
+    from {
+        transform: scale(1.25) rotate(360deg);
+    }
+
+    to {
+        transform: scale(0) rotate(0deg);
     }
 }
 

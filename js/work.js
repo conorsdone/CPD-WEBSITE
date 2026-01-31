@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create close button
     const modalCloseButton = document.createElement("button");
     modalCloseButton.className = "modal-close-button";
-    modalCloseButton.innerHTML = "&times;"; // × symbol
+    modalCloseButton.innerHTML = "↜"; // × symbol
     modalCloseButton.setAttribute("aria-label", "Close modal");
     modalCloseButton.style.display = "none"; // Ensure it's hidden initially
 
@@ -116,12 +116,16 @@ document.addEventListener('DOMContentLoaded', () => {
     modalContent.classList.remove("ani-fadeIn");
     modalContent.classList.add("ani-fadeOut");
 
+    modalCloseButton.classList.remove("ani-fadeInColour");
+    modalCloseButton.classList.add("ani-fadeOutColour");
+
+    modalCloseButton.classList.remove("ani-rotateIn");
+    modalCloseButton.classList.add("ani-rotateOut");
+
     blurBackground.classList.remove("ani-blurIn");
     blurBackground.classList.add("ani-blurOut");
 
     navBar.style.animation = "fadeIn 1.25s forwards";
-    
-    modalCloseButton.style.display = "none";
 
         setTimeout(() => {
             document.body.style.overflow = "auto";
@@ -135,8 +139,14 @@ document.addEventListener('DOMContentLoaded', () => {
             modalContent.classList.remove("ani-fadeOut");
             modalContent.classList.remove("modal-content-open");
 
+            modalCloseButton.classList.remove("ani-fadeOutColour");
+            modalCloseButton.classList.remove("ani-rotateOut");
+
             blurBackground.classList.remove("blur-background");
             blurBackground.classList.remove("ani-blurOut");
+
+            modalCloseButton.style.display = "none";
+            
         }, 1250);
     }
 
@@ -189,6 +199,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             modalContent.classList.add("ani-fadeIn");
             modalContent.classList.add("modal-content-open");
+
+            modalCloseButton.classList.add("ani-fadeInColour");
+            modalCloseButton.classList.add("ani-rotateIn");
 
             blurBackground.classList.add("ani-blurIn");
             blurBackground.classList.add("blur-background");

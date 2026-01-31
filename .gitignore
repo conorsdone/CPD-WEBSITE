@@ -1,2 +1,14 @@
 # Local Netlify folder
 .netlify
+
+# Node dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Mac system files
+.DS_Store
+
+# Optional logs
+npm-debug.log
