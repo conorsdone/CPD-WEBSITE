@@ -30,14 +30,12 @@
     pointer-events: none;
     width: 85vw;
     transition: transform 1s ease-in-out;
-    animation: redAni 5s infinite;
+    animation: logoAnimation-1 5s infinite;
 }
 
 .home body.inverted .cpd-logo {
     position: absolute;
-    pointer-events: none;
-    animation: blueAni 5s infinite;
-}
+    pointer-events: none;}
 
 .home .enter.logo-transition {
     position: relative;
@@ -84,12 +82,12 @@ body {
 
 
 body {
-    background-color: black;
+    background-color: var(--background);
     transition: filter 0.5s ease, background-color 0.5s ease;
 }
 
 body.inverted {
-    background-color: black;
+    background-color: var(--text);
     filter: invert(1);
 }
 
@@ -220,9 +218,13 @@ body.inverted .background .marquee__content__3 {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: var(--modal-background-darken);
     justify-content: center;
     align-items: center;
+}
+
+body.inverted .modal {
+    background-color: var(--modal-background-lighten);
 }
 
 .modal-content {
@@ -266,16 +268,16 @@ body.inverted .background .marquee__content__3 {
 
 @layer demo {
   :root {
-    --color: light-dark(red,red);
-    --shadow: light-dark(#ffff0d, #ffff0d);
-    --glare: light-dark(white, hsl(0 0% 100% / 0.75));
+    --color: light-dark(var(--button-primary),var(--button-primary));
+    --shadow: light-dark(var(--button-primary-accent), var(--button-primary-accent));
+    --glare: light-dark(var(--text), var(--text));
     --transition: 0.5s;
   }
 
   .dazzle {
     --font-level: 5;
     --font-size: 1em;
-    --padding: 0.12em;
+    --padding: 0em;
     padding: var(--padding) calc(var(--padding) * 2);
     border-radius: 0.25em;
     text-decoration: none;
@@ -328,7 +330,7 @@ body.inverted .background .marquee__content__3 {
     text-shadow: none;
     transform: translate(
       calc(var(--hover) * (var(--font-size) * 0.1)),
-      calc(var(--hover) * (var(--font-size) * -0.1))
+      calc(var(--hover) * (var(--font-size) * -0.125))
     );
   }
 
@@ -393,8 +395,6 @@ body.inverted .background .marquee__content__3 {
     top: calc(var(--y, 50) * 1%);
     left: calc(var(--x, 0) * 1%);
     transform: translate(-50%, -50%) scale(0);
-    stroke-width: 1;
-    stroke: light-dark(black, #0000);
   }
 
   .dazzle svg:nth-of-type(1) {
@@ -443,18 +443,6 @@ body.inverted .background .marquee__content__3 {
     --font-width-max: 1500;
   }
 
-  html {
-    color-scheme: light dark;
-  }
-
-  [data-theme='light'] {
-    color-scheme: light only;
-  }
-
-  [data-theme='dark'] {
-    color-scheme: dark only;
-  }
-
   :where(.fluid) {
     --fluid-min: calc(
       var(--font-size-min) * pow(var(--font-ratio-min), var(--font-level, 0))
@@ -475,7 +463,7 @@ body.inverted .background .marquee__content__3 {
     );
     font-size: var(--fluid-type);
   }
-  
+
   body {
     min-height: 100vh;
   }
@@ -483,7 +471,7 @@ body.inverted .background .marquee__content__3 {
 }
 
 table {
-    filter: drop-shadow(0rem 0rem 1rem #ff0000);
+    filter: drop-shadow(0rem 0rem 1rem var(--primary-accent));
 }
 
 .AsciiCanvas {
@@ -492,7 +480,7 @@ table {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 10; /* Adjust z-index if necessary */
+    z-index: 10;
     pointer-events: none;
   }
 
@@ -505,8 +493,8 @@ table {
     position: fixed;
     width: 100vw;
     height: 100vh;
-    background: #000; /* Change this to match your website */
-    color: #fff;
+    background: var(--background);
+    color: var(--text);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -527,8 +515,8 @@ table {
 }
 
 .loader {
-    border: 4px solid rgba(255, 255, 255, 0.3);
-    border-top: 4px solid #fff;
+    border: 4px solid var(--secondary-accent);
+    border-top: 4px solid var(--primary-accent);
     border-radius: 50%;
     width: 50px;
     height: 50px;
@@ -547,27 +535,5 @@ table {
 }
 
 .home a {
-    color: red;
+    color: var(--button-primary);
 }
-
-/* .fadein #f1 {
-    width: 85vw;
-    height: auto;
-    position: absolute;
-    right: 0;
-    padding-right: 1vw;
-}
-
-@media (max-aspect-ratio: 5/5) {
-    .fadein #f1 {
-        width: 65vw;
-    }
-}
-
-
-@media (max-aspect-ratio: 4/5) {
-    .fadein #f1 {
-        width: 100vw;
-        padding: 0 5vh;
-    }
-  } */

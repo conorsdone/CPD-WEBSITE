@@ -1,22 +1,30 @@
 :root {
-    --background: #000000;
+    /* default is dark mode */
+
+    /* main attributes */
+    --background: black;
     --background-2: #0f0f0f;
-    --text: #ffffff;
+    --text: white;
+    --button-primary: #ff0000;
+    --button-primary-accent: #ffff0d;
+    --primary-accent: #ff0000;
+    --secondary-accent: grey;
+
+    /* logo animations */
     --highlight: #ff0000;
     --highlight-2: #63d2f4;
+
     --highlight-3: #d5d3bb;
     --noise-var: 0.1;
     --animation-logo: redAni;
 
-    /* variable-white */
-    /* --background: #ffffff;
-    --background-2: #f5f5f5;
-    --text: #000000;
-    --highlight: #ff0000;
-    --highlight-2: #63d2f4;
-    --noise-var: 0.05; 
-    --animation-logo: blueAni; */
-   
+    --modal-background-darken: rgba(0, 0, 0, 0.8);
+    --modal-background-lighten: rgba(255, 255, 255, 0.8);
+  }
+
+  body.light {
+    --background: var(--text);
+    --text: var(--background);
   }
 
 @font-face {
@@ -55,8 +63,8 @@ body {
     font-size: 16px;
     font-weight: 400;
     line-height: 1.45;
-    background: var(--background-2);
-    background-color: var(--background-2);
+    background: var(--background);
+    background-color: var(--background);
 }
 
 p {
@@ -70,7 +78,7 @@ h1 {
     font-size: 5.8rem;
     line-height: 1;
     color: rgba(255, 0, 0, 0.85);
-    filter: drop-shadow(0rem 0rem 0.96rem var(--background-2));
+    filter: drop-shadow(0rem 0rem 0.96rem var(--background));
     text-decoration: none;
 }
 
@@ -101,27 +109,33 @@ h4 {
     padding: 0px;
 }
 
-@keyframes blueAni {
+@keyframes logoAnimation-1 {
 
-    0%,
-    100% {
-        filter: sepia(100) invert(100%) saturate(50) drop-shadow(0rem 0rem 0rem var(--highlight-2)) blur(0px);
+    0% {
+        filter: saturate(1) drop-shadow(0rem 0rem 0rem var(--highlight));
     }
 
     50% {
-        filter: sepia(100) invert(100%) saturate(100) drop-shadow(0rem 0rem 1rem var(--highlight-2));
+        filter: saturate(2.5) drop-shadow(0rem 0rem 1rem var(--highlight));
+    }
+
+    100% {
+        filter: saturate(1) drop-shadow(0rem 0rem 0rem var(--highlight));
     }
 }
 
-@keyframes redAni {
+@keyframes logoAnimation-2 {
 
-    0%,
-    100% {
-        filter: sepia(100) invert(0%) saturate(10) drop-shadow(0rem 0rem 0rem var(--highlight)) blur(0px);
+    0% {
+        filter: sepia(100) saturate(20) drop-shadow(0rem 0rem 0rem var(--highlight)) blur(0px);
     }
 
     50% {
-        filter: sepia(100) invert(0%) saturate(40) drop-shadow(0rem 0rem 1rem var(--highlight));
+        filter: sepia(100) saturate(40) drop-shadow(0rem 0rem 1rem var(--highlight)) blur(0px);
+    }
+
+    100% {
+        filter: sepia(100) saturate(20) drop-shadow(0rem 0rem 0rem var(--highlight)) blur(0px);
     }
 }
 
@@ -194,7 +208,7 @@ h4 {
     animation-delay: -3s;
 }
 
-.fadein img {
+.logoFade img {
     -webkit-animation-name: fade;
     -webkit-animation-iteration-count: infinite;
     -webkit-animation-duration: 6s;

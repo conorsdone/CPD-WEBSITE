@@ -1,15 +1,3 @@
-:root {
-    --background: #000000;
-    --background-2: #000000;
-    --text: #ffffff;
-}
-
-/* 
-min meaning, everything bigger than x is affected 
-exact meaning, only the exact ratio is affected
-max meaning, everything smaller than x is affected
-*/
-
 body {
     min-height: fit-content;
 }
@@ -22,45 +10,49 @@ body {
     cursor: pointer;
 }
 
-.work:hover,
-.about:hover,
+.work-image:hover,
+.about-image:hover,
 .instagram:hover,
 .nova:hover,
 .vsco:hover {
-    animation: redAni 5s infinite;
+    animation: logoAnimation-2 5s infinite;
 }
 
+/* main wrapper. full page */
 .page-wrapper {
     display: flex;
-    /* Use Flexbox to create a 2-column layout */
     width: 100vw;
-    /* Full viewport width */
     height: calc(var(--vh, 1vh) * 100);
     overflow: hidden;
 }
 
+/* split page */
+
+/* left split */
 .canvas-container {
     width: 50vw;
     height: calc(var(--vh, 1vh) * 100);
 }
 
+/* right split */
 .content-container {
     width: 50vw;
     height: calc(var(--vh, 1vh) * 100);
     overflow: hidden;
     position: relative;
-
 }
 
 @media (max-aspect-ratio: 5/5) {
+    /* on mobile */ 
+
+    /* hide left side  */
     .canvas-container {
         display: none;
-        /* Hides the left side */
     }
 
+    /* make right full-width */
     .content-container {
         width: 100vw;
-        /* Makes content full-width */
         overflow: hidden;
         height: calc(var(--vh, 1vh) * 100);
     }
@@ -75,7 +67,6 @@ body {
     right: 0;
     padding-right: 1vw;
 }
-
 
 @media (max-aspect-ratio: 5/5) {
     .page-header {
@@ -93,7 +84,7 @@ body {
     }
 }
 
-.fadein #f1 {
+.logoFade #f1 {
     width: 34vw;
     height: auto;
     position: absolute;
@@ -102,21 +93,20 @@ body {
 }
 
 @media (max-aspect-ratio: 5/5) {
-    .fadein #f1 {
+    .logoFade #f1 {
         width: 65vw;
     }
 }
 
-
 @media (max-aspect-ratio: 4/5) {
-    .fadein #f1 {
+    .logoFade #f1 {
         width: 100vw;
         padding: 0 5vh;
     }
 }
 
 .cpd-logo {
-    animation: redAni 5s infinite;
+    animation: logoAnimation-1 5s infinite;
 }
 
 .liveTime {
@@ -125,7 +115,6 @@ body {
     font-family: Geist-Mono;
     text-align: right;
 }
-
 
 @media (max-aspect-ratio: 5/5) {
     .liveTime {
@@ -143,7 +132,7 @@ body {
 .mlh-image {
     border-radius: 36rem;
     border-width: 3px;
-    border-color: var(--background-2);
+    border-color: var(--background);
     border-style: solid;
     border-top-left-radius: 0.3rem;
     border-bottom-left-radius: 22.4rem;

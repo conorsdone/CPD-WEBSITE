@@ -47,7 +47,7 @@ window.addEventListener('resize', () => {
 // Get time for header
 function updateTime() {
     const now = new Date();
-    let hours = now.getUTCHours() + 1;
+    let hours = now.getUTCHours();
     const realHours = hours.toString().padStart(2, '0'); // Get hours in GMT
     const minutes = now.getUTCMinutes().toString().padStart(2, '0'); // Get minutes in GMT
     const seconds = now.getUTCSeconds().toString().padStart(2, '0'); // Get seconds in GMT
@@ -78,7 +78,6 @@ function applyAspectRatioClass() {
 
 // Run the function on load and resize to handle toolbar show/hide
 applyAspectRatioClass();
-
 
 window.addEventListener('resize', applyAspectRatioClass);
 

@@ -23,7 +23,7 @@ body {
 
 .work .containerFlex .containerFlexMid .containerMid:hover {
     position: relative;
-    transition: width 1s ease-in-out;
+    /* transition: width 1s ease-in-out; */
 }
 
 .work .containerFlex .containerFlexMid .imgSquare:hover {
@@ -37,10 +37,9 @@ body {
 .work .containerFlex .containerFlexMid .containerMid img {
     /* cursor: pointer; */
     width: 100%;
-
-    @media (max-width: 768px) {
-        max-height: 50dvw
-    }
+    height: auto;
+    display: block;
+    object-fit: cover;
 }
 
 .work .containerFlex .realign {
@@ -70,9 +69,13 @@ body {
 }
 
 .work .containerFlex .realign .containerColumn .column {
-    display: flex;
     flex: 1 0 auto;
     transition: height 1s ease-in-out;
+}
+
+.work .containerFlex .realign .containerColumn .column img {
+    object-fit: fill;
+    height: 100%;
 }
 
 .work .containerFlex .realign .containerColumn .columnRight {
@@ -81,11 +84,6 @@ body {
 
 .work .containerFlex .realign .containerColumn .columnLeft {
     justify-content: flex-end;
-}
-
-.work .containerFlex .realign .containerColumn .column img {
-    object-fit: fill;
-    height: 100%;
 }
 
 .work .containerFlex .realign .containerColumn .columnLeft img {

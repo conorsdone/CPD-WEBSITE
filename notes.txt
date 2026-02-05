@@ -29,3 +29,23 @@ This site has been in the works for a couple of months, design began in November
 1080×2400 pixels – Common on devices like the Google Pixel 8.
 
 FIX LANDSCAPE FOR WORK PAGE !!!!!
+
+
+/* 
+min meaning, everything bigger than x is affected 
+exact meaning, only the exact ratio is affected
+max meaning, everything smaller than x is affected
+*/
+
+
+02-02-2026
+colour roots done for home, ipodLive,
+
+ /* variable-white */
+    /* --background: #ffffff;
+    --background-2: #f5f5f5;
+    --text: #000000;
+    --highlight: #ff0000;
+    --highlight-2: #63d2f4;
+    --noise-var: 0.05; 
+    --animation-logo: blueAni; */
