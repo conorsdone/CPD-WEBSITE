@@ -1,5 +1,5 @@
-/* .home {
-    border: 3px solid greenyellow;
+.home {
+    /* border: 3px solid greenyellow;
     position: absolute;
     z-index: 2000;
     width: 100vw;
@@ -7,11 +7,11 @@
     pointer-events: none;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); */
     transition: top 1s ease-in-out, transform 1s ease-in-out, width 1s ease-in-out;
 }
 
-.home .enter {
+/* .home .enter {
     border: 3px solid blue;
     pointer-events: all;
     position: relative;
@@ -19,19 +19,19 @@
     left: 50%;
     transform: translate(-50%, 50%);
     width: min-content;
-}
+} */
 
 .home .cpd-logo {
-    border: 3px solid palevioletred;
+    /* border: 3px solid palevioletred;
     position: relative;
     top: 50%;
     left: 50%;
     transform: translate(-50%, 0%);
     pointer-events: none;
-    width: 85vw;
+    width: 85vw; */
     transition: transform 1s ease-in-out;
     animation: logoAnimation-1 5s infinite;
-} */
+}
 
 .home body.inverted .cpd-logo {
     position: absolute;
