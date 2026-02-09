@@ -179,33 +179,76 @@ document.addEventListener("DOMContentLoaded", () => {
         return selected;
     }
 
-    // Apply background images to flyImages FIRST (before preloader logic)
-    document.querySelectorAll("li.flyImage").forEach((li) => {
+    // Lazy-load `li.flyImage` backgrounds and videos when they enter the viewport.
+    // This reduces initial network load and improves LCP.
+    const flyItems = document.querySelectorAll("li.flyImage");
+
+    function createVideoForItem(li, id) {
+        const videoEl = document.createElement('video');
+        videoEl.autoplay = true;
+        videoEl.muted = true;
+        videoEl.loop = true;
+        videoEl.playsInline = true;
+        videoEl.style.width = '100%';
+        videoEl.style.height = '100%';
+        videoEl.style.objectFit = 'cover';
+
+        const sourceEl = document.createElement('source');
+        sourceEl.src = `https://res.cloudinary.com/dcouze1qx/video/upload/v1754667301/${id}.mp4`;
+        sourceEl.type = 'video/mp4';
+        videoEl.appendChild(sourceEl);
+
+        li.innerHTML = '';
+        li.appendChild(videoEl);
+    }
+
+    function loadFlyItem(li) {
         const type = li.getAttribute("data-type");
         const id = li.getAttribute("data-image-url");
-
-        if (type === null && id) {
-            const selectedWidth = getOptimalWidthFromViewport(3, 10);
-            li.style.backgroundImage = `url(${base},w_${selectedWidth}/${id})`;
-        } else if (type === "video" && id) {
-            const videoEl = document.createElement('video');
-            videoEl.autoplay = true;
-            videoEl.muted = true;
-            videoEl.loop = true;
-            videoEl.playsInline = true;
-            videoEl.style.width = '100%';
-            videoEl.style.height = '100%';
-            videoEl.style.objectFit = 'cover';
-
-            const sourceEl = document.createElement('source');
-            sourceEl.src = `https://res.cloudinary.com/dcouze1qx/video/upload/v1754667301/${id}.mp4`;
-            sourceEl.type = 'video/mp4';
-            videoEl.appendChild(sourceEl);
-
-            li.innerHTML = ''; // clear background
-            li.appendChild(videoEl);
+        if (!id) return;
+        if (type === 'video') {
+            createVideoForItem(li, id);
+            return;
         }
-    });
+        const selectedWidth = getOptimalWidthFromViewport(3, 10);
+        li.style.backgroundImage = `url(${base},w_${selectedWidth}/${id})`;
+        li.classList.add('bg-loaded');
+    }
+
+    if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    loadFlyItem(entry.target);
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, { root: null, rootMargin: '400px', threshold: 0.01 });
+
+        flyItems.forEach(li => io.observe(li));
+    } else {
+        // Fallback: eager load everything
+        flyItems.forEach(li => loadFlyItem(li));
+    }
+
+    // Background preloader: load all flyImage image URLs in the background
+    // (used to preserve the previous behavior of preloading while deferring
+    // heavy work like ASCII init until idle time).
+    function preloadFlyImagesBackground() {
+        const promises = [];
+        document.querySelectorAll('li.flyImage').forEach(li => {
+            const type = li.getAttribute('data-type');
+            const id = li.getAttribute('data-image-url');
+            if (!id || type === 'video') return;
+            const selectedWidth = getOptimalWidthFromViewport(3, 10);
+            const url = `${base},w_${selectedWidth}/${id}`;
+            const img = new Image();
+            promises.push(new Promise(res => {
+                img.onload = res; img.onerror = res; img.src = url;
+            }));
+        });
+        return Promise.all(promises);
+    }
 
     // CRITICAL FIX: Hide preloader IMMEDIATELY - don't wait for background images!
     // This lets logo show fast which improves LCP
