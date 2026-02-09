@@ -158,11 +158,9 @@ function initAsciiScene() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-     const preloader = document.getElementById('preloader');
-    setTimeout(() => {
-        preloader.classList.add('hidden');
-        initAsciiScene();
-    }, 500); // half-second delay
+    loadFlyImages().then(() => {
+        initAsciiScene(); // initialize ASCII & Three.js after all flyImages loaded
+    });
     const base = 'https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best';
     const modal = document.getElementById("imageModal");
     const modalImg = document.getElementById("modalImg");
