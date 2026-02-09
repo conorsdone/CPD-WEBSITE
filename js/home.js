@@ -19,15 +19,13 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 
 // Set up ASCII effect
 const effect = new AsciiEffect(renderer, ' ***********█', { invert: false });
-effect.setSize(window.innerWidth, window.innerHeight + 20);
+effect.setSize(window.innerWidth, window.innerHeight);
 effect.domElement.style.color = 'yellow';
 effect.domElement.style.zIndex = '10000';
 effect.domElement.style.position = 'absolute';
 effect.domElement.style.top = '0';
 effect.domElement.classList.add("AsciiCanvas");
 effect.domElement.style.pointerEvents = 'none';
-
-// Append ASCII effect's DOM to the body
 document.body.appendChild(effect.domElement);
 
 effect.domElement.addEventListener('click', () => {
@@ -37,15 +35,10 @@ effect.domElement.addEventListener('click', () => {
 // Load model
 const loader = new GLTFLoader();
 let model;
-
 loader.load('./assets/super_mario_star.glb', function (gltf) {
     model = gltf.scene;
     scene.add(model);
-
-    // Scale down
     model.scale.set(0.4, 0.4, 0.4);
-
-    // Position model
     model.position.set(0, 0, -5);
 }, undefined, function (error) {
     console.error(error);
@@ -53,47 +46,33 @@ loader.load('./assets/super_mario_star.glb', function (gltf) {
 
 // Set camera pos
 if (window.innerWidth < 600) {
-    // Mobile view
     camera.position.set(0, 3.5, 10);
 } else {
-    // Desktop view
     camera.position.set(6, -3, 10);
 }
 
+// Mouse rotation
 window.addEventListener('mousemove', (event) => {
     if (!model) return;
-
-    // get model center
     let modelCenter = new THREE.Vector3();
     model.getWorldPosition(modelCenter);
 
-    // get screen center
     let screenCenter = modelCenter.project(camera);
     screenCenter.x = (screenCenter.x + 1) / 2 * window.innerWidth;
     screenCenter.y = -(screenCenter.y - 1) / 2 * window.innerHeight;
 
-    // get mouse pos
-    let mouseX = event.clientX;
-    let mouseY = event.clientY;
+    let diffX = (event.clientX - screenCenter.x) / window.innerWidth * 2;
+    let diffY = (event.clientY - screenCenter.y) / window.innerHeight * 2;
 
-    let diffX = (mouseX - screenCenter.x) / window.innerWidth * 2;
-    let diffY = (mouseY - screenCenter.y) / window.innerHeight * 2;
-
-    // sensitivity for mobile
     let sensitivity = window.innerWidth < 768 ? 2 : 1;
-
-    // rotate model based on diifX and Y
     model.rotation.y = diffX * Math.PI / 4 * sensitivity;
     model.rotation.x = diffY * Math.PI / 4 * sensitivity;
 });
 
-
-// add event listener for mobile
+// Touch rotation
 window.addEventListener('touchmove', (event) => {
     if (!model || event.touches.length < 1) return;
-
     let touch = event.touches[0];
-
     let modelCenter = new THREE.Vector3();
     model.getWorldPosition(modelCenter);
 
@@ -101,36 +80,24 @@ window.addEventListener('touchmove', (event) => {
     screenCenter.x = (screenCenter.x + 1) / 2 * window.innerWidth;
     screenCenter.y = -(screenCenter.y - 1) / 2 * window.innerHeight;
 
-    let touchX = touch.clientX;
-    let touchY = touch.clientY;
-
-    let diffX = (touchX - screenCenter.x) / window.innerWidth * 2;
-    let diffY = (touchY - screenCenter.y) / window.innerHeight * 2;
-
+    let diffX = (touch.clientX - screenCenter.x) / window.innerWidth * 2;
+    let diffY = (touch.clientY - screenCenter.y) / window.innerHeight * 2;
     let sensitivity = window.innerWidth < 768 ? 2 : 1;
 
     model.rotation.y = diffX * Math.PI / 4 * sensitivity;
     model.rotation.x = diffY * Math.PI / 4 * sensitivity;
 });
 
-// Raycasting for detecting clicks on the model
+// Raycasting for model clicks
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
-
-// if click detected toggle invert
 window.addEventListener('click', (event) => {
     if (!model) return;
-
-    // get mouse position
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObject(model, true);
-
-    if (intersects.length > 0) {
-        togglePageInvert();
-    }
+    if (intersects.length > 0) togglePageInvert();
 });
 
 // Function to toggle page inversion
@@ -147,121 +114,167 @@ window.addEventListener('resize', () => {
 });
 
 // Animation loop
+let frame = 0;
+let asciiPaused = false; // new flag
+
 function animate() {
     requestAnimationFrame(animate);
+    if (asciiPaused) return; // skip rendering when paused
 
-    // get model to move up and down
-    if (model) {
-        model.position.y = Math.sin(Date.now() * 0.0015) * 0.3;
-    }
-
-    // Render the scene with the effect
+    if (++frame % 4 !== 0) return; // frame skip
+    if (model) model.position.y = Math.sin(Date.now() * 0.0015) * 0.3;
     effect.render(scene, camera);
 }
-
 animate();
 
-document.addEventListener("DOMContentLoaded", function () {
-    const base = 'https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto/';
-
+document.addEventListener("DOMContentLoaded", () => {
+    const base = 'https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best';
     const modal = document.getElementById("imageModal");
     const modalImg = document.getElementById("modalImg");
     const modalText = document.getElementById("modalText");
     const elementsToMove = document.querySelectorAll(".home, .enter, .cpd-logo");
     const enterElement = document.querySelector(".enter");
 
-    // Func to detect actual mobile devices
-    function isMobileDevice() {
-        const userAgent = navigator.userAgent.toLowerCase();
-        const mobileKeywords = [
-            'android', 'iphone', 'ipad', 'ipod', 'blackberry',
-            'windows phone', 'mobile', 'webos', 'opera mini'
-        ];
+    const candidateWidths = [800, 1200, 1600, 2400];
 
-        const hasMobileUA = mobileKeywords.some(keyword => userAgent.includes(keyword));
-        const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-        const hasSmallScreen = window.screen.width <= 1000 || window.screen.height <= 1000;
-
-        return hasMobileUA || (hasSmallScreen && hasTouch);
+    // Estimate flyImage width from viewport
+    function estimateFlyImageWidth(numImagesPerRow = 3, gapPx = 10) {
+        const viewportWidth = window.innerWidth;
+        return (viewportWidth - gapPx * (numImagesPerRow - 1)) / numImagesPerRow;
     }
 
-    document.querySelectorAll("li").forEach((li) => {
+    // Pick optimal Cloudinary width
+    function getOptimalWidthFromViewport(numImagesPerRow = 3, gapPx = 10) {
+        const flyWidth = estimateFlyImageWidth(numImagesPerRow, gapPx);
+        const dpr = window.devicePixelRatio || 1;
+        const requiredPx = flyWidth * dpr;
+        const selected = candidateWidths.find(w => w >= requiredPx) || candidateWidths[candidateWidths.length - 1];
+        // console.log(`Estimated flyWidth: ${flyWidth}, DPR: ${dpr}, selected Cloudinary width: ${selected}`);
+        return selected;
+    }
+
+    // Apply background images to flyImages
+    document.querySelectorAll("li.flyImage").forEach((li) => {
         const type = li.getAttribute("data-type");
         const id = li.getAttribute("data-image-url");
 
-        // console.log('Processing LI:', { type, id }); // Debug log
-
-        if (type === null && id) { // Make sure id exists
-            const isMobile = isMobileDevice();
-
-            let imageUrl;
-
-            if (isMobile) {
-                // Mobile devices, 1200px only
-                imageUrl = `${base}w_1200/${id}`;
-                li.style.backgroundImage = `url(${imageUrl})`;
-                // console.log(`LI Mobile: ${id} - 1200px`);
-            } else {
-                // Mobile devices, 2400px only
-                imageUrl = `${base}w_2400/${id}`;
-                li.style.backgroundImage = `url(${imageUrl})`;
-                // console.log(`LI Desktop: ${id} - 2400px`);
-            }
-
-            if (li.hasAttribute('alt')) {
-                li.alt = li.alt || id.split('_')[0].replace('-', ' ');
-            }
-
+        if (type === null && id) {
+            const selectedWidth = getOptimalWidthFromViewport(3, 10); // adjust numImagesPerRow & gap as needed
+            li.style.backgroundImage = `url(${base},w_${selectedWidth}/${id})`;
         } else if (type === "video" && id) {
-            // video handler
             const videoUrl = `https://res.cloudinary.com/dcouze1qx/video/upload/v1754667301/${id}.mp4`;
             li.style.backgroundImage = `url(${videoUrl})`;
         }
     });
 
-    // Attach event listener to both marquee containers
+    // Click handler to open modal
     document.querySelectorAll(".marquee__content").forEach((marquee) => {
-        marquee.addEventListener("click", function (event) {
+        marquee.addEventListener("click", (event) => {
             const item = event.target.closest(".flyImage");
             if (!item) return;
-            // Ignore clicks outside of image container
 
             const bgImage = window.getComputedStyle(item).backgroundImage.match(/url\(["']?(.*?)["']?\)/);
             const imageSrc = bgImage ? bgImage[1] : "";
-
-            openModal(imageSrc);
+            openModal(imageSrc, "", item);
         });
     });
 
-    function openModal(imageSrc, description) {
-        modal.style.display = "flex";
-        modalImg.src = imageSrc;
+function openModal(imageSrc, description, item) {
+    const modal = document.getElementById("imageModal");
+    const modalImg = document.getElementById("modalImg");
+    const modalText = document.getElementById("modalText");
+    const elementsToMove = document.querySelectorAll(".home, .enter, .cpd-logo");
+    const enterElement = document.querySelector(".enter");
+    const base = 'https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best';
+    const candidateWidths = [800, 1200, 1600, 2400];
+
+    asciiPaused = true; // pause ascii
+
+    // Cancel any previous high-res preload
+    if (modalImg.highResLoader) {
+        modalImg.highResLoader.onload = null;
+        modalImg.highResLoader = null;
+    }
+
+    const type = item.getAttribute("data-type");
+    const id = item.getAttribute("data-image-url");
+
+    if (type === "video" && id) {
+        // Video: just use the same URL
+        const videoUrl = `https://res.cloudinary.com/dcouze1qx/video/upload/v1754667301/${id}.mp4`;
+        modalImg.style.animation = "none";
+        modalImg.offsetHeight; // force reflow
+        modalImg.src = videoUrl;
         modalText.textContent = description;
-        modalImg.style.animation = "fadeIn 0.5s ease-in-out forwards";
+        modal.style.display = "flex";
+        modalImg.style.animation = "fadeIn 0.3s ease-in-out forwards";
+    } else {
+        // Image: progressive loading as before
+        const viewportWidth = window.innerWidth;
+        const numImagesPerRow = 3;
+        const gapPx = 10;
+        const flyWidth = (viewportWidth - gapPx * (numImagesPerRow - 1)) / numImagesPerRow;
+        const dpr = window.devicePixelRatio || 1;
+        const requiredPx = flyWidth * dpr;
+        const lowerResWidth = candidateWidths.find(w => w >= requiredPx) || candidateWidths[candidateWidths.length - 1];
 
-        elementsToMove.forEach(el => el.classList.add("logo-transition"));
-        if (enterElement) {
-            enterElement.classList.add("logo-transition");
-            enterElement.style.animation = "fadeOut 0.5s ease-in-out forwards";
-        }
+        const publicIdMatch = imageSrc.match(/\/([^/]+)$/);
+        const publicId = publicIdMatch ? publicIdMatch[1] : "";
+        const lowResUrl = `${base},w_${lowerResWidth}/${publicId}`;
+
+        modalImg.style.animation = "none";
+        modalImg.offsetHeight;
+        modalImg.src = lowResUrl;
+        modalText.textContent = description;
+        modal.style.display = "flex";
+        modalImg.style.animation = "fadeIn 0.3s ease-in-out forwards";
+
+        // Preload high-res 2400w
+        const highResUrl = `${base},w_2400/${publicId}`;
+        const imgLoader = new Image();
+        modalImg.highResLoader = imgLoader;
+        imgLoader.onload = () => {
+            if (modal.style.display === "flex") {
+                modalImg.src = highResUrl;
+                modalImg.style.animation = "fadeIn 0.3s ease-in-out forwards";
+            }
+        };
+        imgLoader.src = highResUrl;
     }
 
+    // Common transitions
+    elementsToMove.forEach(el => el.classList.add("logo-transition"));
+    if (enterElement) {
+        enterElement.classList.add("logo-transition");
+        enterElement.style.animation = "fadeOut 0.5s ease-in-out forwards";
+    }
+}
     function closeModal() {
-        modal.style.display = "none";
-        modalImg.style.animation = "fadeOut 1s ease-in-out forwards";
-        elementsToMove.forEach(el => el.classList.remove("logo-transition"));
-        if (enterElement) {
-            enterElement.classList.remove("logo-transition");
-            enterElement.style.animation = "fadeIn 0.5s ease-in-out forwards";
-        }
+    asciiPaused = false;
+    
+    const modal = document.getElementById("imageModal");
+    const modalImg = document.getElementById("modalImg");
+    
+    // Remove the high-res reference
+    modalImg.src = '';           // remove current image
+    if (modalImg.highResLoader) {
+        modalImg.highResLoader.onload = null;
+        modalImg.highResLoader = null;  // discard preloader
     }
 
-    // Close modal when clicking outside img
-    modal.addEventListener("click", function (event) {
-        closeModal();
-    });
-});
+    modal.style.display = "none";
+    modalImg.style.animation = "fadeOut 1s ease-in-out forwards";
 
-$(document).mousemove(function (e) {
-    $("#image").css({ left: e.pageX, top: e.pageY });
+    const elementsToMove = document.querySelectorAll(".home, .enter, .cpd-logo");
+    const enterElement = document.querySelector(".enter");
+    elementsToMove.forEach(el => el.classList.remove("logo-transition"));
+    if (enterElement) {
+        enterElement.classList.remove("logo-transition");
+        enterElement.style.animation = "fadeIn 0.5s ease-in-out forwards";
+    }
+}
+
+    modal.addEventListener("click", (event) => {
+        if (event.target === modal) closeModal();
+    });
 });

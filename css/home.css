@@ -108,7 +108,7 @@ header {
 
 @media (max-width: 600px) {
     .background {
-        margin-top: -10vh;
+        margin-top: -5vh;
         margin-left: -20vw;
     }
 }

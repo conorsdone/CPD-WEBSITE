@@ -1,5 +1,5 @@
 # Local Netlify folder
-.netlify
+.netlify/
 
 # Node dependencies
 node_modules/
@@ -12,3 +12,6 @@ node_modules/
 
 # Optional logs
 npm-debug.log
+.vscode/
+
+notes.txt

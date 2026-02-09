@@ -4,7 +4,7 @@
     
     // Global function to setup responsive images anywhere
     window.setupResponsiveImages = function() {
-        document.querySelectorAll('img[data-public-id]').forEach((img, index) => {
+        document.querySelectorAll('img[data-public-id]:not(.testing)').forEach((img, index) => {
             const id = img.dataset.publicId;
             
             // mobile use 1200px
