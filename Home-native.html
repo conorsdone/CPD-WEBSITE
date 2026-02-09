@@ -13,18 +13,45 @@
     })(window, document, 'script', 'dataLayer', 'GTM-5P5GK6CQ');</script>
   <!-- End Google Tag Manager -->
 
+<head>
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5P5GK6CQ');
+  </script>
+  <!-- End Google Tag Manager -->
+
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
 
-  <link rel="stylesheet" href="css/all.min.css">
-  <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/grid.css">
-  <link rel="stylesheet" href="css/global.css">
-  <link rel="stylesheet" href="css/home.css">
+  <!-- Inline critical CSS for first viewport -->
+  <style>
+    /* Layout / FCP critical for initial screen */
+    body { margin: 0; background: #000; overflow: hidden; }
+    .home { position: absolute; z-index: 2000; text-align: center; pointer-events: none; top: 50%; left: 50%; transform: translate(-50%, -50%); transition: top 1s ease-in-out, transform 1s ease-in-out, width 1s ease-in-out; }
+    .home .cpd-logo { width: 85vw; position: relative; top: 50%; left: 50%; transform: translate(-50%,0); pointer-events: none; transition: transform 1s ease-in-out; }
+    .home .enter { pointer-events: all; position: relative; top: 0%; left: 50%; transform: translate(-50%, 50%); width: min-content; font-size: 2rem; }
+  </style>
 
-  <title>CPD.JPG Home</title>
-  <link rel="icon" href="assets/cpd-star-crt-clear.png" type="image/svg">
+  <!-- Deferred non-critical CSS -->
+  <link rel="stylesheet" href="/css/all.min.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="/css/reset.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="/css/home.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="/css/grid.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="/css/global.css" media="print" onload="this.media='all'">
+
+  <!-- Fallback for no-JS -->
+  <noscript>
+    <link rel="stylesheet" href="/css/all.min.css">
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/grid.css">
+    <link rel="stylesheet" href="/css/global.css">
+  </noscript>
 </head>
 
 <body>

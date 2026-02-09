@@ -1,5 +1,5 @@
-.home {
-    /* border: 3px solid greenyellow; */
+/* .home {
+    border: 3px solid greenyellow;
     position: absolute;
     z-index: 2000;
     width: 100vw;
@@ -12,7 +12,7 @@
 }
 
 .home .enter {
-    /* border: 3px solid blue; */
+    border: 3px solid blue;
     pointer-events: all;
     position: relative;
     top: 0%;
@@ -22,7 +22,7 @@
 }
 
 .home .cpd-logo {
-    /* border: 3px solid palevioletred; */
+    border: 3px solid palevioletred;
     position: relative;
     top: 50%;
     left: 50%;
@@ -31,7 +31,7 @@
     width: 85vw;
     transition: transform 1s ease-in-out;
     animation: logoAnimation-1 5s infinite;
-}
+} */
 
 .home body.inverted .cpd-logo {
     position: absolute;
