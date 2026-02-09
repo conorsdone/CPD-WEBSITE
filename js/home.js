@@ -28,6 +28,7 @@ effect.domElement.classList.add("AsciiCanvas");
 effect.domElement.classList.add("ToggleAscii");
 effect.domElement.style.pointerEvents = 'none';
 document.body.appendChild(effect.domElement);
+let asciiReady = false;
 
 effect.domElement.addEventListener('click', () => {
     togglePageInvert();
@@ -109,6 +110,10 @@ function togglePageInvert() {
     document.body.classList.toggle('inverted');
 }
 
+window.addEventListener('load', () => {
+    asciiReady = true;
+});
+
 // Resize handling
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -123,9 +128,9 @@ let asciiPaused = false; // new flag
 
 function animate() {
     requestAnimationFrame(animate);
-    if (asciiPaused) return; // skip rendering when paused
+    if (!asciiReady || asciiPaused) return;
 
-    if (++frame % 4 !== 0) return; // frame skip
+    if (++frame % 4 !== 0) return;
     if (model) model.position.y = Math.sin(Date.now() * 0.0015) * 0.3;
     effect.render(scene, camera);
 }
