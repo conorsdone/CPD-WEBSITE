@@ -21,7 +21,8 @@
 
   <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-
+  <link rel="preload" as="image"
+    href="https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_1200/cpd-logo-blend-colour_suos5p">
   <!-- Inline critical CSS for first viewport -->
   <style>
     /* Layout / FCP critical for initial screen */
@@ -84,18 +85,23 @@
       style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
+  <div id="preloader">
+  <div class="loader"></div>
+  <div>Loading images...</div>
+</div>
+
   <header>
     <div class="containerFull home">
       <!-- <img data-public-id="cpd-halftone-logo_v8ucjm" class="cpd-logo halftone"> -->
       <!-- <img data-public-id="cpd-logo-blend-colour_suos5p" class="cpd-logo og"> -->
       <img class="cpd-logo testing og"
         src="https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_1200/cpd-logo-blend-colour_suos5p"
-        srcset="
-            https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_800/cpd-logo-blend-colour_suos5p 800w,
-            https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_1200/cpd-logo-blend-colour_suos5p 1200w,
-            https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_1600/cpd-logo-blend-colour_suos5p 1600w,
-            https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_2400/cpd-logo-blend-colour_suos5p 2400w"
-        sizes="(max-width: 600px) 90vw, (max-width: 1200px) 70vw, 60vw" alt="CPD Logo" decoding="async" />
+        srcset=" https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_800/cpd-logo-blend-colour_suos5p 800w,
+                https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_1200/cpd-logo-blend-colour_suos5p 1200w,
+                https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_1600/cpd-logo-blend-colour_suos5p 1600w,
+                https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_2400/cpd-logo-blend-colour_suos5p 2400w"
+        sizes="(max-width: 600px) 90vw, (max-width: 1200px) 70vw, 60vw" width="1200" alt="CPD Logo"
+        decoding="async" />
       <h1 class="enter">
         <a style=" text-align: center; height: 120px; z-index: 7000;" class="width-6 dazzle fluid"
           href="javascript:setTimeout(()=>{window.location = 'main.html' },1400);">
