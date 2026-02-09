@@ -188,15 +188,32 @@ document.addEventListener("DOMContentLoaded", () => {
             const selectedWidth = getOptimalWidthFromViewport(3, 10);
             li.style.backgroundImage = `url(${base},w_${selectedWidth}/${id})`;
         } else if (type === "video" && id) {
-            const videoUrl = `https://res.cloudinary.com/dcouze1qx/video/upload/v1754667301/${id}.mp4`;
-            li.style.backgroundImage = `url(${videoUrl})`;
+            const videoEl = document.createElement('video');
+            videoEl.autoplay = true;
+            videoEl.muted = true;
+            videoEl.loop = true;
+            videoEl.playsInline = true;
+            videoEl.style.width = '100%';
+            videoEl.style.height = '100%';
+            videoEl.style.objectFit = 'cover';
+
+            const sourceEl = document.createElement('source');
+            sourceEl.src = `https://res.cloudinary.com/dcouze1qx/video/upload/v1754667301/${id}.mp4`;
+            sourceEl.type = 'video/mp4';
+            videoEl.appendChild(sourceEl);
+
+            li.innerHTML = ''; // clear background
+            li.appendChild(videoEl);
         }
     });
 
-    // OPTIMIZATION: Hide preloader after background images load, then init ASCII
+    // CRITICAL FIX: Hide preloader IMMEDIATELY - don't wait for background images!
+    // This lets logo show fast which improves LCP
+    preloader.classList.add('hidden');
+
+    // Load background images in the background (non-blocking)
+    // Then init ASCII after they finish
     loadFlyImages().then(() => {
-        preloader.classList.add('hidden');
-        // Defer ASCII init slightly to let page render
         // Safari fallback for requestIdleCallback
         if (window.requestIdleCallback) {
             requestIdleCallback(() => {
@@ -228,11 +245,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const elementsToMove = document.querySelectorAll(".home, .enter, .cpd-logo");
         const enterElement = document.querySelector(".enter");
         const ToggleAscii = document.querySelector(".ToggleAscii");
-        
+
         if (ToggleAscii) {
             ToggleAscii.style.contentVisibility = "hidden";
             asciiPaused = true;
         }
+
+        // Pause all marquee videos
+        document.querySelectorAll('.flyImage video').forEach(video => {
+            video.pause();
+        });
 
         // Cancel any previous high-res preload
         if (modalImg.highResLoader) {
@@ -243,15 +265,38 @@ document.addEventListener("DOMContentLoaded", () => {
         const type = item.getAttribute("data-type");
         const id = item.getAttribute("data-image-url");
 
+
+        elementsToMove.forEach(el => el.classList.add("logo-transition"));
+        if (enterElement) {
+            enterElement.classList.add("logo-transition");
+            enterElement.style.animation = "fadeOut 0.5s ease-in-out forwards";
+        }
+
         if (type === "video" && id) {
-            // Video: just use the same URL
-            const videoUrl = `https://res.cloudinary.com/dcouze1qx/video/upload/v1754667301/${id}.mp4`;
-            modalImg.style.animation = "none";
-            modalImg.offsetHeight; // force reflow
-            modalImg.src = videoUrl;
+            // Remove any existing modal media
+            modalImg.style.display = "none";
+            let existingVideo = modal.querySelector('video');
+            if (existingVideo) existingVideo.remove();
+
+            const video = document.createElement('video');
+            video.src = `https://res.cloudinary.com/dcouze1qx/video/upload/v1754667301/${id}.mp4`;
+            video.autoplay = true;
+            video.muted = true;
+            video.loop = true;
+            video.playsInline = true;
+            video.controls = false;
+
+            video.style.maxWidth = '80%';
+            video.style.maxHeight = '80%';
+            video.style.borderRadius = '25px';
+            video.style.opacity = '0';
+            video.style.animation = 'fadeIn 0.3s ease-in-out forwards';
+
+            modal.appendChild(video);
+
             modalText.textContent = description;
             modal.style.display = "flex";
-            modalImg.style.animation = "fadeIn 0.3s ease-in-out forwards";
+            return;
         } else {
             // Image: progressive loading
             const viewportWidth = window.innerWidth;
@@ -266,6 +311,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const publicId = publicIdMatch ? publicIdMatch[1] : "";
             const lowResUrl = `${base},w_${lowerResWidth}/${publicId}`;
 
+            modalImg.style.display = "block";
             modalImg.style.animation = "none";
             modalImg.offsetHeight;
             modalImg.src = lowResUrl;
@@ -285,20 +331,30 @@ document.addEventListener("DOMContentLoaded", () => {
             };
             imgLoader.src = highResUrl;
         }
-
-        // Common transitions
-        elementsToMove.forEach(el => el.classList.add("logo-transition"));
-        if (enterElement) {
-            enterElement.classList.add("logo-transition");
-            enterElement.style.animation = "fadeOut 0.5s ease-in-out forwards";
-        }
     }
 
     function closeModal() {
         const modal = document.getElementById("imageModal");
         const modalImg = document.getElementById("modalImg");
         const ToggleAscii = document.querySelector(".ToggleAscii");
-        
+        // Stop and remove modal video if present
+        const modalVideo = modal.querySelector('video');
+        if (modalVideo) {
+            modalVideo.style.animation = 'fadeOut 0.3s ease-in-out forwards';
+
+            setTimeout(() => {
+                modalVideo.pause();
+                modalVideo.src = '';
+                modalVideo.load();
+                modalVideo.remove();
+            }, 300);
+        }
+
+        // Resume marquee videos
+        document.querySelectorAll('.flyImage video').forEach(video => {
+            video.play();
+        });
+
         if (ToggleAscii) {
             ToggleAscii.style.contentVisibility = "visible";
             asciiPaused = false;

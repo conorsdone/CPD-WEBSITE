@@ -46,6 +46,9 @@ window.addEventListener('resize', () => {
 
 // Get time for header
 function updateTime() {
+    const timeElement = document.getElementById("gmt-time");
+    if (!timeElement) return; // Exit if element doesn't exist
+    
     const now = new Date();
     let hours = now.getUTCHours();
     const realHours = hours.toString().padStart(2, '0'); // Get hours in GMT
