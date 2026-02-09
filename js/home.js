@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { AsciiEffect } from 'three/addons/effects/AsciiEffect.js';
 
+// OPTIMIZATION: Separate background image loading from critical path
 function loadFlyImages() {
     const promises = [];
     document.querySelectorAll("li.flyImage").forEach(li => {
@@ -21,8 +22,14 @@ function loadFlyImages() {
     return Promise.all(promises);
 }
 
-let asciiPaused = false; // global
+let asciiPaused = false;
+let asciiInitialized = false;
+
+// OPTIMIZATION: Make ASCII initialization lazy and deferred
 function initAsciiScene() {
+    if (asciiInitialized) return;
+    asciiInitialized = true;
+
     // Get canvas
     var canvas = document.getElementsByTagName("canvas")[0];
 
@@ -49,7 +56,6 @@ function initAsciiScene() {
     effect.domElement.classList.add("ToggleAscii");
     effect.domElement.style.pointerEvents = 'none';
     document.body.appendChild(effect.domElement);
-    let asciiReady = false;
 
     effect.domElement.addEventListener('click', () => {
         togglePageInvert();
@@ -74,31 +80,11 @@ function initAsciiScene() {
         camera.position.set(6, -3, 10);
     }
 
-    // Mouse rotation
-    // Mouse rotation throttled with requestAnimationFrame
+    // Mouse/Touch rotation - throttled with requestAnimationFrame
     let rotatePending = false;
-    window.addEventListener('mousemove', (event) => {
-        if (!model || rotatePending) return;
-        rotatePending = true;
-        requestAnimationFrame(() => {
-            updateModelRotation(event.clientX, event.clientY);
-            rotatePending = false;
-        });
-    });
 
-    // Touch rotation throttled with requestAnimationFrame
-    window.addEventListener('touchmove', (event) => {
-        if (!model || rotatePending || event.touches.length < 1) return;
-        const touch = event.touches[0];
-        rotatePending = true;
-        requestAnimationFrame(() => {
-            updateModelRotation(touch.clientX, touch.clientY);
-            rotatePending = false;
-        });
-    });
-
-    // Extracted rotation logic
     function updateModelRotation(x, y) {
+        if (!model) return;
         const modelCenter = new THREE.Vector3();
         model.getWorldPosition(modelCenter);
 
@@ -113,6 +99,25 @@ function initAsciiScene() {
         model.rotation.y = diffX * Math.PI / 4 * sensitivity;
         model.rotation.x = diffY * Math.PI / 4 * sensitivity;
     }
+
+    window.addEventListener('mousemove', (event) => {
+        if (!model || rotatePending) return;
+        rotatePending = true;
+        requestAnimationFrame(() => {
+            updateModelRotation(event.clientX, event.clientY);
+            rotatePending = false;
+        });
+    });
+
+    window.addEventListener('touchmove', (event) => {
+        if (!model || rotatePending || event.touches.length < 1) return;
+        const touch = event.touches[0];
+        rotatePending = true;
+        requestAnimationFrame(() => {
+            updateModelRotation(touch.clientX, touch.clientY);
+            rotatePending = false;
+        });
+    });
 
     // Raycasting for model clicks
     const raycaster = new THREE.Raycaster();
@@ -131,10 +136,6 @@ function initAsciiScene() {
         document.body.classList.toggle('inverted');
     }
 
-    window.addEventListener('load', () => {
-        asciiReady = true;
-    });
-
     // Resize handling
     window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
@@ -143,15 +144,14 @@ function initAsciiScene() {
         effect.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // Animation loop
+    // Animation loop with frame skipping
     let frame = 0;
-    let asciiPaused = false; // new flag
 
     function animate() {
         requestAnimationFrame(animate);
-        if (asciiPaused) return; // skip rendering when paused
+        if (asciiPaused) return;
 
-        if (++frame % 4 !== 0) return; // frame skip
+        if (++frame % 4 !== 0) return; // frame skip for performance
         if (model) model.position.y = Math.sin(Date.now() * 0.0015) * 0.3;
         effect.render(scene, camera);
     }
@@ -160,14 +160,8 @@ function initAsciiScene() {
 
 document.addEventListener("DOMContentLoaded", () => {
     const preloader = document.getElementById('preloader');
-    loadFlyImages().then(() => {
-        preloader.classList.add('hidden'); // fade out preloader
-        initAsciiScene();                   // only now init ASCII
-    });
-
     const base = 'https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best';
     const modal = document.getElementById("imageModal");
-
     const candidateWidths = [800, 1200, 1600, 2400];
 
     // Estimate flyImage width from viewport
@@ -182,21 +176,36 @@ document.addEventListener("DOMContentLoaded", () => {
         const dpr = window.devicePixelRatio || 1;
         const requiredPx = flyWidth * dpr;
         const selected = candidateWidths.find(w => w >= requiredPx) || candidateWidths[candidateWidths.length - 1];
-        // console.log(`Estimated flyWidth: ${flyWidth}, DPR: ${dpr}, selected Cloudinary width: ${selected}`);
         return selected;
     }
 
-    // Apply background images to flyImages
+    // Apply background images to flyImages FIRST (before preloader logic)
     document.querySelectorAll("li.flyImage").forEach((li) => {
         const type = li.getAttribute("data-type");
         const id = li.getAttribute("data-image-url");
 
         if (type === null && id) {
-            const selectedWidth = getOptimalWidthFromViewport(3, 10); // adjust numImagesPerRow & gap as needed
+            const selectedWidth = getOptimalWidthFromViewport(3, 10);
             li.style.backgroundImage = `url(${base},w_${selectedWidth}/${id})`;
         } else if (type === "video" && id) {
             const videoUrl = `https://res.cloudinary.com/dcouze1qx/video/upload/v1754667301/${id}.mp4`;
             li.style.backgroundImage = `url(${videoUrl})`;
+        }
+    });
+
+    // OPTIMIZATION: Hide preloader after background images load, then init ASCII
+    loadFlyImages().then(() => {
+        preloader.classList.add('hidden');
+        // Defer ASCII init slightly to let page render
+        // Safari fallback for requestIdleCallback
+        if (window.requestIdleCallback) {
+            requestIdleCallback(() => {
+                initAsciiScene();
+            }, { timeout: 2000 });
+        } else {
+            setTimeout(() => {
+                initAsciiScene();
+            }, 100);
         }
     });
 
@@ -218,9 +227,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const modalText = document.getElementById("modalText");
         const elementsToMove = document.querySelectorAll(".home, .enter, .cpd-logo");
         const enterElement = document.querySelector(".enter");
-        const base = 'https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best';
-        const candidateWidths = [800, 1200, 1600, 2400];
         const ToggleAscii = document.querySelector(".ToggleAscii");
+        
         if (ToggleAscii) {
             ToggleAscii.style.contentVisibility = "hidden";
             asciiPaused = true;
@@ -245,7 +253,7 @@ document.addEventListener("DOMContentLoaded", () => {
             modal.style.display = "flex";
             modalImg.style.animation = "fadeIn 0.3s ease-in-out forwards";
         } else {
-            // Image: progressive loading as before
+            // Image: progressive loading
             const viewportWidth = window.innerWidth;
             const numImagesPerRow = 3;
             const gapPx = 10;
@@ -285,20 +293,22 @@ document.addEventListener("DOMContentLoaded", () => {
             enterElement.style.animation = "fadeOut 0.5s ease-in-out forwards";
         }
     }
+
     function closeModal() {
         const modal = document.getElementById("imageModal");
         const modalImg = document.getElementById("modalImg");
         const ToggleAscii = document.querySelector(".ToggleAscii");
+        
         if (ToggleAscii) {
             ToggleAscii.style.contentVisibility = "visible";
             asciiPaused = false;
         }
 
         // Remove the high-res reference
-        modalImg.src = '';           // remove current image
+        modalImg.src = '';
         if (modalImg.highResLoader) {
             modalImg.highResLoader.onload = null;
-            modalImg.highResLoader = null;  // discard preloader
+            modalImg.highResLoader = null;
         }
 
         modal.style.display = "none";
@@ -316,4 +326,7 @@ document.addEventListener("DOMContentLoaded", () => {
     modal.addEventListener("click", (event) => {
         if (event.target === modal) closeModal();
     });
+
+    // Make closeModal globally accessible
+    window.closeModal = closeModal;
 });

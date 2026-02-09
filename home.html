@@ -19,46 +19,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home</title>
 
+  <!-- CRITICAL: Preconnect to origins BEFORE any resource loads -->
   <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+  <link rel="dns-prefetch" href="https://res.cloudinary.com">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  
+  <!-- CRITICAL: Preload ONLY the logo (LCP element) - use smaller initial size -->
   <link rel="preload" as="image"
-    href="https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_1200/cpd-logo-blend-colour_suos5p">
+    href="https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_800/cpd-logo-blend-colour_suos5p"
+    imagesrcset="https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_800/cpd-logo-blend-colour_suos5p 800w,
+                 https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_1200/cpd-logo-blend-colour_suos5p 1200w"
+    imagesizes="(max-width: 600px) 90vw, 85vw">
+  
   <!-- Inline critical CSS for first viewport -->
   <style>
-    /* Layout / FCP critical for initial screen */
-    body {
-      margin: 0;
-      background: #000;
-      overflow: hidden;
-    }
-
-    .home {
-      position: absolute;
-      z-index: 2000;
-      text-align: center;
-      pointer-events: none;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
+    /* Minimal critical CSS - just what's needed to prevent layout shift */
+    
+    /* CRITICAL FIX: Add explicit dimensions to logo to prevent CLS */
     .home .cpd-logo {
-      width: 85vw;
-      position: relative;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, 0);
-      pointer-events: none;
+      aspect-ratio: 800 / 155;
+      height: auto;
     }
 
-    .home .enter {
-      pointer-events: all;
-      position: relative;
-      top: 0%;
-      left: 50%;
-      transform: translate(-50%, 50%);
-      width: min-content;
-      font-size: 2rem;
+    /* Preloader styles */
+    #preloader {
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      flex-direction: column;
+    }
+
+    #preloader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease, visibility 0.5s;
+    }
+
+    .loader {
+      border: 4px solid #808080;
+      border-top: 4px solid #ff0000;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 
@@ -86,21 +102,24 @@
   <!-- End Google Tag Manager (noscript) -->
 
   <div id="preloader">
-  <div class="loader"></div>
-  <div>Loading images...</div>
-</div>
+    <div class="loader"></div>
+    <div>Loading...</div>
+  </div>
 
   <header>
     <div class="containerFull home">
-      <!-- <img data-public-id="cpd-halftone-logo_v8ucjm" class="cpd-logo halftone"> -->
-      <!-- <img data-public-id="cpd-logo-blend-colour_suos5p" class="cpd-logo og"> -->
+      <!-- CRITICAL FIX: Add explicit width and height attributes to prevent CLS -->
+      <!-- Using 800x155 as base dimensions (actual logo ratio) -->
       <img class="cpd-logo testing og"
-        src="https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_1200/cpd-logo-blend-colour_suos5p"
-        srcset=" https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_800/cpd-logo-blend-colour_suos5p 800w,
+        src="https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_800/cpd-logo-blend-colour_suos5p"
+        srcset="https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_800/cpd-logo-blend-colour_suos5p 800w,
                 https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_1200/cpd-logo-blend-colour_suos5p 1200w,
-                https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_1600/cpd-logo-blend-colour_suos5p 1600w,
-                https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_2400/cpd-logo-blend-colour_suos5p 2400w"
-        sizes="(max-width: 600px) 90vw, (max-width: 1200px) 70vw, 60vw" width="1200" alt="CPD Logo"
+                https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best,w_1600/cpd-logo-blend-colour_suos5p 1600w"
+        sizes="(max-width: 600px) 90vw, 85vw" 
+        width="800" 
+        height="155"
+        alt="CPD Logo"
+        fetchpriority="high"
         decoding="async" />
       <h1 class="enter">
         <a style=" text-align: center; height: 120px; z-index: 7000;" class="width-6 dazzle fluid"
@@ -206,15 +225,6 @@
     </div>
 
   </div>
-
-  <!-- <footer>
-        <p style="z-index: 5000; position: absolute; font-size: 0.5rem; bottom: 0%; padding: 1%;">
-            © 2024 Conor Dunne.<br>
-            The code on this website is released under <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank">CC0 1.0</a> (public domain).<br>
-            However, all images and media are protected under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a>.<br> 
-            Unauthorized use of images is prohibited.
-          </p>        
-    </footer> -->
 
   <!-- Cookie Banner -->
   <div id="cookie-banner"

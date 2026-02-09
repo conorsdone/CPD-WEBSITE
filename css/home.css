@@ -1,5 +1,4 @@
 .home {
-    /* border: 3px solid greenyellow;
     position: absolute;
     z-index: 2000;
     width: 100vw;
@@ -7,35 +6,39 @@
     pointer-events: none;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); */
+    transform: translate(-50%, -50%);
     transition: top 1s ease-in-out, transform 1s ease-in-out, width 1s ease-in-out;
 }
 
-/* .home .enter {
-    border: 3px solid blue;
+.home .enter {
     pointer-events: all;
     position: relative;
     top: 0%;
     left: 50%;
     transform: translate(-50%, 50%);
     width: min-content;
-} */
+}
 
 .home .cpd-logo {
-    /* border: 3px solid palevioletred;
     position: relative;
     top: 50%;
     left: 50%;
     transform: translate(-50%, 0%);
     pointer-events: none;
-    width: 85vw; */
+    width: 85vw;
+    /* OPTIMIZATION: Add aspect ratio to prevent layout shift */
+    aspect-ratio: 800 / 155;
+    height: auto;
     transition: transform 1s ease-in-out;
     animation: logoAnimation-1 5s infinite;
+    /* OPTIMIZATION: Hint browser this element will animate */
+    will-change: filter;
 }
 
 .home body.inverted .cpd-logo {
     position: absolute;
-    pointer-events: none;}
+    pointer-events: none;
+}
 
 .home .enter.logo-transition {
     position: relative;
@@ -482,9 +485,9 @@ table {
     height: 100%;
     z-index: 10;
     pointer-events: none;
-  }
+}
 
-  @media (max-width: 600px) {
+@media (max-width: 600px) {
     
 }
 
@@ -506,7 +509,7 @@ table {
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.5s ease, visibility 0.5s;
-  }
+}
 
 /* Loader Animation (Spinner) */
 .loader {
