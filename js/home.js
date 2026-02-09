@@ -21,6 +21,7 @@ function loadFlyImages() {
     return Promise.all(promises);
 }
 
+let asciiPaused = false; // global
 function initAsciiScene() {
     // Get canvas
     var canvas = document.getElementsByTagName("canvas")[0];
@@ -164,13 +165,8 @@ document.addEventListener("DOMContentLoaded", () => {
         initAsciiScene();                   // only now init ASCII
     });
 
-    
     const base = 'https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best';
     const modal = document.getElementById("imageModal");
-    const modalImg = document.getElementById("modalImg");
-    const modalText = document.getElementById("modalText");
-    const elementsToMove = document.querySelectorAll(".home, .enter, .cpd-logo");
-    const enterElement = document.querySelector(".enter");
 
     const candidateWidths = [800, 1200, 1600, 2400];
 
@@ -225,10 +221,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const base = 'https://res.cloudinary.com/dcouze1qx/image/upload/f_auto,q_auto:best';
         const candidateWidths = [800, 1200, 1600, 2400];
         const ToggleAscii = document.querySelector(".ToggleAscii");
-
-        ToggleAscii.style.contentVisibility = "hidden";
-
-        asciiPaused = true; // pause ascii
+        if (ToggleAscii) {
+            ToggleAscii.style.contentVisibility = "hidden";
+            asciiPaused = true;
+        }
 
         // Cancel any previous high-res preload
         if (modalImg.highResLoader) {
@@ -293,9 +289,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const modal = document.getElementById("imageModal");
         const modalImg = document.getElementById("modalImg");
         const ToggleAscii = document.querySelector(".ToggleAscii");
-
-        ToggleAscii.style.contentVisibility = "visible";
-        asciiPaused = false;
+        if (ToggleAscii) {
+            ToggleAscii.style.contentVisibility = "visible";
+            asciiPaused = false;
+        }
 
         // Remove the high-res reference
         modalImg.src = '';           // remove current image
