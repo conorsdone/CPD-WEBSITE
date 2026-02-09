@@ -20,17 +20,20 @@
 
     --modal-background-darken: rgba(0, 0, 0, 0.8);
     --modal-background-lighten: rgba(255, 255, 255, 0.8);
-  }
+}
 
-  body.light {
+body.light {
     --background: var(--text);
     --text: var(--background);
-  }
+}
 
 @font-face {
     font-family: Generic;
     src: url("../assets/Generic-G50-CC-Typic.ttf") format("truetype"),
         url("../assets/Generic-G50-CC-Typic.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
