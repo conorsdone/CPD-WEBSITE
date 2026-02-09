@@ -52,41 +52,44 @@ if (window.innerWidth < 600) {
 }
 
 // Mouse rotation
+// Mouse rotation throttled with requestAnimationFrame
+let rotatePending = false;
 window.addEventListener('mousemove', (event) => {
-    if (!model) return;
-    let modelCenter = new THREE.Vector3();
-    model.getWorldPosition(modelCenter);
-
-    let screenCenter = modelCenter.project(camera);
-    screenCenter.x = (screenCenter.x + 1) / 2 * window.innerWidth;
-    screenCenter.y = -(screenCenter.y - 1) / 2 * window.innerHeight;
-
-    let diffX = (event.clientX - screenCenter.x) / window.innerWidth * 2;
-    let diffY = (event.clientY - screenCenter.y) / window.innerHeight * 2;
-
-    let sensitivity = window.innerWidth < 768 ? 2 : 1;
-    model.rotation.y = diffX * Math.PI / 4 * sensitivity;
-    model.rotation.x = diffY * Math.PI / 4 * sensitivity;
+    if (!model || rotatePending) return;
+    rotatePending = true;
+    requestAnimationFrame(() => {
+        updateModelRotation(event.clientX, event.clientY);
+        rotatePending = false;
+    });
 });
 
-// Touch rotation
+// Touch rotation throttled with requestAnimationFrame
 window.addEventListener('touchmove', (event) => {
-    if (!model || event.touches.length < 1) return;
-    let touch = event.touches[0];
-    let modelCenter = new THREE.Vector3();
+    if (!model || rotatePending || event.touches.length < 1) return;
+    const touch = event.touches[0];
+    rotatePending = true;
+    requestAnimationFrame(() => {
+        updateModelRotation(touch.clientX, touch.clientY);
+        rotatePending = false;
+    });
+});
+
+// Extracted rotation logic
+function updateModelRotation(x, y) {
+    const modelCenter = new THREE.Vector3();
     model.getWorldPosition(modelCenter);
 
-    let screenCenter = modelCenter.project(camera);
+    const screenCenter = modelCenter.project(camera);
     screenCenter.x = (screenCenter.x + 1) / 2 * window.innerWidth;
     screenCenter.y = -(screenCenter.y - 1) / 2 * window.innerHeight;
 
-    let diffX = (touch.clientX - screenCenter.x) / window.innerWidth * 2;
-    let diffY = (touch.clientY - screenCenter.y) / window.innerHeight * 2;
-    let sensitivity = window.innerWidth < 768 ? 2 : 1;
+    const diffX = (x - screenCenter.x) / window.innerWidth * 2;
+    const diffY = (y - screenCenter.y) / window.innerHeight * 2;
+    const sensitivity = window.innerWidth < 768 ? 2 : 1;
 
     model.rotation.y = diffX * Math.PI / 4 * sensitivity;
     model.rotation.x = diffY * Math.PI / 4 * sensitivity;
-});
+}
 
 // Raycasting for model clicks
 const raycaster = new THREE.Raycaster();
@@ -251,7 +254,7 @@ function openModal(imageSrc, description, item) {
 }
     function closeModal() {
     asciiPaused = false;
-    
+
     const modal = document.getElementById("imageModal");
     const modalImg = document.getElementById("modalImg");
     

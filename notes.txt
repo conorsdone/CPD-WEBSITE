@@ -49,3 +49,44 @@ colour roots done for home, ipodLive,
     --highlight-2: #63d2f4;
     --noise-var: 0.05; 
     --animation-logo: blueAni; */
+
+
+    Diagnose performance issues
+74
+Performance
+97
+Accessibility
+88
+Best Practices
+83
+SEO
+74
+FCP
++10
+LCP
++4
+TBT
++28
+CLS
++25
+SI
++7
+Performance
+Values are estimated and may vary. The performance score is calculated directly from these metrics.See calculator.
+0–49
+50–89
+90–100
+Final Screenshot
+
+METRICS
+Expand view
+First Contentful Paint
+0.8 s
+Largest Contentful Paint
+5.8 s
+Total Blocking Time
+150 ms
+Cumulative Layout Shift
+0
+Speed Index
+4.5 s
