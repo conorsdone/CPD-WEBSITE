@@ -1,268 +1,275 @@
+:root {
+  --gap: clamp(0.5rem, 1rem, 1.5rem);
+}
+
 .home {
-    position: absolute;
-    z-index: 2000;
-    width: 100vw;
-    text-align: center;
-    pointer-events: none;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    transition: top 1s ease-in-out, transform 1s ease-in-out, width 1s ease-in-out;
+  position: absolute;
+  z-index: 6;
+  width: 100vw;
+  text-align: center;
+  pointer-events: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: top 1s ease-in-out, transform 1s ease-in-out, width 1s ease-in-out;
 }
 
 .home .enter {
-    pointer-events: all;
-    position: relative;
-    top: 0%;
-    left: 50%;
-    transform: translate(-50%, 50%);
-    width: min-content;
+  pointer-events: all;
+  position: relative;
+  top: 0%;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  width: min-content;
 }
 
 .home .cpd-logo {
-    position: relative;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, 0%);
-    pointer-events: none;
-    width: 85vw;
-    /* OPTIMIZATION: Add aspect ratio to prevent layout shift */
-    aspect-ratio: 800 / 155;
-    height: auto;
-    transition: transform 1s ease-in-out;
-    animation: logoAnimation-1 5s infinite;
-    /* OPTIMIZATION: Hint browser this element will animate */
-    will-change: filter;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  pointer-events: none;
+  width: 85vw;
+  /* OPTIMIZATION: Add aspect ratio to prevent layout shift */
+  aspect-ratio: 800 / 155;
+  height: auto;
+  transition: transform 1s ease-in-out;
+  animation: logoAnimation-1 5s infinite;
+  /* OPTIMIZATION: Hint browser this element will animate */
+  will-change: filter;
 }
 
 .home body.inverted .cpd-logo {
-    position: absolute;
-    pointer-events: none;
+  position: absolute;
+  pointer-events: none;
 }
 
 .home .enter.logo-transition {
-    position: relative;
-    animation: fadeOut 0.5s ease-in-out forwards;
+  position: relative;
+  animation: fadeOut 0.5s ease-in-out forwards;
 }
 
 .home .cpd-logo.logo-transition {
-    position: relative;
-    transform: translate(-50%, -50%);
+  position: relative;
+  transform: translate(-50%, -50%);
 }
 
 @media (max-width: 600px) {
-    .home .cpd-logo {
-        width: 90vw;
-    }
+  .home .cpd-logo {
+    width: 90vw;
+  }
 
-    .home .cpd-logo.logo-transition {
-        position: relative;
-    }
+  .home .cpd-logo.logo-transition {
+    position: relative;
+  }
 
-    .home.logo-transition {
-        top: 15% !important;
-        left: 50% !important;
-        width: 90vw !important;
-    }
+  .home.logo-transition {
+    top: 15% !important;
+    left: 50% !important;
+    width: 90vw !important;
+  }
 
-    .home .enter {
-        font-size: 3rem !important;
-    }
+  .home .enter {
+    font-size: 3rem !important;
+  }
 }
 
 .home.logo-transition {
-    top: 10%;
-    left: 50%;
-    transform: translate(-50%, 0%);
-    width: 60vw;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  width: 60vw;
 }
 
 /* BACKGROUND.CSS */
 html,
 body {
-    overflow: hidden;
+  overflow: hidden;
 }
 
-
 body {
-    background-color: var(--background);
-    transition: filter 0.5s ease, background-color 0.5s ease;
+  background-color: var(--background);
+  transition: filter 0.5s ease, background-color 0.5s ease;
 }
 
 body.inverted {
-    background-color: var(--text);
-    filter: invert(1);
+  background-color: var(--text);
+  filter: invert(1);
 }
 
 header {
-    z-index: 1500;
+  z-index: 5;
 }
 
 .background {
-    position: relative;
-    margin-top: -30vh;
-    margin-left: -10vw;
-    margin-right: -20vw;
-    padding-bottom: 20px;
-    transform: rotate(10deg);
-    transition: transform 3s ease;
-    height: 100vh;
+  position: relative;
+  margin-top: -30vh;
+  margin-left: -10vw;
+  margin-right: -20vw;
+  padding-bottom: 20px;
+  transform: rotate(10deg);
+  transition: transform 3s ease;
+  height: 100vh;
 }
 
 @media (max-width: 600px) {
-    .background {
-        margin-top: -5vh;
-        margin-left: -20vw;
-    }
+  .background {
+    margin-top: -5vh;
+    margin-left: -20vw;
+  }
 }
 
 body.inverted .background {
-    transform: rotate(-10deg);
+  transform: rotate(-10deg);
 }
 
 .background .flyImage {
-    width: 40vh;
-    aspect-ratio: 4 / 5;
-    background-size: cover;
-    background-position: center;
+  width: 40vh;
+  aspect-ratio: 4 / 5;
+  background-size: cover;
+  background-position: center;
 }
 
+/* 
+.background .flyImage:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+} */
+
 @media (max-width: 600px) {
-    .background .flyImage {
-        width: 50vw;
-        aspect-ratio: 4 / 5;
-        background-size: cover;
-    }
+  .background .flyImage {
+    width: 50vw;
+  }
 }
 
 .background .container {
-    margin-top: 1rem;
+  margin-top: 1rem;
 }
 
 .background .marquee {
-    --gap: clamp(0.5rem, 1rem, 1.5rem);
-    position: relative;
-    display: flex;
-    overflow: hidden;
-    user-select: none;
-    gap: var(--gap);
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+  gap: var(--gap);
 }
 
 .background .marquee__content {
-    flex-shrink: 0;
-    display: flex;
-    justify-content: space-around;
-    gap: var(--gap);
-    /* min-width: 100%; */
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-around;
+  gap: var(--gap);
+  overflow: hidden;
+  /* min-width: 100%; */
 }
 
 .background .marquee__content__1 {
-    animation: scroll 14s linear infinite;
+  animation: scroll 14s linear infinite;
 }
 
 .background .marquee__content__2 {
-    animation: scroll 20s linear infinite;
+  animation: scroll 20s linear infinite;
 }
 
 .background .marquee__content__3 {
-    animation: scroll 10s linear infinite;
+  animation: scroll 10s linear infinite;
 }
 
 body.inverted .background .marquee__content__1 {
-    animation: scroll-reverse 14s linear infinite;
+  animation: scroll-reverse 14s linear infinite;
 }
 
 body.inverted .background .marquee__content__2 {
-    animation: scroll-reverse 20s linear infinite;
+  animation: scroll-reverse 20s linear infinite;
 }
 
 body.inverted .background .marquee__content__3 {
-    animation: scroll-reverse 10s linear infinite;
+  animation: scroll-reverse 10s linear infinite;
 }
 
 @keyframes scroll {
-    from {
-        transform: translateX(0);
-    }
+  from {
+    transform: translateX(0);
+  }
 
-    to {
-        transform: translateX(calc(-100% - var(--gap)));
-    }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
 }
 
 @keyframes scroll-reverse {
-    from {
-        transform: translateX(calc(-100% - var(--gap)));
-    }
+  from {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
 
-    to {
-        transform: translateX(0);
-    }
+  to {
+    transform: translateX(0);
+  }
 }
 
 .button-7 {
-    position: fixed;
-    top: 100px;
-    left: 100px;
-    z-index: 1100;
-    background: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease, color 0.3s ease;
+  position: fixed;
+  top: 100px;
+  left: 100px;
+  z-index: 3;
+  background: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .modal {
-    display: none;
-    position: fixed;
-    z-index: 1200;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--modal-background-darken);
-    justify-content: center;
-    align-items: center;
+  display: none;
+  position: fixed;
+  z-index: 4;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--modal-background-darken);
+  justify-content: center;
+  align-items: center;
 }
 
 body.inverted .modal {
-    background-color: var(--modal-background-lighten);
+  background-color: var(--modal-background-lighten);
 }
 
 .modal-content {
-    max-width: 80%;
-    max-height: 80%;
-    border-radius: 25px;
+  max-width: 80%;
+  max-height: 80%;
+  border-radius: 25px;
 }
 
 @media (max-width: 600px) {
-    .modal-content {
-        max-width: 90%;
-        max-height: 90%;
-        border-radius: 10px;
-    }
+  .modal-content {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+  }
 }
 
 .marquee--fit-content {
-    max-width: fit-content;
+  max-width: fit-content;
 }
 
 .marquee--pos-absolute .marquee__content:last-child {
-    position: absolute;
-    top: 0;
-    left: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .cursor-image {
-    position: absolute;
-    mix-blend-mode: exclusion;
-    /* filter: invert(100%); */
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    transition: transform 0.05s linear;
-    /* mix-blend-mode: screen;  */
-    z-index: 10000;
+  position: absolute;
+  mix-blend-mode: exclusion;
+  /* filter: invert(100%); */
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: transform 0.05s linear;
+  /* mix-blend-mode: screen;  */
+  z-index: 8;
 }
 
 @import url('https://unpkg.com/normalize.css') layer(normalize);
@@ -271,7 +278,7 @@ body.inverted .modal {
 
 @layer demo {
   :root {
-    --color: light-dark(var(--button-primary),var(--button-primary));
+    --color: light-dark(var(--button-primary), var(--button-primary));
     --shadow: light-dark(var(--button-primary-accent), var(--button-primary-accent));
     --glare: light-dark(var(--text), var(--text));
     --transition: 0.5s;
@@ -295,46 +302,33 @@ body.inverted .modal {
     display: inline-block;
     transition: all 0.2s;
     text-decoration: none;
-    text-shadow: calc(var(--hover) * (var(--font-size) * -0))
-        calc(var(--hover) * (var(--font-size) * 0)) var(--shadow),
-      calc(var(--hover) * (var(--font-size) * -0.02))
-        calc(var(--hover) * (var(--font-size) * 0.02)) var(--shadow),
-      calc(var(--hover) * (var(--font-size) * -0.04))
-        calc(var(--hover) * (var(--font-size) * 0.04)) var(--shadow),
-      calc(var(--hover) * (var(--font-size) * -0.06))
-        calc(var(--hover) * (var(--font-size) * 0.06)) var(--shadow),
-      calc(var(--hover) * (var(--font-size) * -0.08))
-        calc(var(--hover) * (var(--font-size) * 0.08)) var(--shadow),
-      calc(var(--hover) * (var(--font-size) * -0.1))
-        calc(var(--hover) * (var(--font-size) * 0.1)) var(--shadow);
-    transform: translate(
-      calc(var(--hover) * (var(--font-size) * 0.1)),
-      calc(var(--hover) * (var(--font-size) * -0.1))
-    );
+    text-shadow: calc(var(--hover) * (var(--font-size) * -0)) calc(var(--hover) * (var(--font-size) * 0)) var(--shadow),
+      calc(var(--hover) * (var(--font-size) * -0.02)) calc(var(--hover) * (var(--font-size) * 0.02)) var(--shadow),
+      calc(var(--hover) * (var(--font-size) * -0.04)) calc(var(--hover) * (var(--font-size) * 0.04)) var(--shadow),
+      calc(var(--hover) * (var(--font-size) * -0.06)) calc(var(--hover) * (var(--font-size) * 0.06)) var(--shadow),
+      calc(var(--hover) * (var(--font-size) * -0.08)) calc(var(--hover) * (var(--font-size) * 0.08)) var(--shadow),
+      calc(var(--hover) * (var(--font-size) * -0.1)) calc(var(--hover) * (var(--font-size) * 0.1)) var(--shadow);
+    transform: translate(calc(var(--hover) * (var(--font-size) * 0.1)),
+        calc(var(--hover) * (var(--font-size) * -0.1)));
   }
 
   .dazzle span:last-of-type {
     position: absolute;
     inset: var(--padding) calc(var(--padding) * 2);
-    background: linear-gradient(
-          108deg,
-          transparent 0 55%,
-          var(--glare) 55% 60%,
-          transparent 60% 70%,
-          var(--glare) 70% 85%,
-          transparent 85%
-        )
-        calc(var(--pos) * -200%) 0% / 200% 100%,
+    background: linear-gradient(108deg,
+        transparent 0 55%,
+        var(--glare) 55% 60%,
+        transparent 60% 70%,
+        var(--glare) 70% 85%,
+        transparent 85%) calc(var(--pos) * -200%) 0% / 200% 100%,
       var(--color);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    z-index: 2;
+    z-index: 0;
     text-shadow: none;
-    transform: translate(
-      calc(var(--hover) * (var(--font-size) * 0.1)),
-      calc(var(--hover) * (var(--font-size) * -0.125))
-    );
+    transform: translate(calc(var(--hover) * (var(--font-size) * 0.1)),
+        calc(var(--hover) * (var(--font-size) * -0.125)));
   }
 
   .dazzle span:last-of-type {
@@ -367,7 +361,7 @@ body.inverted .modal {
 
   .dazzle svg {
     position: absolute;
-    z-index: 3;
+    z-index: 1;
     width: calc(var(--font-size) * 0.5);
     aspect-ratio: 1;
   }
@@ -383,8 +377,7 @@ body.inverted .modal {
   }
 
   .dazzle:is(:hover, :focus-visible) svg {
-    animation: sparkle 0.75s calc(0.1s + ((var(--delay-step) * var(--d)) * 1s))
-      both;
+    animation: sparkle 0.75s calc(0.1s + ((var(--delay-step) * var(--d)) * 1s)) both;
   }
 
   @keyframes sparkle {
@@ -447,96 +440,89 @@ body.inverted .modal {
   }
 
   :where(.fluid) {
-    --fluid-min: calc(
-      var(--font-size-min) * pow(var(--font-ratio-min), var(--font-level, 0))
-    );
-    --fluid-max: calc(
-      var(--font-size-max) * pow(var(--font-ratio-max), var(--font-level, 0))
-    );
-    --fluid-preferred: calc(
-      (var(--fluid-max) - var(--fluid-min)) /
-        (var(--font-width-max) - var(--font-width-min))
-    );
-    --fluid-type: clamp(
-      (var(--fluid-min) / 16) * 1rem,
-      ((var(--fluid-min) / 16) * 1rem) -
-        (((var(--fluid-preferred) * var(--font-width-min)) / 16) * 1rem) +
-        (var(--fluid-preferred) * var(--variable-unit, 100vi)),
-      (var(--fluid-max) / 16) * 1rem
-    );
+    --fluid-min: calc(var(--font-size-min) * pow(var(--font-ratio-min), var(--font-level, 0)));
+    --fluid-max: calc(var(--font-size-max) * pow(var(--font-ratio-max), var(--font-level, 0)));
+    --fluid-preferred: calc((var(--fluid-max) - var(--fluid-min)) / (var(--font-width-max) - var(--font-width-min)));
+    --fluid-type: clamp((var(--fluid-min) / 16) * 1rem,
+        ((var(--fluid-min) / 16) * 1rem) - (((var(--fluid-preferred) * var(--font-width-min)) / 16) * 1rem) + (var(--fluid-preferred) * var(--variable-unit, 100vi)),
+        (var(--fluid-max) / 16) * 1rem);
     font-size: var(--fluid-type);
   }
 
   body {
     min-height: 100vh;
   }
-  
+
 }
 
 table {
-    filter: drop-shadow(0rem 0rem 1rem var(--primary-accent));
+  filter: drop-shadow(0rem 0rem 1rem var(--primary-accent));
 }
 
 .AsciiCanvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 10;
-    pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
 }
 
-@media (max-width: 600px) {
-    
-}
+@media (max-width: 600px) {}
 
 /* Preloader Full-Screen Overlay */
 #preloader {
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    background: var(--background);
-    color: var(--text);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999; /* Ensures it's on top */
-    flex-direction: column;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background: var(--background);
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 7;
+  /* Ensures it's on top */
+  flex-direction: column;
 }
 
 #preloader.hidden {
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.5s ease, visibility 0.5s;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0.5s;
 }
 
 /* Loader Animation (Spinner) */
 .loader {
-    font-size: 2rem;
-    font-weight: bold;
+  font-size: 2rem;
+  font-weight: bold;
 }
 
 .loader {
-    border: 4px solid var(--secondary-accent);
-    border-top: 4px solid var(--primary-accent);
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
-    margin-bottom: 20px;
+  border: 4px solid var(--secondary-accent);
+  border-top: 4px solid var(--primary-accent);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Hide the main content initially */
 #content {
-    display: none;
+  display: none;
 }
 
 .home a {
-    color: var(--button-primary);
+  color: var(--button-primary);
 }
